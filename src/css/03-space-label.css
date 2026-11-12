@@ -1,0 +1,152 @@
+#zia-workspace-slot {
+  display: flex;
+  flex: 1;
+  min-width: min(max-content, 100%);
+  align-items: center;
+  -moz-window-dragging: drag;
+
+  & > .zen-current-workspace-indicator {
+    max-width: 100% !important;
+    min-height: var(--zia-space-pill-height) !important;
+    max-height: var(--zia-space-pill-height) !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    background-color: transparent !important;
+    margin-inline-start: var(--zia-space-name-nudge) !important;
+    translate: 0 var(--zia-space-name-offset);
+
+    & > toolbarbutton:last-of-type {
+      margin-inline-end: 0 !important;
+    }
+
+    & .zen-workspaces-actions {
+      display: none !important;
+    }
+
+    flex: 0 0 auto !important;
+    width: max-content !important;
+    min-width: max-content !important;
+
+    /* Only the name's pill (and the space's icon under it) is clickable:
+       Zen folds the space on a click anywhere in this box, and it reached
+       well past the pill into the empty row beside it. The rest of the row
+       is left to drag the window, as the top row does. */
+    pointer-events: none !important;
+
+    & > :is(#zia-space-label, .zen-current-workspace-indicator-stack, .zen-current-workspace-indicator-name) {
+      pointer-events: auto !important;
+    }
+
+    & > #zia-space-label:hover,
+    &:has(> .zen-current-workspace-indicator-stack:hover) > #zia-space-label {
+      background-color: var(--zia-space-pill-bg) !important;
+    }
+
+    &::before {
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
+    &:has(#zia-space-label) > .zen-current-workspace-indicator-name {
+      display: none !important;
+    }
+
+    &:has(#zia-space-label) .zen-current-workspace-indicator-stack {
+      position: absolute !important;
+      inset-inline-start: 8px !important;
+      top: 50% !important;
+      translate: 0 -50% !important;
+      margin: 0 !important;
+      width: 16px !important;
+      height: 16px !important;
+      opacity: 0 !important;
+      background: transparent !important;
+    }
+
+    .zen-current-workspace-indicator-name {
+      flex: 0 0 auto !important;
+    }
+  }
+}
+
+:root[zen-sidebar-expanded] #zia-workspace-slot[collapsedpinnedtabs] > .zen-current-workspace-indicator {
+  .zen-current-workspace-indicator-stack:not([zen-emoji-open="true"]) {
+    .zen-current-workspace-indicator-chevron {
+      display: flex;
+      opacity: 1;
+    }
+
+    .zen-current-workspace-indicator-icon {
+      display: none;
+    }
+  }
+}
+
+:root[zen-sidebar-expanded] #zia-workspace-slot[collapsedpinnedtabs] .zen-current-workspace-indicator-chevron {
+  transform: rotate(0deg);
+}
+
+/* Optional: the space's icon only, its name hidden. The top row is as wide
+   as the name, so a long one widened the sidebar and it changed size from
+   space to space; with no icon, nothing is left to show. Or neither, hidden
+   (the spaces at the foot of the sidebar keep their icons). */
+@media -moz-pref("zia.sidebar.space-label", "none") {
+  #zia-space-label {
+    display: none !important;
+  }
+}
+
+@media -moz-pref("zia.sidebar.space-label", "icon") {
+  #zia-space-label {
+    & > .zia-space-name {
+      display: none;
+    }
+
+    &[zia-has-icon]::before,
+    & > .zia-space-svg {
+      margin-inline-end: 0 !important;
+    }
+
+    &:not([zia-has-icon], [zia-has-svg]) {
+      display: none;
+    }
+  }
+}
+
+/* With the space's name left above the tabs, as Zen has it (Zia's settings), the
+   slot it would go in is out of the top row too: empty, it still stretched across
+   the row and kept its buttons pushed to the end, where Zia puts them, and moving
+   them in Customize Toolbar didn't bring them back. The same with nothing to show there,
+   hidden or no icon to keep (the slot blank), where the row starts with the slot (Windows and
+   Linux, the window buttons top right): the ⋯ menu and sidebar button start the row.
+   Beside macOS's traffic lights a blank slot stays, keeping the buttons at the row's
+   far end, clear of them. And while Customize Toolbar is open, so its box has the
+   whole row to arrange the buttons in: squeezed to the end beside the name, there was
+   nowhere to drop them */
+:root:is([zia-space-name-in-list], [customizing]) #zia-workspace-slot,
+#zia-workspace-slot[zia-blank]:not(.titlebar-buttonbox-container + *) {
+  display: none !important;
+}
+
+/* The name sits a little low to line up with macOS's traffic lights beside it.
+   With no window buttons in the row (Windows and Linux keep them top right), it's
+   level with the row's own buttons instead: 1.5px low beside them, the space's
+   icon and name looked off centre */
+#zen-sidebar-top-buttons:not(:has(> .titlebar-buttonbox-container)) #zia-workspace-slot > .zen-current-workspace-indicator {
+  translate: none !important;
+}
+
+/* With the space's name in the top row, it takes the room there: Zen's spacer among the
+   row's buttons took half of it, and its ⋯ menu sat in the middle, apart from its back and
+   reload (Windows and Linux layouts, and the sidebar on the right, #507) */
+:root:not([zia-space-name-in-list], [customizing]) #zen-sidebar-top-buttons:has(> #zia-workspace-slot:is(:not([zia-blank]), .titlebar-buttonbox-container + *)) {
+  & #zen-sidebar-top-buttons-customization-target {
+    flex: 0 1 auto !important;
+  }
+
+  & #zen-sidebar-top-buttons-separator {
+    width: 0 !important;
+    min-width: 0 !important;
+    flex: 0 !important;
+  }
+}

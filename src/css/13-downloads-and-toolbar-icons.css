@@ -1,0 +1,440 @@
+#downloads-button,
+#downloads-indicator-anchor {
+  list-style-image: url("chrome://sine/content/zia/icons/downloads.svg") !important;
+}
+
+#downloads-button[hidden],
+#downloads-button[hidden="true"] {
+  display: none !important;
+}
+
+#downloads-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: var(--zia-space-pill-height) !important;
+  min-height: var(--zia-space-pill-height) !important;
+  border-radius: calc(10px * var(--zia-squircle-grow)) !important;
+  corner-shape: var(--zia-squircle) !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  position: relative;
+  /* a square everywhere: as wide as it's tall (the space name's height) */
+  width: var(--zia-space-pill-height) !important;
+  min-width: var(--zia-space-pill-height) !important;
+  max-width: var(--zia-space-pill-height) !important;
+  padding-inline: 0 !important;
+
+  /* level with the toolbar's own icons beside it */
+  translate: 0 1px;
+
+  &:hover {
+    background-color: var(--zia-space-pill-bg) !important;
+  }
+
+  & #zia-download-ring {
+    position: absolute;
+    inset: 3px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &[zia-downloading] #zia-download-ring {
+    opacity: 1;
+  }
+
+  & .zia-download-ring-track {
+    stroke: rgba(255, 255, 255, 0.12);
+  }
+
+  & .zia-download-ring-arc {
+    stroke: var(--zia-loading-color);
+    transition: stroke-dashoffset 0.25s ease;
+  }
+
+  & * {
+    background: none !important;
+    background-color: transparent !important;
+  }
+
+  & > .toolbarbutton-icon {
+    width: 17px !important;
+    height: 17px !important;
+    padding: 0 !important;
+    margin: auto !important;
+  }
+}
+
+/* Windows gives toolbar buttons more padding, which stretched the hover
+   square into an uneven tall shape; it's held to an even square there. */
+@media (-moz-platform: windows) {
+  #downloads-button {
+    padding: 0 !important;
+
+    & > :is(.toolbarbutton-badge-stack, #downloads-indicator-anchor, .toolbarbutton-icon) {
+      padding: 0 !important;
+      margin: auto !important;
+    }
+  }
+}
+
+/* The icon in the vertical middle of its hover square: drawn a pixel high
+   of it otherwise, more room below it than above */
+#downloads-button > :is(.toolbarbutton-badge-stack, #downloads-indicator-anchor, .toolbarbutton-icon) {
+  translate: 0 1px;
+}
+
+#downloads-indicator-icon {
+  width: 17px !important;
+  height: 17px !important;
+  max-height: 17px !important;
+  visibility: visible !important;
+  translate: 0 -1px;
+}
+
+#downloads-indicator-start-box,
+#downloads-indicator-finish-box,
+#downloads-indicator-progress-outer {
+  display: none !important;
+}
+
+#downloads-button[animate][notification="start"] #downloads-indicator-icon {
+  animation: zia-download-start 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+#downloads-button[animate][notification="finish"] #downloads-indicator-icon {
+  animation: zia-download-finish 2.1s ease-in-out;
+}
+
+@keyframes zia-download-start {
+  0% { transform: translateY(0); }
+  35% { transform: translateY(2px) scale(0.92); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes zia-download-finish {
+  0% { list-style-image: url("chrome://sine/content/zia/icons/downloads.svg"); transform: scale(1); opacity: 1; }
+  14% { list-style-image: url("chrome://sine/content/zia/icons/downloads.svg"); transform: scale(0.55); opacity: 0; }
+  15% { list-style-image: url("chrome://sine/content/zia/icons/download-done.svg"); transform: scale(0.55); opacity: 0; }
+  30% { list-style-image: url("chrome://sine/content/zia/icons/download-done.svg"); transform: scale(1); opacity: 1; }
+  70% { list-style-image: url("chrome://sine/content/zia/icons/download-done.svg"); transform: scale(1); opacity: 1; }
+  84% { list-style-image: url("chrome://sine/content/zia/icons/download-done.svg"); transform: scale(0.55); opacity: 0; }
+  85% { list-style-image: url("chrome://sine/content/zia/icons/downloads.svg"); transform: scale(0.55); opacity: 0; }
+  100% { list-style-image: url("chrome://sine/content/zia/icons/downloads.svg"); transform: scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #downloads-button[animate] #downloads-indicator-icon {
+    animation: none !important;
+  }
+}
+
+:is(#history-panelmenu, #zen-history-button) {
+  list-style-image: url("chrome://sine/content/zia/icons/history.svg") !important;
+}
+
+#alltabs-button {
+  list-style-image: url("chrome://sine/content/zia/icons/chevron-down.svg") !important;
+}
+
+/* The buttons along the sidebar's foot (the library, the tab list) at
+   the toolbar's 16px, set here so a Zen update can't grow them (1.23 drew
+   the library's as a sprite of its own, and they came out bigger) */
+#zen-sidebar-foot-buttons {
+  --zen-toolbar-button-size: 16px !important;
+
+  & #zen-library-button {
+    --zen-library-sprite-size: 16px !important;
+  }
+}
+
+/* The extensions that don't fit in the sidebar's address bar (Zen's single toolbar), on
+   a row of their own under it: the toolbar's icon buttons, as at the top of the page,
+   not Zen's filled tiles (which read as more essentials) */
+:root[zen-single-toolbar="true"] #zen-overflow-extensions-list:not(:empty) {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 6px 0 0 !important;
+
+  & .unified-extensions-item {
+    flex: none !important;
+  }
+
+  & .unified-extensions-item-action-button {
+    width: 28px !important;
+    height: 28px !important;
+    background-color: transparent !important;
+    border-radius: calc(7px * var(--zia-squircle-grow)) !important;
+    corner-shape: var(--zia-squircle-soft) !important;
+    box-shadow: none !important;
+
+    &:hover {
+      background-color: color-mix(in srgb, currentColor 10%, transparent) !important;
+    }
+  }
+
+  & :is(.toolbarbutton-icon, .toolbarbutton-badge-stack) {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+#zen-sidebar-foot-buttons toolbarbutton:not(#downloads-button) > .toolbarbutton-icon {
+  opacity: 0.4;
+  transition: none !important;
+}
+
+#zen-sidebar-foot-buttons toolbarbutton:not(#downloads-button):hover > .toolbarbutton-icon {
+  opacity: 0.7;
+}
+
+/* No tile behind the sidebar's bottom buttons (the Library, the spaces'
+   dots, the tab list's arrow), hovered, pressed or open: only their icons
+   brighten, as above */
+:root:not(#zia-none) #zen-sidebar-foot-buttons :is(toolbarbutton, toolbarbutton > .toolbarbutton-icon, toolbarbutton > .toolbarbutton-badge-stack) {
+  background-color: transparent !important;
+}
+
+#alltabs-button .toolbarbutton-icon {
+  opacity: 0.4 !important;
+}
+
+#alltabs-button:hover .toolbarbutton-icon {
+  opacity: 0.7 !important;
+}
+
+/* With Zia's address bar: its icons at Zia's sizes, and a keyword
+   search's pill (type a keyword, or pick an engine, and the bar says
+   which: Google, Bookmarks, Tabs) in Zia's look, a squircle chip tinted from the bar's own ink, so it reads
+   on the dark pop-up, a light one or one in the site's colour, the
+   engine's name at the tabs' text size and Zia's x to leave it (#347).
+   It was hidden altogether. With Zen's address bar it's Zen's. */
+@media -moz-pref("zia.urlbar.zia-look") {
+  #urlbar :is(#page-action-buttons, .urlbar-page-action) image,
+  #urlbar .urlbar-icon {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  #urlbar #zen-site-data-icon-button image {
+    width: 15px !important;
+    height: 14px !important;
+  }
+
+  #urlbar #urlbar-search-mode-indicator {
+    align-self: center !important;
+    align-items: center !important;
+    gap: 2px !important;
+    height: 22px !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 3px 0 8px !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: calc(6px * var(--zia-squircle-grow)) !important;
+    corner-shape: var(--zia-squircle) !important;
+    background-color: color-mix(in srgb, currentColor 12%, transparent) !important;
+    color: inherit !important;
+  }
+
+  /* The text after it starts Zia's gap between icon and text away, the
+     same gap the pill has before it, after the search icon: the room is
+     the text's own (Firefox's was three times that; a margin on the pill
+     didn't make any) */
+  #urlbar[searchmode] .urlbar-input-box {
+    margin-inline-start: 0 !important;
+    padding-inline-start: 0 !important;
+  }
+
+  #urlbar[searchmode] .urlbar-input {
+    margin-inline-start: 0 !important;
+    padding-inline-start: var(--zia-pop-text-gap, 10px) !important;
+  }
+
+  #urlbar #urlbar-search-mode-indicator-title {
+    margin: 0 !important;
+    padding: 0 !important;
+    color: inherit !important;
+    font-size: var(--zia-text-size) !important;
+    font-weight: 500 !important;
+  }
+
+  #urlbar #urlbar-search-mode-indicator-close {
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: calc(4px * var(--zia-squircle-grow)) !important;
+    corner-shape: var(--zia-squircle) !important;
+    background: url("chrome://sine/content/zia/icons/ui/x.svg") center / 10px no-repeat !important;
+    -moz-context-properties: fill, fill-opacity !important;
+    fill: currentColor !important;
+    fill-opacity: 0.6 !important;
+    transition: background-color 0.12s ease, fill-opacity 0.12s ease !important;
+
+    &:hover {
+      background-color: color-mix(in srgb, currentColor 12%, transparent) !important;
+      fill-opacity: 1 !important;
+    }
+  }
+}
+
+/* A tab's own tip and Firefox's preview give way to Zia's hover cards
+   (only while they're on). Every other tip, a page's own (a link's or a
+   picture's title) among them, shows as ever: they were all hidden, and
+   with them what a page tells you on hovering or focusing something. */
+@media -moz-pref("zia.features.tab-hover-cards") {
+  #tabbrowser-tab-tooltip,
+  #tab-preview-panel {
+    display: none !important;
+  }
+}
+
+/* The status bar, where a link goes as you hover it: hidden, unless "Show
+   where links go" is on (an option), then a small pill of Zia's glass at
+   the foot of the page */
+@media not -moz-pref("zia.status-bar") {
+  #statuspanel {
+    display: none !important;
+  }
+}
+
+@media -moz-pref("zia.status-bar") {
+  #statuspanel {
+    padding: 0 8px 8px !important;
+  }
+
+  #statuspanel-label {
+    margin: 0 !important;
+    padding: 4px 10px !important;
+    border: none !important;
+    border-radius: calc(9px * var(--zia-squircle-grow)) !important;
+    background: rgba(38, 38, 38, 0.86) !important;
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: var(--zia-glass-edge-dark), 0 6px 18px rgba(0, 0, 0, 0.3) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 12px !important;
+  }
+
+  :root:not(#zia-none) #statuspanel-label {
+    corner-shape: var(--zia-squircle) !important;
+  }
+
+  :root[zia-light] #statuspanel-label {
+    background: rgba(248, 248, 250, 0.9) !important;
+    box-shadow: var(--zia-glass-edge-light), 0 6px 18px rgba(0, 0, 0, 0.14) !important;
+    color: rgba(28, 28, 32, 0.9) !important;
+  }
+}
+
+/* A download flying to the Library button as a row, as in Dia (zia.uc.js):
+   the window dimmed, a faint glow trailing the row and a soft bloom where
+   it lands, and the row itself, a small glass row with the
+   file's icon and name, as AI renaming's card is drawn */
+#zia-download-flight {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  overflow: hidden;
+
+  & > .zia-df-dim {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.34);
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  /* (the glow trailing the row: its size, very faint and soft) */
+  & > .zia-df-beam {
+    position: absolute;
+    width: 200px;
+    height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.07), transparent);
+    filter: blur(12px);
+    mix-blend-mode: screen;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  & > .zia-df-bloom {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    margin: -80px 0 0 -80px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04) 50%, transparent);
+    mix-blend-mode: screen;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  & > .zia-df-row {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 240px;
+    height: 32px;
+    padding: 0 12px 0 9px;
+    border-radius: calc(11px * var(--zia-squircle-grow));
+    corner-shape: var(--zia-squircle) !important;
+    background: var(--zia-media-solid, var(--zia-media-card-base));
+    box-shadow: var(--zia-glass-edge), 0 8px 24px rgba(0, 0, 0, 0.32);
+    color: var(--zia-sidebar-ink, rgb(255, 255, 255));
+    font: 500 12.5px/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+    white-space: nowrap;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  & .zia-df-icon {
+    flex: none;
+    width: 16px;
+    height: 16px;
+  }
+
+  /* (room under the line, or the name's clip cut off the tails of its
+     g, p and y) */
+  & .zia-df-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.35;
+    padding-block: 1px;
+  }
+}
+
+/* light: a lighter grey over the window, as in Dia, and a white row with
+   dark ink */
+:root[zia-light] #zia-download-flight {
+  & > .zia-df-dim {
+    background: rgba(40, 40, 50, 0.16);
+  }
+
+  & > .zia-df-beam {
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.22), transparent);
+  }
+
+  & > .zia-df-bloom {
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1) 50%, transparent);
+  }
+
+  & > .zia-df-row {
+    background: rgb(252, 252, 253);
+    color: rgb(28, 28, 32);
+    box-shadow: var(--zia-glass-edge), 0 8px 24px rgba(0, 0, 0, 0.16);
+  }
+}
+
+/* Zia Settings in the ⋯ menu (zia.uc.js), with an icon as its neighbours have: Zen's
+   sliders, so it isn't taken for Firefox's own Settings above it */
+#zia-settings-menu-button {
+  list-style-image: url("chrome://browser/skin/zen-icons/sliders.svg") !important;
+}

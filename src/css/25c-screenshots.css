@@ -1,0 +1,57 @@
+/* The screenshot buttons (Save visible, Save full page) that show top right as
+   a screenshot starts, as Zia's card: its colour, squircle, edge and lift,
+   light in a light space; the buttons as Zia's tiles (zia.uc.js puts their
+   look in, out of reach of these styles). The dimmed page and its region
+   picking are drawn in the page, out of reach of any theme. Inside the page's
+   top rather than over the toolbar, where Firefox puts it: Zia's rounded page
+   cut its top off there (#445). */
+:root:not(#zia-none) screenshots-buttons {
+  top: 10px !important;
+  padding: 6px !important;
+  /* see-through, the page blurred behind it, as the address pop-up can be (#516) */
+  background-color: color-mix(in srgb, var(--zia-shot-card, var(--zia-tab-card-bg)) 78%, transparent) !important;
+  backdrop-filter: blur(24px) saturate(1.6) !important;
+  color: rgb(255, 255, 255) !important;
+  color-scheme: dark;
+  border-radius: calc(var(--zia-tab-card-radius) * var(--zia-squircle-grow)) !important;
+  corner-shape: var(--zia-squircle) !important;
+  box-shadow: var(--zia-glass-edge-lit), var(--zia-glass-pop-lift) !important;
+}
+
+/* (solid while the page shows a video, as the compact sidebar, 16-compact-mode) */
+:root[zia-video]:not(#zia-none) screenshots-buttons {
+  background-color: var(--zia-shot-card, var(--zia-tab-card-bg)) !important;
+  backdrop-filter: none !important;
+}
+
+/* (the page under them as a layer Firefox composites itself, so the blur sees it, while
+   they're up: as the address pop-up's, 18-light-pop-up-and-late-overrides; not over a
+   video, as the compact sidebar, 16-compact-mode) */
+:root:not(#zia-none):not([zia-video]) #tabbrowser-tabpanels .browserSidebarContainer:has(screenshots-buttons):not(:has([hidden] screenshots-buttons)) {
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+}
+
+:root[zia-light]:not(#zia-none) screenshots-buttons {
+  color: rgb(28, 28, 32) !important;
+  color-scheme: light;
+}
+
+/* ...in the toolbar's colour and ink, as the toolbar is (Zen's own colour with
+   "Toolbar in the site's colour" off: Zia's card, above) */
+:root:not([zia-theme-toolbar]):not(#zia-none) screenshots-buttons {
+  --zia-shot-card: var(--zia-site-bg, var(--zia-tab-card-bg));
+}
+
+:root[zia-site-light="true"]:not([zia-theme-toolbar]):not(#zia-none) screenshots-buttons {
+  color: var(--zia-light-ink, rgb(28, 28, 32)) !important;
+  color-scheme: light;
+}
+
+:root:is([zia-site-dark="true"], [zia-site-mid="true"]):not([zia-theme-toolbar]):not(#zia-none) screenshots-buttons {
+  color: rgb(255, 255, 255) !important;
+  color-scheme: dark;
+}
+
+/* (the preview of a shot is a page of its own, which these styles don't reach:
+   zia-screenshots.css, put in by zia.uc.js) */

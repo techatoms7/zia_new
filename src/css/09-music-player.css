@@ -1,0 +1,509 @@
+@media -moz-pref("zia.features.media-player") {
+#zen-media-controls-toolbar {
+  --zia-media-ease: var(--zen-media-stack-easing, cubic-bezier(0.25, 1, 0.5, 1));
+
+  /* Zia's squircle, as its other cards (the card, its glow, the stack) */
+  border-radius: calc(var(--zia-media-radius) * var(--zia-squircle-grow)) !important;
+  corner-shape: var(--zia-squircle) !important;
+
+  .zen-media-card::before,
+  .zen-media-card::after {
+    border-radius: inherit !important;
+    corner-shape: var(--zia-squircle) !important;
+  }
+
+  .zen-media-card {
+    --zia-media-glow-a: rgb(90, 185, 245);
+    --zia-media-glow-b: rgb(123, 77, 255);
+    --zen-sidebar-notification-bg: rgb(0, 0, 0);
+
+    /* see-through, a shade of whatever's under it (the space's colour, its
+       grain), as the selected tab is */
+    background-color: var(--zia-media-bg) !important;
+    background-image: none !important;
+    isolation: isolate;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(170px 110px at 16px 6px, color-mix(in srgb, var(--zia-media-glow-a) 32%, transparent), transparent 72%),
+        radial-gradient(220px 120px at 60% -40px, color-mix(in srgb, var(--zia-media-glow-b) 16%, transparent), transparent 75%);
+      opacity: 0;
+      transition: opacity 0.3s var(--zia-media-ease);
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+    border-radius: calc(var(--zia-media-radius) * var(--zia-squircle-grow)) !important;
+    corner-shape: var(--zia-squircle) !important;
+    outline: none !important;
+    box-shadow: var(--zia-media-edge, var(--zia-glass-edge)) !important;
+    padding: 9px 10px !important;
+
+    box-sizing: border-box !important;
+    height: var(--zia-media-card-height) !important;
+    transition:
+      transform var(--zia-spring-time) var(--zia-spring),
+      opacity 0.3s var(--zia-media-ease),
+      filter 0.3s var(--zia-media-ease),
+      height var(--zia-spring-time) var(--zia-spring),
+      background-color 0.3s var(--zia-media-ease) !important;
+
+    &[zen-reindexing] {
+      transition: none !important;
+    }
+
+    &[zia-glow-pending] {
+      --zia-media-glow-a: transparent;
+      --zia-media-glow-b: transparent;
+    }
+  }
+
+  .zen-media-main-vbox {
+    height: 100% !important;
+    align-content: center;
+    display: grid !important;
+
+    grid-template-columns: var(--zia-media-ring-size) minmax(0, 1fr) auto auto auto auto auto;
+    grid-template-rows: auto auto auto;
+    column-gap: 0;
+    row-gap: 0;
+    align-items: center;
+  }
+
+  .zen-media-main-vbox > vbox,
+  .zen-media-info-container,
+  .zen-media-buttons-hbox,
+  .zen-media-controls-hbox,
+  .zen-media-playback-buttons {
+    display: contents !important;
+  }
+
+  .zen-media-focus-button {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center !important;
+    position: relative;
+    width: var(--zia-media-ring-size) !important;
+    height: var(--zia-media-ring-size) !important;
+    min-width: var(--zia-media-ring-size) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: transparent !important;
+
+    & > .toolbarbutton-icon,
+    & image {
+      width: var(--zia-media-art-size) !important;
+      height: var(--zia-media-art-size) !important;
+      min-width: var(--zia-media-art-size) !important;
+      min-height: var(--zia-media-art-size) !important;
+      padding: 0 !important;
+      border-radius: calc(7px * var(--zia-squircle-grow)) !important;
+      corner-shape: var(--zia-squircle) !important;
+      transition: opacity 0.2s ease, filter 0.2s ease;
+    }
+
+    & > .zia-ring {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    & .zia-ring-track {
+      stroke: rgba(255, 255, 255, 0.14);
+    }
+
+    & .zia-ring-fill {
+      transition: stroke-dasharray 0.9s linear, opacity 0.2s ease;
+    }
+
+    &:not([zia-art])[zia-favicon] > .toolbarbutton-icon,
+    &:not([zia-art])[zia-favicon] image {
+      list-style-image: none !important;
+      background:
+        var(--zia-media-favicon, none) center / 50% no-repeat,
+        var(--zia-favicon-tint, rgb(44, 44, 46)) !important;
+      transition: background-color 0.3s ease, opacity 0.2s ease, filter 0.2s ease;
+    }
+
+    &:not([zia-art])[zia-initial]::before {
+      content: attr(zia-initial);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 16px;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    &[zia-art] > .toolbarbutton-icon,
+    &[zia-art] image {
+      list-style-image: none !important;
+      background: var(--zia-media-art) center / cover no-repeat !important;
+    }
+
+    &::after {
+      display: none !important;
+    }
+  }
+
+  /* on Windows the picture came through square: clipped, as near the squircle as a clip goes */
+  @media (-moz-platform: windows) {
+    .zen-media-focus-button :is(.toolbarbutton-icon, image) {
+      clip-path: inset(0 round calc(7px * var(--zia-squircle-grow) * 0.8));
+    }
+  }
+
+  /* Live (or with no position to show): the ring whole, in the picture's colours, rather than
+     none: with no progress, a channel's picture (Kick, Twitch, a YouTube live) had only the
+     grey track round it */
+  .zen-media-card:is([media-position-hidden], [zia-live]) .zia-ring-fill {
+    stroke-dasharray: 100 100 !important;
+    stroke-opacity: 1 !important;
+  }
+
+  .zen-media-card:not(.playing) .zen-media-focus-button :is(image, .toolbarbutton-icon) {
+    opacity: 0.75;
+    filter: saturate(0.75);
+  }
+
+  .zen-media-info-vbox {
+    grid-column: 2 / 7;
+    grid-row: 1;
+    min-width: 0;
+    padding-inline: 8px 4px;
+    justify-content: center;
+    gap: 2px;
+
+    &::before {
+      display: none !important;
+    }
+
+    & label {
+      min-height: 0 !important;
+      height: auto !important;
+      line-height: 1.25;
+    }
+  }
+
+  .zen-media-title {
+    color: rgb(255, 255, 255) !important;
+    font-weight: var(--zia-folder-weight) !important;
+    font-size: 1.08em !important;
+  }
+
+  .zen-media-artist {
+    color: rgba(255, 255, 255, 0.65) !important;
+    opacity: 1 !important;
+    font-weight: var(--zia-tab-weight) !important;
+    font-size: 0.95em !important;
+  }
+
+  .zen-media-progress-hbox {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0;
+
+    height: 0 !important;
+    max-height: none !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    transform: none !important;
+    padding: 0 2px !important;
+    margin: 0 !important;
+    pointer-events: none !important;
+    transition:
+      height var(--zia-spring-time) var(--zia-spring),
+      margin var(--zia-spring-time) var(--zia-spring),
+      opacity 0.25s var(--zia-media-ease) !important;
+  }
+
+  .zen-media-card[media-sharing] .zen-media-progress-hbox {
+    display: none !important;
+  }
+
+  .zen-media-card:is([media-position-hidden], [zia-live]):not([media-sharing]) .zen-media-progress-hbox {
+    & > * {
+      display: none !important;
+    }
+
+    &::before {
+      content: "LIVE";
+      flex: 1;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+
+      background:
+        linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0.2) calc(50% - 34px),
+          transparent calc(50% - 18px),
+          transparent calc(50% + 18px),
+          rgba(255, 255, 255, 0.2) calc(50% + 34px)
+        ) center / 100% 4px no-repeat;
+    }
+  }
+
+  .zen-media-current-time,
+  .zen-media-duration {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.65) !important;
+    font-size: 10px !important;
+    margin: 0 !important;
+    transition:
+      max-width 0.3s var(--zia-media-ease),
+      opacity 0.3s var(--zia-media-ease),
+      margin 0.3s var(--zia-media-ease) !important;
+  }
+
+  .zen-media-progress-bar {
+    --progress-height: 2px;
+    flex: 1;
+    height: var(--progress-height) !important;
+    margin: 0 !important;
+    background-color: transparent !important;
+    transition: height 0.3s var(--zia-media-ease) !important;
+
+    &::-moz-range-track {
+      background: rgba(255, 255, 255, 0.2) !important;
+      height: var(--progress-height) !important;
+    }
+
+    &::-moz-range-progress {
+      background: rgb(255, 255, 255) !important;
+      box-shadow: none !important;
+      height: var(--progress-height) !important;
+    }
+
+    &::-moz-range-thumb {
+      background: rgb(255, 255, 255) !important;
+      width: 10px !important;
+      height: 10px !important;
+      transform: scale(0) !important;
+      transition: transform 0.2s var(--zia-media-ease) !important;
+    }
+  }
+
+  /* the sound bars stay at the title's end; play/pause sits between previous and next, as in
+     Zen, so opening the card never moves it from under the pointer */
+  .zen-media-mute-button { grid-column: 7; grid-row: 1; }
+  .zen-media-previoustrack-button { grid-column: 3; grid-row: 3; }
+  .zen-media-playpause-button { grid-column: 4; grid-row: 3; }
+  .zen-media-nexttrack-button { grid-column: 5; grid-row: 3; }
+  /* Zen hides it unless the page has exactly one video; it picks the main video anyway */
+  .zen-media-pip-button { grid-column: 6; grid-row: 3; display: flex !important; }
+  .zen-media-close-button { grid-column: 7; grid-row: 3; }
+
+  :is(.zen-media-playpause-button, .zen-media-previoustrack-button, .zen-media-nexttrack-button, .zen-media-pip-button, .zen-media-close-button) {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    translate: 0 6px;
+    margin-top: 0 !important;
+    pointer-events: none;
+    transition:
+      max-height var(--zia-spring-time) var(--zia-spring),
+      opacity 0.3s var(--zia-media-ease),
+      translate var(--zia-spring-time) var(--zia-spring),
+      margin var(--zia-spring-time) var(--zia-spring) !important;
+  }
+
+  .zen-media-card:not([muted]) .zen-media-mute-button {
+    list-style-image: var(--zia-sound-still, url("chrome://sine/content/zia/icons/sound-still.svg")) !important;
+  }
+
+  .zen-media-card.playing:not([muted]) .zen-media-mute-button {
+    list-style-image: var(--zia-sound-wave, url("chrome://sine/content/zia/icons/sound-wave.svg")) !important;
+  }
+
+  .zen-media-card[muted] .zen-media-mute-button {
+    list-style-image: var(--zia-sound-muted, url("chrome://sine/content/zia/icons/sound-muted.svg")) !important;
+  }
+
+  .zen-media-mute-button > .toolbarbutton-icon {
+    -moz-context-properties: fill;
+    fill: currentColor !important;
+  }
+
+  .media-device-buttons {
+    grid-column: 3 / -1;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  /* with more than one card, the whole stack opens without the spring, height too */
+  &:hover:has(.zen-media-card ~ .zen-media-card) .zen-media-card:not([zen-reindexing]) {
+    transition:
+      transform 0.35s var(--zia-media-ease),
+      opacity 0.3s var(--zia-media-ease),
+      filter 0.3s var(--zia-media-ease),
+      height 0.3s var(--zia-media-ease),
+      background-color 0.3s var(--zia-media-ease) !important;
+  }
+
+  &:hover {
+    .zen-media-card {
+      height: var(--zia-media-card-height-open) !important;
+      /* the stack fans open without the spring, which bounced the top card; it
+         keeps the spring closing, and the card still springs as it grows */
+      transition:
+        transform 0.35s var(--zia-media-ease),
+        opacity 0.3s var(--zia-media-ease),
+        filter 0.3s var(--zia-media-ease),
+        height var(--zia-spring-time) var(--zia-spring),
+        background-color 0.3s var(--zia-media-ease) !important;
+
+      &[zen-reindexing] {
+        transition: none !important;
+      }
+
+      /* solid while open, as it then floats over the tabs (Zen keeps the
+         toolbar its closed height): the same shade, over the sidebar's colour */
+      background-color: var(--zia-media-solid, var(--zia-media-card-base)) !important;
+    }
+
+    .zen-media-progress-hbox {
+      height: 16px !important;
+      margin: 8px 0 0 !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    .zen-media-current-time,
+    .zen-media-duration {
+      max-width: 64px;
+      opacity: 1;
+    }
+
+    .zen-media-current-time {
+      margin-inline-end: 7px !important;
+    }
+
+    .zen-media-duration {
+      margin-inline-start: 7px !important;
+    }
+
+    .zen-media-progress-bar {
+      --progress-height: 4px;
+
+      &::-moz-range-thumb {
+        transform: scale(1) !important;
+      }
+    }
+
+    :is(.zen-media-playpause-button, .zen-media-previoustrack-button, .zen-media-nexttrack-button, .zen-media-pip-button, .zen-media-close-button) {
+      max-height: 30px !important;
+      opacity: 1 !important;
+      translate: 0 0;
+      margin-top: 6px !important;
+      pointer-events: auto;
+    }
+  }
+
+  .toolbarbutton-1 {
+    margin-block: 0 !important;
+    margin-inline: 0 !important;
+    padding: 0 !important;
+    justify-self: center;
+    border-radius: calc(8px * var(--zia-squircle-grow)) !important;
+    corner-shape: var(--zia-squircle) !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+    fill: currentColor !important;
+    scale: 1 !important;
+
+    & > .toolbarbutton-icon {
+      width: 28px !important;
+      height: 28px !important;
+      padding: 6px !important;
+      border-radius: calc(8px * var(--zia-squircle-grow)) !important;
+      corner-shape: var(--zia-squircle) !important;
+      background-color: transparent !important;
+    }
+
+    &:hover > .toolbarbutton-icon {
+      background-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    &:active {
+      scale: 1 !important;
+    }
+  }
+
+  /* the buttons in Zia's icons (Tabler, as the rest of Zia) */
+  .zen-media-playpause-button {
+    list-style-image: url("chrome://sine/content/zia/icons/ui/media-play.svg") !important;
+  }
+
+  .zen-media-card.playing .zen-media-playpause-button {
+    list-style-image: url("chrome://sine/content/zia/icons/ui/media-pause.svg") !important;
+  }
+
+  .zen-media-previoustrack-button {
+    list-style-image: url("chrome://sine/content/zia/icons/ui/media-prev.svg") !important;
+  }
+
+  .zen-media-nexttrack-button {
+    list-style-image: url("chrome://sine/content/zia/icons/ui/media-next.svg") !important;
+  }
+
+  .zen-media-pip-button {
+    list-style-image: url("chrome://sine/content/zia/icons/ui/media-pip.svg") !important;
+  }
+
+  .zen-media-close-button {
+    list-style-image: url("chrome://sine/content/zia/icons/ui/x.svg") !important;
+  }
+
+  :is(.zen-media-playpause-button, .zen-media-previoustrack-button, .zen-media-nexttrack-button, .zen-media-pip-button, .zen-media-close-button) > .toolbarbutton-icon {
+    -moz-context-properties: fill, fill-opacity, stroke, stroke-opacity;
+    fill: currentColor !important;
+    fill-opacity: 1 !important;
+  }
+
+  .zen-media-playpause-button > .toolbarbutton-icon {
+    color: rgba(255, 255, 255, 0.92) !important;
+    fill: rgba(255, 255, 255, 0.92) !important;
+  }
+
+  .zen-media-card[media-sharing] .media-device-buttons {
+    display: flex !important;
+  }
+}
+
+/* not while the front card fades away: the one behind showed almost empty until it took its place */
+#zen-media-controls-toolbar:not(:hover):has(.zen-media-card[stacked-behind]):not(:has(.zen-media-card:not([stacked-behind]):is([zen-hiding], [zen-removing]))) .zen-media-card[stacked-behind] {
+  mask: linear-gradient(
+    #000 0 calc(var(--zen-media-stack-peek, 8px) * var(--zen-media-card-peek-level, 1) / (1 - 0.04 * var(--zen-media-card-peek-level, 1))),
+    transparent 0
+  );
+
+  & .zen-media-main-vbox {
+    opacity: 0 !important;
+  }
+}
+}
+

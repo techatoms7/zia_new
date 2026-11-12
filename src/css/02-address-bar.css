@@ -1,0 +1,836 @@
+/* Zia's address bar, all of it (the bar, its loading line, the page's
+   title in it, the copy-link and site buttons, the pop-up), with "Zia's
+   address bar" on, zia.urlbar.zia-look; off leaves the bar as Zen draws
+   it and keeps the rest of Zia */
+@media -moz-pref("zia.urlbar.zia-look") {
+  #urlbar:not(:hover):not([focused]):not([breakout-extend]) > .urlbar-background {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+  }
+
+  #urlbar:not([breakout-extend]) > .urlbar-background {
+    border-radius: var(--zia-urlbar-radius) !important;
+    transition: background-color 0.06s linear !important;
+  }
+
+  :root:not([zia-split="true"]) #urlbar:not([breakout-extend], [zen-floating-urlbar="true"]) {
+    height: var(--zia-urlbar-height) !important;
+    min-height: var(--zia-urlbar-height) !important;
+    max-height: var(--zia-urlbar-height) !important;
+    --urlbar-height: var(--zia-urlbar-height) !important;
+
+    & :is(.urlbar-input, #zia-url-title, #zia-url-plain) {
+      translate: 0 0;
+    }
+  }
+
+  /* The bar's contents centred in its height, whatever is showing in it:
+     searching your bookmarks, history or tabs brings up a taller search
+     button that otherwise pushed the text and icons down, leaving less room
+     below them than above */
+  :root:not([zia-split="true"]) #urlbar:not([breakout-extend]) > :is(#urlbar-input-container, .urlbar-input-container) {
+    height: 100% !important;
+    min-height: 0 !important;
+    padding-block: 0 !important;
+    align-items: center !important;
+  }
+
+  #urlbar:is(:hover, [focused]):not([breakout-extend]) > .urlbar-background {
+    background: var(--zia-urlbar-hover-bg) !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  /* In the sidebar (Zen's single toolbar) the bar is a field of its own, as in Dia: no
+     toolbar around it to say where it is, so it keeps a faint fill, brighter on hover */
+  :root[zen-single-toolbar="true"] #urlbar:not([breakout-extend]) > .urlbar-background {
+    background: color-mix(in srgb, currentColor 7%, transparent) !important;
+  }
+
+  :root[zen-single-toolbar="true"] #urlbar:is(:hover, [focused]):not([breakout-extend]) > .urlbar-background {
+    background: color-mix(in srgb, currentColor 11%, transparent) !important;
+  }
+
+  /* ...as tall as a tab, and as round (its own corner was tighter than the tabs
+     under it) */
+  :root[zen-single-toolbar="true"]:not([zia-split="true"]) #urlbar:not([breakout-extend], [zen-floating-urlbar="true"]) {
+    --zia-urlbar-radius: var(--zia-tab-radius) !important;
+    height: var(--zia-tab-height) !important;
+    min-height: var(--zia-tab-height) !important;
+    max-height: var(--zia-tab-height) !important;
+    --urlbar-height: var(--zia-tab-height) !important;
+    /* (Zen's 1px all round, and the fill's own inset, left it 2px shorter than a tab) */
+    padding: 0 !important;
+
+    & > .urlbar-background {
+      inset: 0 !important;
+      margin: 0 !important;
+      border-width: 0 !important;
+    }
+  }
+
+  /* Windows, with no tab open: the address bar's hover showed as a flat,
+     solid grey block; it's the same light see-through wash as elsewhere. */
+  @media (-moz-platform: windows) {
+    :root[zen-has-empty-tab="true"] #urlbar:is(:hover, [focused]):not([breakout-extend]) > .urlbar-background {
+      background: rgba(255, 255, 255, 0.09) !important;
+      background-color: rgba(255, 255, 255, 0.09) !important;
+    }
+  }
+
+  /* The floating address bar's row is Zen's 62px (15px above and below the
+     text), but with nothing listed under it the bar itself stayed 52px, so
+     its background was 10px short at the bottom and the address and icon sat
+     5px below its middle: the bar is at least as tall as its row */
+  #urlbar[zen-floating-urlbar="true"]:not([zia-classic]) {
+    min-height: var(--urlbar-container-height, 62px) !important;
+  }
+
+  /* The floating address bar with nothing to list under it yet (no history,
+     top sites or suggestions to show as it opens: Firefox doesn't open the
+     list then, so it's never "extended"): it's the pop-up all the same, in
+     its colour, corners, edge and shadow, at its own height (the toolbar's
+     31px squeezed it, its text sitting low) */
+  #urlbar[zen-floating-urlbar="true"]:not([breakout-extend]):not([zia-classic]) {
+    border-radius: calc(var(--zia-pop-radius) * var(--zia-squircle-grow)) !important;
+    corner-shape: var(--zia-squircle) !important;
+
+    & > .urlbar-background {
+      background: var(--zia-urlbar-open-bg) !important;
+      border: none !important;
+      border-radius: calc(var(--zia-pop-radius) * var(--zia-squircle-grow)) !important;
+      corner-shape: var(--zia-squircle) !important;
+      box-shadow: var(--zia-glass-edge), var(--zia-glass-pop-lift) !important;
+    }
+
+    & > :is(#urlbar-input-container, .urlbar-input-container) {
+      align-items: center !important;
+    }
+  }
+
+  #urlbar[breakout-extend]:not([zia-classic]):not([zen-floating-urlbar="true"]) {
+    border-radius: calc(var(--zia-pop-radius) * var(--zia-squircle-grow)) !important;
+    corner-shape: var(--zia-squircle) !important;
+    translate: var(--zia-urlbar-open-offset-x, 0px) var(--zia-urlbar-open-offset) !important;
+    --urlbarview-separator-color: transparent !important;
+    --urlbarView-separator-color: transparent !important;
+
+    & > .urlbar-background {
+      background: var(--zia-urlbar-open-bg) !important;
+      border-radius: calc(var(--zia-pop-radius) * var(--zia-squircle-grow)) !important;
+      corner-shape: var(--zia-squircle) !important;
+      box-shadow: var(--zia-glass-edge), var(--zia-glass-pop-lift) !important;
+      backdrop-filter: none !important;
+      /* (up to the window's top edge, or cut back to it where the pop-up went past it,
+         zia.uc.js; and down past its last row, where the pop-up's own height fell short
+         of it, #450) */
+      top: calc(var(--zia-pop-trim-top, 0px) - var(--zia-pop-reach-top, 0px)) !important;
+      bottom: calc(-1 * var(--zia-pop-reach-bottom, 0px)) !important;
+      transform-origin: 50% 0 !important;
+      animation: zia-urlbar-open 0.18s cubic-bezier(0.2, 0.9, 0.3, 1) !important;
+    }
+  }
+
+  @keyframes zia-urlbar-open {
+    from { scale: 0.8; opacity: 0.4; }
+    to { scale: 1; opacity: 1; }
+  }
+
+  #urlbar[breakout-extend]:not([zia-classic]) {
+    /* (Zen 1.23 gave every row a 45px least height and a clear 2px border
+       above and below, which made Zia's rows taller and further apart) */
+    --urlbarview-row-min-height: var(--zia-pop-row-height) !important;
+
+    & .urlbarView-row {
+      margin-inline: var(--zia-pop-row-inset) !important;
+      margin-block: calc(var(--zia-pop-row-gap) / 2) !important;
+      padding-block: 0 !important;
+      border-block: 0 !important;
+      min-height: 0 !important;
+      border-radius: var(--zia-pop-row-radius) !important;
+
+      & > .urlbarView-row-inner {
+        padding-block: 0 !important;
+        min-height: var(--zia-pop-row-height) !important;
+        align-items: center !important;
+      }
+    }
+
+    & .urlbarView-row:hover {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    & .urlbarView-row[selected] {
+      background-color: rgba(255, 255, 255, 0.08) !important;
+
+      :root[zia-space-colored="true"] & {
+        background-color: color-mix(in srgb, var(--zen-primary-color, white) 12%, rgb(61, 61, 61)) !important;
+      }
+
+      & .urlbarView-shortcutContent {
+        background-color: transparent !important;
+        fill: rgba(255, 255, 255, 0.9) !important;
+        /* (Zen darkens these for its white chip, which Zia takes away) */
+        color: rgba(255, 255, 255, 0.55) !important;
+      }
+
+      & .urlbarView-favicon {
+        fill: rgba(255, 255, 255, 0.85) !important;
+      }
+    }
+
+    & .urlbarView-favicon {
+      background-color: transparent !important;
+      border-radius: 0 !important;
+      width: 16px !important;
+      height: 16px !important;
+      min-width: 16px !important;
+      padding: 0 !important;
+    }
+
+    & .urlbarView-row :is(.urlbarView-title,
+      .urlbarView-url,
+      .urlbarView-action,
+      .urlbarView-title-separator,
+      .urlbarView-tags,
+      .urlbarView-title strong) {
+      font-size: var(--zia-text-size) !important;
+    }
+
+    & .urlbarView-row :is(.urlbarView-title,
+      .urlbarView-url,
+      .urlbarView-action,
+      .urlbarView-title-separator,
+      .urlbarView-tags) {
+      font-weight: var(--zia-tab-weight) !important;
+    }
+
+    & .urlbarView-row :is(.urlbarView-title, .urlbarView-url, .urlbarView-action) strong {
+      font-weight: var(--zia-tab-weight) !important;
+    }
+
+    & .urlbarView-row :is(.urlbarView-title, .urlbarView-title strong) {
+      color: rgb(255, 255, 255) !important;
+    }
+
+    & .urlbarView-row :is(.urlbarView-url, .urlbarView-action, .urlbarView-title-separator) {
+      color: rgba(255, 255, 255, 0.55) !important;
+    }
+
+    & .urlbarView-row :is(.urlbarView-url, .urlbarView-action, .urlbarView-title-separator, .urlbarView-tags) strong {
+      color: inherit !important;
+    }
+
+    & :is(.urlbarView-button-result-menu, .urlbarView-result-menu-button, .urlbarView-button-menu) {
+      display: none !important;
+    }
+
+    & :is(.urlbarView-action.urlbarView-switchToTab, .urlbarView-row[type="switchtab"] .urlbarView-action) {
+      display: none !important;
+    }
+
+    /* An open tab says so: a small "Switch to tab" tag at the end of its row
+       (Firefox's own action text is hidden above), pinned to the row's end so
+       a long title can't push it out of view (a sliver of it showed there) */
+    & .urlbarView-row[type="switchtab"] .urlbarView-row-inner {
+      position: relative;
+      padding-inline-end: 104px !important;
+    }
+
+    & .urlbarView-row[type="switchtab"] .urlbarView-row-inner::after {
+      content: "Switch to tab";
+      position: absolute;
+      inset-inline-end: 8px;
+      top: 50%;
+      translate: 0 -50%;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background-color: color-mix(in srgb, currentColor 10%, transparent);
+      color: color-mix(in srgb, currentColor 60%, transparent);
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 16px;
+      white-space: nowrap;
+    }
+
+    & :is(.urlbarView, .urlbarView-results, #urlbar-results) {
+      padding-inline: 0 !important;
+      padding-block: 0 !important;
+      margin-inline: 0 !important;
+    }
+
+    /* (outside the list's scroll, as the box around it had it till Zen 1.23.3 took that box out) */
+    & #urlbar-results {
+      margin-block: var(--zia-pop-list-pad) !important;
+      /* Zen's 244px fit under 7 of Zia's taller rows, so most searches scrolled and
+         arrowing down hid the top row under the typing box; still scrolls on a short window */
+      max-height: 70vh !important;
+    }
+
+    & .urlbarView {
+      margin-block-end: calc(-1 * var(--zia-pop-bottom-trim)) !important;
+    }
+
+    /* When the list scrolls it hangs past the pop-up by the trim. Cut it off
+       exactly at the pop-up's edge, so rows run right up to it mid-scroll, and
+       add the hidden amount back as space at the end, so the last row scrolls
+       clear with the same gap below it as at the sides. */
+    :root[zia-pop-scrolls="true"] & .urlbarView {
+      clip-path: inset(0 0 var(--zia-pop-bottom-trim) 0);
+    }
+
+    :root[zia-pop-scrolls="true"] & #urlbar-results::after {
+      content: "";
+      display: block;
+      height: var(--zia-pop-bottom-trim);
+    }
+
+    --urlbarView-item-inline-padding: 8px !important;
+
+    & :is(.urlbarView, .urlbarView-results, #urlbar-results) {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-inline: 0 !important;
+    }
+
+    & :is(.urlbarView-results, #urlbar-results) {
+      border-block: 0 !important;
+    }
+
+    & .urlbarView-row-buttons {
+      display: none !important;
+    }
+
+    & :is(.search-one-offs, #urlbar-one-offs, .search-panel-one-offs-container) {
+      display: none !important;
+    }
+  }
+
+  :is(#urlbar:not([breakout-extend]), .zia-pane-address)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--zia-urlbar-radius);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    --zia-load-width: calc(var(--zia-load-progress, 0) * 100%);
+    --zia-load-p: var(--zia-load-progress, 0);
+    --zia-load-tint: color-mix(in srgb, var(--zia-loading-color) 30%, transparent),
+      color-mix(in srgb, var(--zia-loading-color) 14%, transparent) 50%,
+      transparent 100%;
+    --zia-load-line: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--zia-loading-color) 70%, transparent),
+      var(--zia-loading-color) 85%,
+      color-mix(in srgb, var(--zia-loading-color) 55%, white) 100%
+    );
+    --zia-load-glow: color-mix(in srgb, var(--zia-loading-color) 36%, transparent),
+      color-mix(in srgb, var(--zia-loading-color) 16%, transparent) 35%,
+      color-mix(in srgb, var(--zia-loading-color) 5%, transparent) 70%,
+      transparent 100%;
+    background:
+      radial-gradient(farthest-side at 100% 100%, var(--zia-load-glow))
+        calc(var(--zia-load-p) * 100% + (var(--zia-load-p) - 1) * 180px) 100% / 180px 100% no-repeat,
+      radial-gradient(farthest-side at 0% 100%, var(--zia-load-glow))
+        calc(var(--zia-load-p) * 100% + var(--zia-load-p) * 28px) 100% / 28px 100% no-repeat,
+      radial-gradient(100% 100% at 100% 100%, var(--zia-load-tint))
+        calc(var(--zia-load-p) * 100% + (var(--zia-load-p) - 1) * 240px) 100% / 240px 100% no-repeat,
+      radial-gradient(100% 100% at 0% 100%, var(--zia-load-tint))
+        calc(var(--zia-load-p) * 100% + var(--zia-load-p) * 36px) 100% / 36px 100% no-repeat,
+      var(--zia-load-line) left bottom / var(--zia-load-width) 1.5px no-repeat;
+  }
+
+  :root[zia-loading="true"] #urlbar:not([breakout-extend])::after,
+  :root .zia-pane-address[zia-loading]:not(#zia-none)::after {
+    opacity: 1;
+    animation: zia-loading-shimmer 1.4s ease-in-out infinite;
+  }
+
+  @keyframes zia-loading-shimmer {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.25); }
+  }
+
+  #urlbar .urlbar-input-box {
+    position: relative;
+  }
+
+  /* (shown and hidden, never taken out: brought back with display, the title made Firefox lay
+     the whole window out again, sidebar and all, at every tab switch and every pointing at
+     the bar, as the bar marks itself invalid for a moment as a tab is switched to; #593) */
+  #zia-url-title,
+  #zia-url-plain {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    visibility: hidden;
+    /* (its size is the bar's, never its text's: a new title at each switch laid the
+       whole window out again, sidebar and all, without this) */
+    contain: strict;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    color: var(--toolbar-field-color, currentColor);
+  }
+
+  #zia-url-title > span,
+  #zia-url-plain > span {
+    white-space: pre;
+  }
+
+  #zia-url-title .zia-url-title-rest,
+  #zia-url-plain .zia-url-title-rest {
+    opacity: 0.55;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #urlbar[zia-has-title="true"]:not(:hover):not([focused]):not([breakout-extend]) #zia-url-title {
+    visibility: visible;
+  }
+
+  #urlbar[zia-has-title="true"]:hover:not([focused]):not([breakout-extend]) #zia-url-plain {
+    visibility: visible;
+  }
+
+  #urlbar[zia-has-title="true"]:not([focused]):not([breakout-extend]) .urlbar-input {
+    opacity: 0 !important;
+  }
+
+  /* Optionally, the closed bar shows only the page's title, in the domain's
+     colour (zia.uc.js), and keeps it on hover: the address shows once clicked */
+  @media -moz-pref("zia.urlbar.title-only") {
+    #zia-url-title .zia-url-title-host {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #urlbar[zia-has-title="true"]:hover:not([focused]):not([breakout-extend]) {
+      & #zia-url-title {
+        visibility: visible;
+      }
+
+      & #zia-url-plain {
+        visibility: hidden;
+      }
+    }
+  }
+
+  #urlbar :is(.urlbar-input, #zia-url-title, #zia-url-title span, #zia-url-plain, #zia-url-plain span) {
+    font-weight: var(--zia-tab-weight) !important;
+  }
+
+  /* Zen's own copy button gives way to Zia's paperclip, once it's there */
+  #urlbar:has(#zia-copy-link-button) #zen-copy-url-button {
+    display: none !important;
+  }
+
+  #urlbar #identity-box,
+  #urlbar #page-action-buttons {
+    transition: opacity 0.15s ease !important;
+  }
+
+  #urlbar:not(:hover):not([focused]):not([breakout-extend]) :is(#identity-box, #page-action-buttons) {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* (in the sidebar, Zen's single toolbar, Zen shows and fades each of them itself with
+     the sidebar hovered, as it does the extensions beside them: hidden here as well,
+     only the extensions showed till the bar itself was hovered, then faded in slower) */
+  :root[zen-single-toolbar="true"] #urlbar:not([breakout-extend]) :is(#identity-box, #page-action-buttons) {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  /* Takes the address bar's colour as it changes with the site, like the
+     icons beside it. */
+  #zia-copy-link-button {
+    color: inherit !important;
+  }
+
+  #zia-copy-link-button image {
+    list-style-image: url("chrome://sine/content/zia/icons/ui/paperclip.svg") !important;
+    -moz-context-properties: fill, fill-opacity, stroke, stroke-opacity;
+    fill: currentColor;
+  }
+
+  #zia-copy-link-button[zia-copied] image {
+    list-style-image: url("chrome://sine/content/zia/icons/ui/check.svg") !important;
+  }
+
+  /* (Dia's tile, measured: 22 square with a 3.5px corner, 26px from one icon
+     to the next. At 26 square it nearly filled the bar's height, with three
+     times as much room to its right; Zen's 8px corner made it near round) */
+  #urlbar :is(#zia-copy-link-button, #zen-site-data-icon-button) {
+    width: 22px !important;
+    min-width: 22px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    border-radius: 3.5px !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+    align-items: center !important;
+    align-self: center !important;
+  }
+
+  #urlbar #zen-site-data-icon-button {
+    margin-inline-start: 3px !important;
+  }
+
+  /* Firefox's own buttons there (translate, reader view, the star...), when
+     they show, as the same tile: they had Firefox's rounder, brighter one
+     (only at least 22 wide, so the translate one's language still fits) */
+  #urlbar #page-action-buttons > .urlbar-page-action:not(#zia-copy-link-button, #zen-site-data-icon-button) {
+    min-width: 22px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    border-radius: 3.5px !important;
+    padding-block: 0 !important;
+    margin-inline-start: 3px !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+    align-items: center !important;
+    align-self: center !important;
+
+    &:is(:hover, [open]) {
+      background-color: color-mix(in srgb, currentColor 7%, transparent) !important;
+    }
+  }
+
+  /* (Dia's tile is about 7% over the bar, measured; Zen's was several times
+     that. The icon's own ink, so it's dark on a light bar) */
+  #urlbar :is(#zia-copy-link-button, #zen-site-data-icon-button):is(:hover, [open]) {
+    background-color: color-mix(in srgb, currentColor 7%, transparent) !important;
+  }
+
+  /* (Dia's icons in them a touch smaller than the toolbar's 16px) */
+  #urlbar #zia-copy-link-button image {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  #zia-copy-link-button[hidden],
+  #urlbar[breakout-extend]:not([zia-classic]) #zia-copy-link-button {
+    display: none !important;
+  }
+
+  #urlbar *:active,
+  #urlbar *:active > image {
+    scale: 1 !important;
+    transform: none !important;
+  }
+
+  #zen-site-data-icon-button image {
+    list-style-image: url("chrome://sine/content/zia/icons/site-settings.svg") !important;
+  }
+}
+
+#zen-toggle-compact-mode,
+#PanelUI-menu-button {
+  padding-inline: 1px !important;
+  margin-inline: 0 !important;
+}
+
+:root[zen-little-window="true"] #zen-toggle-compact-mode {
+  visibility: collapse !important;
+  display: none !important;
+  min-width: 0 !important;
+  width: 0 !important;
+  max-width: 0 !important;
+}
+
+/* The ⋯ menu (Firefox's app menu) shows at the end of the toolbar; it can be
+   hidden in Zia's settings, as Dia and Arc have none. Hidden, it's kept in its
+   place at no width rather than taken out: Firefox's notices (an update ready,
+   an add-on added) still point at it, and opened from the keyboard the menu
+   still has its corner. */
+@media not -moz-pref("zia.toolbar.menu-button") {
+  #PanelUI-button {
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+#zen-toggle-compact-mode {
+  list-style-image: url("chrome://sine/content/zia/icons/sidebar.svg") !important;
+}
+
+/* the same shade as back, forward and reload (Zen's toolbar buttons are a
+   little softer than the text, which these otherwise took) */
+:is(#zen-toggle-compact-mode, #PanelUI-menu-button, #PanelUI-menu-button[open]) .toolbarbutton-icon {
+  fill: var(--toolbarbutton-icon-fill, currentColor) !important;
+}
+
+#back-button {
+  list-style-image: url("chrome://sine/content/zia/icons/back.svg") !important;
+}
+
+#forward-button {
+  list-style-image: url("chrome://sine/content/zia/icons/forward.svg") !important;
+}
+
+#reload-button {
+  list-style-image: url("chrome://sine/content/zia/icons/reload-arc.svg") !important;
+}
+
+#stop-button {
+  list-style-image: url("chrome://sine/content/zia/icons/stop.svg") !important;
+}
+
+/* (the buttons themselves not in the sidebar's address bar, Zen's single toolbar, where
+   Zen fades them in and out with the site and copy buttons: still, they showed and went
+   at once, before those) */
+:root:not([zen-single-toolbar="true"]) #nav-bar :is(
+  .unified-extensions-item,
+  .webextension-browser-action,
+  toolbarbutton[id$="-browser-action"],
+  toolbarbutton[id$="-BAP"]
+),
+#nav-bar :is(
+  .unified-extensions-item,
+  .webextension-browser-action,
+  toolbarbutton[id$="-browser-action"],
+  toolbarbutton[id$="-BAP"]
+)::before,
+#nav-bar :is(
+  .unified-extensions-item,
+  .webextension-browser-action,
+  toolbarbutton[id$="-browser-action"],
+  toolbarbutton[id$="-BAP"]
+) :is(
+  .toolbarbutton-icon,
+  .toolbarbutton-badge-stack,
+  .toolbarbutton-badge,
+  .unified-extensions-item-action-button
+) {
+  transition: none !important;
+  animation: none !important;
+}
+
+:root #zen-appcontent-navbar-wrapper {
+  color-scheme: dark !important;
+  color: rgb(251, 251, 254) !important;
+  --zia-toolbar-ink: rgb(251, 251, 254);
+  --toolbox-textcolor: rgb(251, 251, 254) !important;
+  --toolbar-color: rgb(251, 251, 254) !important;
+  --toolbar-field-color: rgb(251, 251, 254) !important;
+  --zen-toolbar-element-bg: rgba(255, 255, 255, 0.06) !important;
+  --zen-toolbar-element-bg-hover: rgba(255, 255, 255, 0.1) !important;
+}
+
+:root[zia-site-dark="true"] #zen-appcontent-navbar-wrapper {
+  color: var(--zia-dark-ink, rgb(251, 251, 254)) !important;
+  --toolbox-textcolor: var(--zia-dark-ink, rgb(251, 251, 254)) !important;
+  --toolbar-color: var(--zia-dark-ink, rgb(251, 251, 254)) !important;
+  --toolbar-field-color: var(--zia-dark-ink, rgb(251, 251, 254)) !important;
+  /* the buttons and extension icons in the address's own ink, so they all
+     match (they were whiter than the address) */
+  --toolbarbutton-icon-fill: var(--zia-dark-ink, rgb(251, 251, 254)) !important;
+  --zia-toolbar-ink: var(--zia-dark-ink, rgb(251, 251, 254));
+
+  & toolbarbutton:not(.webextension-browser-action, [id$="-browser-action"], [id$="-BAP"]) {
+    color: var(--zia-dark-ink, rgb(251, 251, 254)) !important;
+    fill: var(--zia-dark-ink, rgb(251, 251, 254)) !important;
+    fill-opacity: 1 !important;
+  }
+}
+
+:root[zia-site-dark="true"] :is(#zia-url-title, #zia-url-plain) .zia-url-title-rest {
+  opacity: 0.36;
+}
+
+/* Strong mid colours (a bright red): the toolbar's text and buttons are
+   full white, and the dimmed end of the address a lot less dim. */
+:root[zia-site-mid="true"] #zen-appcontent-navbar-wrapper {
+  color: rgb(255, 255, 255) !important;
+  --toolbox-textcolor: rgb(255, 255, 255) !important;
+  --toolbar-color: rgb(255, 255, 255) !important;
+  --toolbar-field-color: rgb(255, 255, 255) !important;
+  --toolbarbutton-icon-fill: rgb(255, 255, 255) !important;
+  --zia-toolbar-ink: rgb(255, 255, 255);
+  --zen-toolbar-element-bg-hover: rgba(0, 0, 0, 0.14) !important;
+
+  & toolbarbutton:not(.webextension-browser-action, [id$="-browser-action"], [id$="-BAP"]) {
+    color: rgb(255, 255, 255) !important;
+    fill: rgb(255, 255, 255) !important;
+    fill-opacity: 1 !important;
+  }
+
+  & #PersonalToolbar :is(.toolbarbutton-text, .toolbarbutton-icon) {
+    opacity: 1 !important;
+  }
+}
+
+:root[zia-site-mid="true"] :is(#zia-url-title, #zia-url-plain) .zia-url-title-rest {
+  opacity: 0.78;
+}
+
+:root[zia-site-light="true"] #zen-appcontent-navbar-wrapper {
+  color-scheme: light !important;
+  color: var(--zia-light-ink) !important;
+  --toolbox-textcolor: var(--zia-light-ink) !important;
+  --toolbar-color: var(--zia-light-ink) !important;
+  --toolbar-field-color: var(--zia-light-ink) !important;
+  /* the buttons in the same ink as the address, as in Dia */
+  --toolbarbutton-icon-fill: var(--zia-light-ink) !important;
+  --zia-toolbar-ink: var(--zia-light-ink);
+  --zen-toolbar-element-bg: rgba(0, 0, 0, 0.06) !important;
+  --zen-toolbar-element-bg-hover: rgba(0, 0, 0, 0.1) !important;
+}
+
+:root[zia-site-light="true"] :is(#zia-url-title, #zia-url-plain) .zia-url-title-rest {
+  /* (the ink is already the softer brown-grey, so less dim than on dark) */
+  opacity: 0.7;
+}
+
+:root[zia-site-light="true"] #zen-appcontent-navbar-wrapper toolbarbutton:not(.webextension-browser-action, [id$="-browser-action"], [id$="-BAP"]) {
+  color: var(--zia-light-ink) !important;
+  fill: var(--zia-light-ink) !important;
+  /* full strength, or the thin strokes read lighter than the address */
+  fill-opacity: 1 !important;
+}
+
+/* Extension icons that take the toolbar's colour (Zia's own icons given to
+   an extension, and extensions' single-colour icons) in the same shade as
+   reload, back and the sidebar button beside them (the toolbar's icon
+   colour, a little softer than the address), at full strength: they came
+   out fainter, and then, in the address's ink, brighter */
+#zen-appcontent-navbar-wrapper :is(.webextension-browser-action, toolbarbutton[id$="-browser-action"], toolbarbutton[id$="-BAP"]),
+#zen-appcontent-navbar-wrapper :is(.webextension-browser-action, toolbarbutton[id$="-browser-action"], toolbarbutton[id$="-BAP"]) :is(.toolbarbutton-icon, .toolbarbutton-badge-stack) {
+  fill: var(--toolbarbutton-icon-fill, var(--zia-toolbar-ink, currentColor)) !important;
+  stroke: var(--toolbarbutton-icon-fill, var(--zia-toolbar-ink, currentColor)) !important;
+  fill-opacity: 1 !important;
+  stroke-opacity: 1 !important;
+}
+
+/* Every icon in the toolbar (reload, back, the sidebar button, the menu,
+   extensions) in the address's own ink, as in Dia: Zen draws them in each
+   button's text colour at 70%, a step dimmer than the address, and
+   extensions' text colour had stayed plain white, so theirs were brighter */
+#zen-appcontent-navbar-wrapper toolbarbutton {
+  --toolbarbutton-icon-fill: var(--zia-toolbar-ink, currentColor) !important;
+}
+
+#zen-appcontent-navbar-wrapper :is(.webextension-browser-action, toolbarbutton[id$="-browser-action"], toolbarbutton[id$="-BAP"]) {
+  color: var(--zia-toolbar-ink, currentColor) !important;
+}
+
+/* Extension buttons in the toolbar spaced as Zen's own beside them: each
+   took 2px either side the others didn't, so the gaps grew wherever an
+   extension sat (31px a button, as share, back and the menu take) */
+#zen-appcontent-navbar-wrapper #nav-bar-customization-target > :is([id$="-browser-action"], [id$="-BAP"]) {
+  margin-inline: 0.5px !important;
+}
+
+@media -moz-pref("zia.urlbar.zia-look") {
+  :root #urlbar[breakout-extend]:not([zia-classic]) {
+    color-scheme: dark !important;
+    color: rgb(251, 251, 254) !important;
+    --toolbar-field-color: rgb(251, 251, 254) !important;
+    --toolbar-field-focus-color: rgb(251, 251, 254) !important;
+
+    & .urlbar-input {
+      color: rgb(251, 251, 254) !important;
+    }
+
+    & .urlbar-icon {
+      color: rgb(251, 251, 254) !important;
+      fill: currentColor !important;
+    }
+  }
+
+  /* The "paste the copied link" suggestion: just the link, without the
+     search engine's name in a chip at the far right */
+  .urlbarView-row:is([type="clipboard"], :has(.urlbarView-favicon[src*="clipboard"])) :is(.urlbarView-action, .urlbarView-button:not(.urlbarView-button-result-menu)) {
+    display: none !important;
+  }
+
+  /* "Switch to tab:" (and the like) in the address itself, the address's own
+     size rather than Zen's 14px */
+  #urlbar[breakout-extend]:not([zia-classic]) :is(#urlbar-label-box, #urlbar-label-box > *) {
+    font-size: var(--zia-text-size) !important;
+    font-weight: var(--zia-tab-weight) !important;
+  }
+
+  /* Optional: the address bar's text centred in it (off: from the left).
+     Only the toolbar's: the floating bar mid-window (Zen's new tab bar, or
+     its own setting) is a search box, and starts from the left. */
+  @media -moz-pref("zia.urlbar.center-text") {
+    #urlbar:not([zen-floating-urlbar="true"]) :is(.urlbar-input, #zia-url-title, #zia-url-plain) {
+      text-align: center !important;
+      justify-content: center !important;
+    }
+
+    /* ...on the toolbar's middle rather than the bar's, padded on one side by
+       twice the gap between them (zia.uc.js) */
+    /* (opened as well, so the text stays where it was as the bar is clicked: centred in
+       the opened bar instead, it jumped aside, #443) */
+    #urlbar:not([zen-floating-urlbar="true"]) :is(.urlbar-input, #zia-url-title, #zia-url-plain) {
+      padding-left: max(0px, 2 * var(--zia-center-shift, 0px)) !important;
+      padding-right: max(0px, -2 * var(--zia-center-shift, 0px)) !important;
+    }
+
+    /* Optionally only while it's closed: opened, the typing starts from the left,
+       in line with the rows under it (#446) */
+    @media -moz-pref("zia.urlbar.center-text.pop-up-left") {
+      #urlbar[breakout-extend]:not([zen-floating-urlbar="true"]) :is(.urlbar-input, #zia-url-title, #zia-url-plain) {
+        text-align: start !important;
+        justify-content: flex-start !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+    }
+  }
+}
+
+/* Zen's own address bar: Zia's parts of it put away, Zen's back */
+@media not -moz-pref("zia.urlbar.zia-look") {
+  #urlbar :is(#zia-url-title, #zia-url-plain, #zia-copy-link-button) {
+    display: none !important;
+  }
+}
+
+/* Answers in the pop-up, the result in larger type: maths, units and time
+   zones (Firefox's rows) and colours (Zia's, with a swatch) */
+.urlbarView-row:is([dynamicType="calculator"], [dynamicType="unitConversion"], [dynamicType="ziaColour"]) strong {
+  font-size: 1.2em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.urlbarView-dynamic-ziaColour-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.urlbarView-dynamic-ziaColour-swatch {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.25), 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.urlbarView-dynamic-ziaColour-forms {
+  opacity: 0.55;
+  font-size: 0.92em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

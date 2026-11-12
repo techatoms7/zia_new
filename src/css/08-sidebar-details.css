@@ -1,0 +1,215 @@
+/* the address in the toolbar's ink (with Zia's address bar; Zen's keeps
+   its own, softer) */
+@media -moz-pref("zia.urlbar.zia-look") {
+  #urlbar:not([breakout-extend]) .urlbar-input {
+    color: rgb(255, 255, 255) !important;
+  }
+  :root[zia-site-dark="true"] #urlbar:not([breakout-extend]) .urlbar-input {
+    color: var(--zia-dark-ink, rgb(251, 251, 254)) !important;
+  }
+
+  :root[zia-site-light="true"] #urlbar:not([breakout-extend]) .urlbar-input {
+    color: var(--zia-light-ink) !important;
+  }
+}
+
+:is(zen-folder, tab-group:not([split-view-group])) > .tab-group-label-container > label,
+:is(zen-folder, tab-group:not([split-view-group]))[collapsed] > .tab-group-label-container > label {
+  color: rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+}
+
+:root:not(#zia-none) :is(zen-folder[zia-folder-color], tab-group:not([split-view-group])) > .tab-group-label-container > label {
+  color: color-mix(in srgb, var(--zia-folder-swatch, white) var(--zia-folder-name-tint), white) !important;
+}
+
+:root:not(#zia-none) :is(zen-folder[zia-folder-color], tab-group:not([split-view-group])):hover > .tab-group-label-container > label {
+  color: color-mix(in srgb, var(--zia-folder-swatch, white) var(--zia-folder-name-tint-hover), white) !important;
+}
+
+#zen-workspaces-button {
+  gap: 0 !important;
+
+  /* a space with no icon is a dot in a narrow button, so a row of dots
+     sits close together; beside a space with an icon it keeps a little
+     room from it (it sat squashed against the icon) */
+  & toolbarbutton:has(> .zen-workspace-icon[no-icon="true"]) {
+    min-width: 0 !important;
+    width: 12px !important;
+    max-width: 12px !important;
+    height: 20px !important;
+    filter: none !important;
+    opacity: 1 !important;
+    background: transparent !important;
+
+    & > .zen-workspace-icon[no-icon="true"] {
+      width: 6px !important;
+      height: 6px !important;
+      background: rgba(255, 255, 255, 0.28) !important;
+    }
+
+    &[active="true"] > .zen-workspace-icon[no-icon="true"] {
+      background: rgba(255, 255, 255, 0.92) !important;
+    }
+
+    &:hover:not([active="true"]) > .zen-workspace-icon[no-icon="true"] {
+      background: rgba(255, 255, 255, 0.5) !important;
+    }
+  }
+
+  & toolbarbutton:not(:has(> .zen-workspace-icon[no-icon="true"])) + toolbarbutton:has(> .zen-workspace-icon[no-icon="true"]) {
+    margin-inline-start: 6px !important;
+  }
+
+  & toolbarbutton:has(> .zen-workspace-icon[no-icon="true"]) + toolbarbutton:not(:has(> .zen-workspace-icon[no-icon="true"])) {
+    margin-inline-start: 6px !important;
+  }
+}
+
+.pinned-tabs-container-separator toolbarseparator {
+  background: rgba(255, 255, 255, 0.13) !important;
+}
+
+.tabbrowser-tab:not([zen-essential], [visuallyselected]):hover > .tab-stack > .tab-background {
+  background: var(--zia-tab-hover-bg) !important;
+}
+
+:root[zen-sidebar-expanded="true"] #tabbrowser-tabs {
+  overflow-clip-margin: 16px !important;
+}
+
+:root[zen-sidebar-expanded="true"]:is([swipe-gesture="true"], [animating-background="true"]) #tabbrowser-tabs,
+/* (Zen 1.23 marks the sidebar and the tab list itself, not the window) */
+:root[zen-sidebar-expanded="true"] #navigator-toolbox[animating-background] #tabbrowser-tabs,
+:root[zen-sidebar-expanded="true"] #tabbrowser-tabs:has(#tabbrowser-arrowscrollbox[swipe-gesture]) {
+  overflow-clip-margin: var(--zen-toolbox-padding) !important;
+}
+
+/* The tab list draws a little past its edges for the selected tab's glow,
+   which let the space beside the one shown peek in at the sidebar's edge:
+   its coloured folders showed as thin coloured slivers down the side (seen
+   on Windows, where the spaces sit closer). A space Zen has put to one side
+   (not shown, at a whole step away) is hidden while it rests there; while
+   it slides in or follows a swipe it's somewhere in between, and shows.
+   Faded out whole rather than only hidden: a folder's name inside sets
+   itself visible again, which a hidden space can't stop, so the coloured
+   folders still showed. */
+zen-workspace:not([active]):is([style*="translateX(1"], [style*="translateX(2"], [style*="translateX(3"], [style*="translateX(4"], [style*="translateX(5"], [style*="translateX(6"], [style*="translateX(7"], [style*="translateX(8"], [style*="translateX(9"], [style*="translateX(-"])[style*="00%)"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Room at the end of the tab list for the last tab's glow, which the list
+   would otherwise cut off. The list's inner scroll box ends where the last
+   row does and doesn't take padding of its own, so the room goes at the end
+   of the tabs inside it, and scrolls with them. (It used to be padding on
+   the list itself too, which sat outside the scrolling: with a long list it
+   showed as an empty band above the media cards.) */
+.zen-workspace-normal-tabs-section {
+  padding-bottom: calc(var(--zia-active-glow-blur) + var(--zia-active-glow-spread) + var(--zia-active-glow-reach)) !important;
+}
+
+/* No scrollbars anywhere in the sidebar; it still scrolls */
+#navigator-toolbox,
+#navigator-toolbox *,
+#navigator-toolbox arrowscrollbox::part(scrollbox),
+zen-workspace,
+zen-workspace *,
+zen-workspace arrowscrollbox::part(scrollbox) {
+  scrollbar-width: none !important;
+}
+
+:is(zen-folder, tab-group:not([split-view-group])) > .tab-group-label-container {
+  font-weight: var(--zia-folder-weight) !important;
+}
+
+:root[zen-sidebar-expanded="true"] .tabbrowser-tab:not([zen-essential]) > .tab-stack > :is(.tab-background, .tab-content) {
+  margin-inline-end: var(--zia-tab-right-fix, 0px) !important;
+}
+
+:root[zen-sidebar-expanded="true"] :is(zen-folder, tab-group:not([split-view-group])) .tabbrowser-tab:not([zen-essential]) > .tab-stack > :is(.tab-background, .tab-content) {
+  margin-inline-end: calc(var(--zia-folder-right-fix, 0px) + var(--zia-folder-inner-gap, 5px)) !important;
+}
+
+:root[zen-sidebar-expanded="true"] :is(zen-folder, tab-group:not([split-view-group])) :is(zen-folder, tab-group:not([split-view-group])) .tabbrowser-tab:not([zen-essential]) > .tab-stack > :is(.tab-background, .tab-content) {
+  margin-inline-end: calc(var(--zia-folder-right-fix, 0px) + 2 * var(--zia-folder-inner-gap, 5px)) !important;
+}
+
+:root[zen-sidebar-expanded="true"] :is(zen-folder, tab-group:not([split-view-group])) :is(zen-folder, tab-group:not([split-view-group])) :is(zen-folder, tab-group:not([split-view-group])) .tabbrowser-tab:not([zen-essential]) > .tab-stack > :is(.tab-background, .tab-content) {
+  margin-inline-end: calc(var(--zia-folder-right-fix, 0px) + 3 * var(--zia-folder-inner-gap, 5px)) !important;
+}
+
+:root[zen-sidebar-expanded="true"] :is(zen-folder, tab-group:not([split-view-group])) > .tab-group-label-container {
+  padding-inline-end: calc(var(--zia-folder-right-fix, 0px) + var(--zia-folder-inner-gap, 5px)) !important;
+}
+
+:root[zen-sidebar-expanded="true"] :is(zen-folder, tab-group:not([split-view-group])) :is(zen-folder, tab-group:not([split-view-group])) > .tab-group-label-container {
+  padding-inline-end: calc(var(--zia-folder-right-fix, 0px) + 2 * var(--zia-folder-inner-gap, 5px)) !important;
+}
+
+/* As in Dia, a tab that isn't the one you're on is a little dimmer, hovered
+   or not, and goes white once selected */
+.tabbrowser-tab:not([zen-essential]) .tab-label-container {
+  color: rgba(255, 255, 255, 0.8) !important;
+  opacity: 1 !important;
+}
+
+.tabbrowser-tab:not([zen-essential])[visuallyselected] .tab-label-container {
+  color: rgb(255, 255, 255) !important;
+}
+
+/* Renaming a tab or folder: the name in the box stays the size it is in the
+   list */
+#tab-label-input {
+  font-size: var(--zia-text-size) !important;
+}
+
+/* ...and empty, it says it's waiting for one (zia.uc.js), in the name's own ink, dimmed */
+#tab-label-input::placeholder {
+  color: currentColor !important;
+  opacity: 0.45 !important;
+}
+
+/* Optional (zia.spaces.collapse-icons): the spaces at the foot of the sidebar always as Zen
+   draws them when they don't fit, each but the open one a dot, its icon shown as it's
+   pointed at; narrow either way, so the row doesn't shift (#513) */
+@media -moz-pref("zia.spaces.collapse-icons") {
+  #zen-workspaces-button toolbarbutton:not([active="true"], [dragged="true"]):not(:has(> .zen-workspace-icon[no-icon="true"])) {
+    min-width: 0 !important;
+    width: 16px !important;
+    max-width: 16px !important;
+    background: transparent !important;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 4px;
+      height: 4px;
+      border-radius: 99px;
+      translate: -50% -50%;
+      background: color-mix(in srgb, var(--zen-primary-color) 10%, light-dark(rgba(0, 0, 0, 0.4), rgba(255, 255, 255, 0.4)) 90%);
+      opacity: 1;
+      pointer-events: none;
+      transition: opacity 150ms ease-in-out;
+    }
+
+    & .zen-workspace-icon {
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+    }
+
+    &:hover {
+      &::after {
+        opacity: 0;
+      }
+
+      & .zen-workspace-icon {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+}

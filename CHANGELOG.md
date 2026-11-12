@@ -1,0 +1,5606 @@
+# Changelog
+
+Every release of Zia, newest first. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [2.122.5] — 2026-11-11
+
+### Fixed
+
+- The sidebar is see-through again for anyone who'd turned off the "Wallpaper tint" option
+  that Zia 2.104 to 2.106 had: it switched off Zen's see-through window, and once the option
+  went there was nothing left to turn it back on. Zen's own setting comes back once, after a
+  restart of Zen.
+
+## [2.122.4] — 2026-11-11
+
+### Fixed
+
+- Picture-in-picture hides the site name whenever the buttons beside it would run into it,
+  instead of only below 460px wide; in a mid-sized window it showed under Minimise and the
+  tuck button ([#600](https://github.com/z1n-k/zia/issues/600)).
+
+## [2.122.3] — 2026-11-11
+
+### Fixed
+
+- Advanced Tab Groups' groups follow the pointer when dragged, sliding through the list as
+  Zen folders do, and land where they're shown; before, nothing moved under the pointer
+  ([#567](https://github.com/z1n-k/zia/issues/567)). Plain tab groups keep Zen's own drag.
+
+## [2.122.2] — 2026-11-10
+
+### Changed
+
+- Zia is out of beta: it now works with all three of Zen's layouts, Collapsed Sidebar
+  included.
+- The README lists every setting as Zia Settings shows it (Links open in Glance, Pull to
+  refresh, Page pictures, Blur over video, Space name and icon, No emoji in the player), and
+  no longer the removed Sidebar see-through.
+
+## [2.122.1] — 2026-11-10
+
+### Fixed
+
+- Collapsed sidebar: with a small page gap (Zen's set to 1px, say) the essentials sat pressed
+  against the window's top. The column now starts at least as far down as the essentials sit
+  from its sides.
+- Collapsed sidebar: pointing at a folder showed its Delete Folder button squeezed beside the
+  icon; it's hidden in the icon column (the folder's menu still deletes it).
+- The window buttons and the space's name now stay level with the toolbar's buttons whatever
+  the page gap: with Zen's gap set below 6px, or the page edge to edge, they sat lower or
+  higher than the back and reload buttons.
+
+## [2.122.0] — 2026-11-10
+
+### Added
+
+- Links open in Glance (#592): a new setting under Tabs and essentials. Links to other sites
+  only, or every link, open in Glance; Shift+click opens a new tab instead. Links to a place
+  on the same page, downloads and mail links work as usual, and a link clicked inside a
+  Glance stays in it.
+- Zen's Collapsed Sidebar layout: the window buttons sit at the start of the toolbar, the icon
+  column starts level with the page with the space's icon back in it, icons are centred and
+  the open tab has no clipped glow. In compact mode the column floats below the toolbar.
+
+### Changed
+
+- Music player (#595): play/pause sits between previous and next when the card opens, and the
+  sound bars stay where they are, so pausing no longer means chasing the button.
+
+### Fixed
+
+- Dragging a tab or folder started late, worst on Windows with many tabs (#566, #567): the tab
+  list was rebuilt at the start and end of every drag. It now builds about as much as Zen
+  without Zia.
+- High CPU use (#593): the loading orb drew on every screen refresh while any tab loaded (now 30
+  times a second), the drift round an open essential did the same (now 15), page pictures were
+  saved on every tab switch (now once a minute per page), the address bar's title laid out the
+  whole window on tab switches and hovers, and the top-glow check measured every row.
+- Frame drops switching spaces and toggling compact mode (#594): the music card's colour was
+  worked out on every frame of a space change, once per colour stop of a gradient theme, and
+  compact mode measured the sidebar panel on every frame of its slide.
+- With "Toolbar in the site's colour" off, compact mode's toolbar stayed near-black (#337); it
+  now takes the theme's colour there too.
+- Customize Collapsed Sidebar's top and bottom margins in compact mode are kept (#544).
+- Undo close (Cmd/Ctrl+Z) on Zen 1.24, which removed the function it called first.
+
+## [2.121.6] — 2026-11-08
+
+### Fixed
+
+- Scrolling Reddit's chat still reloaded the page: its messages scroll inside a web
+  component, which hides what's inside it, so pull to refresh saw nothing there that
+  scrolls. It now looks inside components too, closed ones included.
+- Zia's in-page helper is versioned again, so a newer one always loads after an update and a
+  restart, rather than one kept from before.
+
+## [2.121.5] — 2026-11-08
+
+### Fixed
+
+- Scrolling a chat (or any box that scrolls on its own inside a page) could reload the page:
+  pull to refresh only stepped aside for a box scrolled away from its top, which missed chats
+  that scroll from the bottom, and lists at their top. A pull now only counts where nothing
+  under the pointer scrolls but the page itself.
+
+## [2.121.4] — 2026-11-07
+
+### Fixed
+
+- With the address bar near the window's top (a shorter toolbar, or the page edge to edge),
+  its text dropped a few pixels as the pop-up opened: the pop-up was moved down to stay in
+  the window, text and all. Now only its background is cut back to the window's top edge, and
+  the text stays exactly where it was in the closed bar.
+
+### Changed
+
+- Over a playing video, Zia's glass (address pop-up, find bar, hover cards, compact sidebar,
+  swipe arrow, screenshot buttons) is solid again, as before 2.118.0. Since 2.118.0 it was
+  see-through without the blur there, which kept the video's colours but left the moving
+  video showing behind the text. Solid keeps both the video's colours and the text easy to
+  read; "Blur over video" in Settings still keeps the glass for anyone who prefers it.
+
+## [2.121.3] — 2026-11-07
+
+### Fixed
+
+- Tucked picture-in-picture shook as it slid back in (#576): macOS reports a window's move a
+  moment late, and Zia read the late part as the window being dragged, let go of the tuck and
+  tucked it again with a spring. A finished slide now keeps the place it was sent to.
+- Peeking out from a side, picture-in-picture now reaches the screen's very edge, not the
+  usable area's (which stops short of it where a hidden Dock waits). The pointer pushed to
+  the edge counted as leaving it, so it tucked away, and could peek and tuck over and over.
+  Thanks kcussiefil.
+
+## [2.121.2] — 2026-11-07
+
+### Fixed
+
+- Pull to refresh still paused before reloading: a real trackpad pull goes on coasting for a
+  second or more once the fingers lift, and Zia waited for the coast to end. It now lets go as
+  the coast begins (the movement dropping well below its peak), so the page reloads about a
+  tenth of a second into the pull, and it's full after a longer pull (200 px), as a real
+  pull passes that at once. The reloaded page no longer reads the rest of the coast as
+  another pull and reloads again.
+
+## [2.121.1] — 2026-11-07
+
+### Fixed
+
+- Pull to refresh's bubble stopped part of the way down and sat there for a second or two,
+  and often didn't reload: once the fingers lift, macOS goes on sending scroll events of next
+  to nothing while the page bounces back, which kept the pull going, and Firefox passes on
+  less of a pull than expected once the page is bouncing. Only real movement keeps a pull
+  going now, so the bubble lets go as soon as you do, and it's full after a shorter pull.
+
+## [2.121.0] — 2026-11-07
+
+### Added
+
+- Pull to refresh: at the top of a page, keep scrolling up with the trackpad (or a Magic
+  Mouse) and a bubble with the refresh arrow comes down, its arrow turning as you pull; let
+  go once it's full and the page reloads, stop short and it goes. A scroll that only flicks
+  up to the top never reloads. "Pull to refresh" in Settings turns it off.
+
+### Fixed
+
+- Nothing a page reported reached the window (Firefox 159 dropped what Zia used to find it),
+  so the toolbar's site colour didn't follow a page as it scrolled until something else
+  changed. It follows again.
+
+## [2.120.4] — 2026-11-07
+
+### Fixed
+
+- A tab's close (x) and unload (-) marks came out bigger and bolder on Zen 1.24.1b, which
+  draws them from two lines instead of icons. They're back to the icons' size in Zia's
+  buttons.
+
+## [2.120.3] — 2026-11-07
+
+### Fixed
+
+- The hover card's page picture was empty after updating to 2.120.2 until Zen was restarted.
+  It's cut to the card's squircle by its own box again, which works whether or not Zen has
+  restarted since the update, with the gap between the corners still even.
+
+## [2.120.2] — 2026-11-07
+
+### Fixed
+
+- The page picture's top corners still didn't follow the card's on screen: Zia rounds every
+  corner plainly unless a part says otherwise, and the picture didn't, so it came out round
+  inside the card's squircle. It's now painted with the card's own squircle, and the gap
+  between them is even all the way round.
+
+## [2.120.1] — 2026-11-07
+
+### Fixed
+
+- A sleeping tab's hover card had no picture of its page, and after a restart most tabs
+  are asleep. Zia now keeps each tab's picture as you leave it (taken once the browser is
+  idle and saved in the background, the last 400, never in a private window) and shows the
+  last one on a sleeping tab's card.
+- The picture's top corners didn't follow the card's: the picture clipped itself to a plain
+  round corner, not the card's squircle. Now the gap between them is even all the way round.
+
+## [2.120.0] — 2026-11-07
+
+### Added
+
+- Tab hover cards show a picture of the tab's page at the top, as in Dia, the open tab's
+  too: set in from the card's edge by a hair, its corners curving with the card's. On by
+  default, "Page pictures" in Settings under Tabs and essentials turns it off. Before, the
+  picture only showed with Firefox's own hover previews turned on in about:config.
+
+## [2.119.2] — 2026-11-06
+
+### Fixed
+
+- A tab group from Advanced Tab Groups left without a colour showed no folder icon and a
+  dimmed name (#568): the mod gives such a group a transparent colour, and Zia drew the
+  icon and name in it. It now takes Zia's plain folder colour, as other groups without a
+  colour do. Thanks ryee123123.
+
+## [2.119.1] — 2026-11-06
+
+### Fixed
+
+- Dragging a tab lagged more in 2.119.0 than before (#566): its change to move the list
+  once a frame left the dragged tab trailing the pointer where the frames come slower than
+  the moves, as on Windows. That change is undone; 2.119.0's other two (less layout work
+  as a drag starts, and the page measured once a drag) stay. Thanks ryee123123.
+
+## [2.119.0] — 2026-11-06
+
+### Changed
+
+- Tucked picture-in-picture with "shows all of it" on is calmer (#576): it comes out only
+  once the pointer has rested on the strip a moment (a quarter of a second), and tucks
+  away again only once the pointer has been off it a moment, so brushing past or slipping
+  off for an instant no longer slides it out and back. Thanks kcussiefil.
+- Picture-in-picture's controls fade, with the pointer, once it has rested over a playing
+  video for a second and a half, and come back as it moves (#576). They stay while the
+  pointer is on a control, a menu is open, or the video is paused.
+
+### Fixed
+
+- Dragging a tab was slow on Windows (#566): Zia laid the tab list out again for every
+  move Windows sends, several a frame, and at the start of a drag for each box around the
+  tab. It now does that once a frame and once a drag, so a drag starts with about a third
+  of the work and each move costs about half. Thanks ryee123123.
+
+## [2.118.1] — 2026-11-06
+
+### Fixed
+
+- Right-clicking the foot of the sidebar showed two separator lines in a row, under
+  Theme…: Zen hides Set Profile when there are no profiles to pick, but not the line
+  after it. The toolbar's right-click menu now never shows a line next to another, or
+  at either end. Thanks Poumpky.
+
+## [2.118.0] — 2026-11-05
+
+### Added
+
+- Blur over video, in Settings under Look (off by default): Zia's see-through surfaces
+  keep blurring the page while a video shows, for anyone who'd rather have the glass than
+  exact video colours (#573). With it on, a video behind them comes out a little duller,
+  and HDR video loses its HDR.
+
+### Changed
+
+- Over a video, the compact sidebar, hover cards, address pop-up, find bar, swipe arrow
+  and screenshot buttons stay see-through, without the blur, instead of going solid
+  (#573). The video shows through them, and its colours, HDR included, are kept as
+  macOS shows them. Thanks kcussiefil.
+- The gap round the page follows Zen's `zen.theme.content-element-separation` once
+  you've set it; Zia's own 6px is kept over Zen's default. Only 0 was followed before.
+  Thanks effor.
+
+## [2.117.6] — 2026-11-05
+
+### Fixed
+
+- With Zen's see-through pages on (`browser.tabs.allow_transparent_browser`), the
+  toolbar didn't take a website's colour (#542): it came out black, or the colour
+  of the space behind the page, since 2.100.5. Websites are read from their own
+  picture again; Settings, the other about: pages and the empty tab still take what
+  shows through them. Thanks SoaringGecko.
+
+## [2.117.5] — 2026-11-05
+
+### Fixed
+
+- A folder dragged just below a closed folder went inside it, at its end, where it
+  couldn't be seen and was hard to get back out (#567). Dragged past a closed folder, a
+  folder now stays beside it, as its own row; it still goes inside an open folder,
+  dropped among or after its tabs. A tab dragged there still goes into the closed folder.
+
+## [2.117.4] — 2026-11-04
+
+### Fixed
+
+- A video looked a little duller while a hover card, the address pop-up, the find bar,
+  the swipe arrow or the screenshot buttons were open over it on macOS (#569), as it did
+  under the compact sidebar before 2.117.3. To blur the page behind them, Zen has to draw
+  the page itself, and drawn that way a video comes out duller than macOS shows it. While
+  the open tab shows a video on screen, they're all solid now, as the compact sidebar is,
+  so the video keeps its colours; everywhere else they stay see-through. Thanks kcussiefil.
+
+## [2.117.3] — 2026-11-04
+
+### Fixed
+
+- A video looked a little duller while compact mode's sidebar was out on macOS (#564).
+  To blur the page behind the see-through sidebar, Zen has to draw the page itself, and
+  drawn that way a video comes out duller than macOS shows it, playing or paused. While
+  the open tab shows a video on screen, the sidebar (and top toolbar) is now solid, as Zen
+  paints it, so the video keeps its colours; everywhere else it stays see-through. Thanks
+  kcussiefil for spotting it.
+- The "Zia's script isn't running" card no longer shows after an update while the older
+  Zia's script is still running until Zen restarts.
+
+## [2.117.2] — 2026-11-04
+
+### Fixed
+
+- HDR video looked washed out on macOS with Zia on (#561). To blur the page behind its
+  see-through surfaces, Zia had Zen draw the page itself rather than hand it to macOS,
+  and drawn that way an HDR video loses its HDR. Zia now does that only while something
+  see-through is over the page (the address pop-up, a hover card, the find bar, the
+  compact sidebar, the swipe arrow, the screenshot buttons), so videos keep their HDR the
+  rest of the time. Thanks kcussiefil for tracking it down.
+- The address bar's pop-up is dark in a dark theme and light in a light one (#562). It
+  went by the light or dark setting for web pages, so a dark theme on a light system got
+  a white pop-up, and Zen's new-tab bar with it. For the pop-up in your theme's own
+  colour, turn on "The pop-up takes the toolbar's colour as it opens".
+
+## [2.117.1] — 2026-11-03
+
+### Added
+
+- When Zia's script isn't running, a card at the foot of the window says so and how to
+  fix it: in Sine's settings, tick "Enable installing JS from unofficial sources", then
+  restart Zen. Installed from GitHub, Zia needs that for its features to work. The card
+  goes as soon as the script runs, and never shows when it does.
+
+## [2.117.0] — 2026-11-03
+
+### Added
+
+- **The music player leaves emoji out of titles and artist names** (on by default): a
+  stream's "🔴 LIVE 🔴" title reads as plain text. Turn it off in Media to keep them.
+
+### Fixed
+
+- The music player's picture could vanish, leaving an empty frame, when it changed while
+  you were on the playing tab (seen on Twitch, which swaps in the channel's picture). The
+  flip between pictures could stop halfway with the picture turned edge-on; it now always
+  ends facing you.
+
+## [2.116.0] — 2026-11-03
+
+### Added
+
+- **Hidden**: the open space's name and icon can be left off the top of the sidebar
+  altogether, whether or not the space has an icon. The spaces at the foot of the sidebar
+  keep their icons, or their dots with **Space switcher… shows dots** (thanks PowerFactory).
+
+### Changed
+
+- **The open space's name and icon** (Sidebar and folders) is one choice in place of two
+  checkboxes: at the top of the sidebar, at the top as the icon only, above the tabs as
+  Zen does, or hidden. "Show the space's name above the tabs" and "Hide the space's name…
+  keeping its icon" carry over to it after Zen restarts.
+- The space switcher setting says what it does: **Space switcher at the foot of the
+  sidebar shows dots, the open space's icon among them**.
+
+## [2.115.2] — 2026-11-03
+
+### Fixed
+
+- On macOS, with **Hide the space's name** on and a space with no icon, the buttons at
+  the top of the sidebar stay at the row's far end, clear of the traffic lights, as before
+  2.115.1, which drew them in beside them. Only where the window buttons aren't in that
+  row (Windows and Linux) do the ⋯ menu and sidebar button move to its start.
+
+## [2.115.1] — 2026-11-03
+
+### Fixed
+
+- With **Hide the space's name** on and a space with no icon, the buttons at the top of
+  the sidebar sit where Zen and Customize Toolbar put them (the ⋯ menu and sidebar button
+  on the left). The empty space-name area still stretched across the row and pushed them
+  all to the end. On macOS they follow the window buttons as before.
+- In Customize Toolbar, the sidebar's top row is yours to arrange from end to end: the
+  space's name made way only for a narrow box at the end, with nowhere to drop buttons
+  (thanks PowerFactory).
+
+## [2.115.0] — 2026-11-03
+
+### Changed
+
+- A new tab extension's page (Yet another speed dial and the like) comes before
+  **New tabs open your search engine's page**: new tabs open the extension's page, and
+  the search page once it's gone. Zia's replaced it, though only on some starts, so the
+  extension looked broken; the setting now says so
+  ([#543](https://github.com/z1n-k/zia/issues/543), thanks @apoapostolov).
+
+### Removed
+
+- **Sidebar see-through** (added in 2.111.0). It faded Zen's own sidebar colour, not the
+  Liquid Glass it was taken for, which a theme can't draw; Zen's own see-through stays as
+  you set it ([#547](https://github.com/z1n-k/zia/issues/547), thanks @OneGunBullet).
+
+### Fixed
+
+- An open essential taken out of the essentials no longer keeps Ultra's drifting colour:
+  it went on turning round the tab it had become, as two slow lines
+  ([#548](https://github.com/z1n-k/zia/issues/548), thanks @LAutomate-dev).
+
+## [2.114.1] — 2026-10-31
+
+### Fixed
+
+- On Windows in light mode with no space colour, the sidebar is see-through again, the
+  desktop showing through as in Zen itself. 2.103.1's light base, meant for a light space
+  colour, covered it too and left it nearly solid (thanks Poumpky).
+
+## [2.114.0] — 2026-10-30
+
+### Added
+
+- Zia Settings marks the settings added in recent updates with a small blue "New",
+  and the sections holding them with a dot. Each one's mark goes once you've seen
+  it, and searching "new" lists them all.
+
+## [2.113.5] — 2026-10-30
+
+### Fixed
+
+- Clicking a space's name with the open tab in a closed folder: the line under the
+  pinned tabs now really bounces with the tabs below it (2.113.2's left it still).
+
+## [2.113.4] — 2026-10-30
+
+### Fixed
+
+- Zia's picture in the Sine store: the address it pointed to had gone, so the store
+  showed none.
+
+## [2.113.3] — 2026-10-30
+
+### Fixed
+
+- Folders' arrows are back on Zen 1.24, as is the dashed outline where a tab dropped
+  into an empty folder will go. Both had gone blank.
+
+## [2.113.2] — 2026-10-30
+
+### Fixed
+
+- A tab dragged to another space moves into it as the space changes and is dragged
+  on there as before: under the pointer and inside the sidebar until pulled out to
+  the page. It had floated free as Zen's picture, over a split's panes too.
+- Clicking a space's name with the open tab in a closed folder: the line under the
+  pinned tabs bounces with the tabs below it.
+
+## [2.113.1] — 2026-10-30
+
+### Fixed
+
+- A tab dragged to another space (held over its icon) lands there when let go. It
+  had landed back in the space it came from, pinned, or (in 2.113.0) gone back where
+  it was. Once the space changes, Zen's own picture of the tab follows the pointer.
+
+## [2.113.0] — 2026-10-30
+
+### Added
+
+- **Count this install** (on, in Zia Settings): once a day Zia downloads a tiny
+  file from its GitHub release so GitHub can count how many use Zia. Nothing about
+  you or your browsing is sent, and there's no ID. Switch it off any time.
+
+### Fixed
+
+- A tab dragged to another space (held over its icon) stays in sight as the space
+  changes, and lands where you let go; it had vanished for the rest of the drag.
+- Clicking a space's name bounces its pinned tabs shut and open again when the open
+  tab is in a closed folder there; only that tab stayed, and it moved without the
+  bounce.
+
+## [2.112.9] — 2026-10-30
+
+### Changed
+
+- Holding Cmd or Ctrl over the new tab button shows "Paste" and the copied address
+  on one line, the address softer, in place of Zen's two cramped lines.
+- Space routing, now in Zen's Library, is drawn the Zia way: its address field
+  and space menus as the search field, Cancel as Zia's buttons, Add route the one
+  lit button, and calmer headings.
+
+## [2.112.8] — 2026-10-30
+
+### Fixed
+
+- The new tab button's "Paste & Search" preview has room under the name, and the
+  address starts in line with it.
+
+## [2.112.7] — 2026-10-30
+
+### Changed
+
+- Ready for Zen 1.24:
+  - The new pill that takes you back to the open tab, once it's scrolled out of
+    sight, is drawn as one of Zia's tiles.
+  - The new tab button's "Paste & Search" preview (hold Cmd or Ctrl over it)
+    sits under "New Tab".
+  - Reader view's new spot at the foot of the site panel lights up like the
+    buttons along its top.
+
+### Fixed
+
+- Zen 1.24: the remove button on the top section was cut off while editing the
+  Library's sections.
+- Zen 1.24: "Keyboard Shortcuts" in the address bar's commands opens Zen's new
+  shortcuts page (`about:keyboard`), not an empty Settings page.
+- Zen 1.24: the + on the new tab button sits in line with the tabs' icons again,
+  and a pinned tab's address under its name isn't pushed up too far.
+- Zen 1.24: the search fields in the history and bookmarks sidebars keep Zia's
+  soft look; Firefox 159 renamed what they're drawn with.
+
+- The window buttons (minimise, maximise, close) show at the end of the top-right
+  pane's toolbar in split view with compact mode too. Its hidden top toolbar had
+  hidden them along with it ([#526](https://github.com/z1n-k/zia/issues/526),
+  thanks @Arcrous).
+
+## [2.112.6] — 2026-10-29
+
+### Fixed
+
+- **New tabs start in the address bar** works with **Search page in new tabs**:
+  the search page's address is cleared, ready to type. With the setting off, the
+  address bar now lets go of the cursor, so the page's own search box gets it
+  ([#518](https://github.com/z1n-k/zia/issues/518), thanks @thoroughmas).
+
+## [2.112.5] — 2026-10-29
+
+### Added
+
+- Licence files for the code from Libraries.dev (`libraries-dev-LICENSE`) and
+  PiP Tuck Away (`pip-tuck-away-LICENSE`), both MIT.
+
+## [2.112.4] — 2026-10-29
+
+### Added
+
+- **Hide pinned-tab slash** (off by default): no slash between the icon and the
+  name of a pinned tab that's moved off its page. Its icon still takes it back.
+
+### Fixed
+
+- The window's buttons (minimise, maximise, close) show in split view, at the
+  end of the top-right pane's toolbar: they were in the main toolbar, which a
+  split hides ([#524](https://github.com/z1n-k/zia/issues/524), thanks @Arcrous).
+
+## [2.112.3] — 2026-10-28
+
+### Changed
+
+- The README ends at its last section: the credits live with the code they
+  cover.
+
+## [2.112.2] — 2026-10-28
+
+### Fixed
+
+- Several selected tabs dragged together aren't cut off below the end of the
+  tab list: the list closing up round them kept its edge for the drag, while a
+  single tab could go anywhere in the sidebar
+  ([#396](https://github.com/z1n-k/zia/issues/396), thanks @Y4k3d0).
+
+## [2.112.1] — 2026-10-28
+
+### Changed
+
+- The README is rewritten: shorter, up to date, and easier to scan.
+
+### Fixed
+
+- "Full address" shows `https://`: Zia wrote Firefox's `browser.urlbar.trimHttps`
+  as your own choice at every start, which outranked its own default for it, so
+  the scheme stayed hidden. It's put back once, and left to you from then on
+  ([#519](https://github.com/z1n-k/zia/issues/519)).
+
+## [2.112.0] — 2026-10-28
+
+### Added
+
+- **Centred address bar** (Address bar, off by default): the bar itself in the
+  middle of the toolbar, with as much room before it as after, made up on the
+  side with fewer buttons rather than with flexible spaces added by hand
+  ([#515](https://github.com/z1n-k/zia/issues/515), thanks @OneGunBullet).
+- **Collapsed space icons** (Sidebar, off by default): the spaces at the foot of
+  the sidebar as dots, the open one shown, each icon showing as you point at it,
+  as Zen draws them when they don't fit
+  ([#513](https://github.com/z1n-k/zia/issues/513), thanks @OneGunBullet).
+
+### Changed
+
+- The screenshot buttons' card is see-through, the page blurred behind it, as
+  the address pop-up can be, rather than solid in the toolbar's colour
+  ([#516](https://github.com/z1n-k/zia/issues/516), thanks @OneGunBullet).
+- A live stream in the music player (a Kick, Twitch or YouTube live, its
+  channel's picture) has its ring whole, in the picture's colours. With no
+  progress to show it had only the grey track.
+
+### Fixed
+
+- "New tabs start in the address bar" works both ways. On, the search page's
+  address is cleared as it loads: read mid-load, another tab's address passed
+  for something typed and the clearing stopped for good. Off, the address bar
+  lets go of the cursor: the search page's address written into it as it loaded
+  kept it there ([#518](https://github.com/z1n-k/zia/issues/518),
+  [#433](https://github.com/z1n-k/zia/issues/433), thanks @thoroughmas).
+- "Full address" shows the address as it is, `https://` and `www.` and all;
+  Firefox's own `browser.urlbar.trimHttps` decides on the scheme, and a choice of
+  your own there is kept ([#519](https://github.com/z1n-k/zia/issues/519),
+  thanks @Mineros04).
+- The Library's spaces each show in their own light or dark, their tabs and
+  folders too: a light space's card had white text in a dark space, and the
+  other way round ([#514](https://github.com/z1n-k/zia/issues/514), thanks
+  @OneGunBullet).
+- The Library's spaces stop at the Library's edge with the sidebar pinned or
+  hidden alike: how far the page covers the Library is measured now, rather than
+  guessed, which cut them short one way and ran them under the page the other
+  ([#512](https://github.com/z1n-k/zia/issues/512), thanks @OneGunBullet).
+- With the address pop-up's text centred, the opened pop-up opens over the bar
+  rather than off to its left ([#515](https://github.com/z1n-k/zia/issues/515)).
+- With the space's name in the sidebar's top row, the row's buttons stay
+  together at its end, the ⋯ menu with back and reload, rather than the ⋯ menu
+  in the middle (Windows and Linux layouts, and the sidebar on the right,
+  [#507](https://github.com/z1n-k/zia/issues/507), thanks @conqazht).
+
+## [2.111.1] — 2026-10-25
+
+### Fixed
+
+- The opened address bar stays in place when a dialog opens over the window
+  (Cmd+Q's "Quit Zen or close current tab?", say). The dialog takes the opened
+  bar down while it stays marked opened, and Zia measured it there and moved it
+  further out of place each time, as the address and its pop-up showed after.
+
+## [2.111.0] — 2026-10-25
+
+### Added
+
+- **Sidebar see-through** (Look, off by default): how much of the desktop shows
+  through the sidebar and the gaps round the page, a little, some or half; the
+  page itself stays as it is. Zen's own see-through is one fixed amount, and its
+  space colour's slider sets how strong the colour is rather than this. On
+  macOS, and on Windows and Linux where Zen's window can be see-through.
+
+### Fixed
+
+- A screenshot's preview (its Retry, Close, Copy and Download) is in Zia's look:
+  Zia's tiles, Download in Zia's blue, on Zia's card colour. Its styles never
+  reached it, as it's a page of its own in a dialog, so it kept Firefox's
+  buttons; Zia now puts them into the preview as it opens.
+
+## [2.110.1] — 2026-10-24
+
+### Fixed
+
+- Zia Settings lists the models each AI service actually offers for renaming
+  downloads, as Sine's settings do, and keeps the one you'd chosen. It showed only
+  the three built-in ones, and a model chosen in Sine's settings showed as empty
+  (thanks Bxthesda).
+
+## [2.110.0] — 2026-10-24
+
+### Changed
+
+- Zia Settings is easier to read: each setting has a short name, with what it
+  does in smaller grey text under it (Sine's list keeps the full wording, and
+  the search finds either).
+- Zia Settings looks like the rest of Zia: the card as a hover card, the
+  sections down the side as tabs with the one in view lit as the selected tab,
+  each setting as a tab row, and the Library's search, fields and switches. It
+  follows light spaces too.
+
+### Fixed
+
+- Zia Settings' search box is a single field: Zen's own field look drew a second
+  box inside it.
+
+## [2.109.3] — 2026-10-24
+
+### Fixed
+
+- Zia Settings works: it shows how each setting is set, its switches change
+  them, and the ✕, Esc and a click outside close it. It was a page of its own
+  in a frame, and inside Zen nothing passed between it and Zia: every switch
+  showed off and it couldn't be closed, short of restarting Zen. It's drawn in
+  the window itself now, as Zia's other panels are.
+
+## [2.109.2] — 2026-10-24
+
+### Fixed
+
+- Zia Settings shows how each setting is actually set. Every switch showed off:
+  the settings were handed to the page in a way that didn't reach it inside Zen.
+  Changes made on the page reach Zia two ways now too, as the welcome tour's do.
+- Zia Settings keeps up with a setting changed while it's open (in Sine's list,
+  another window, or one that turns itself back off, as "Show the welcome tour
+  again" does): it showed what it had first.
+- Zia Settings opens again if asked to just as it's closing; nothing opened.
+
+## [2.109.1] — 2026-10-24
+
+### Fixed
+
+- Zia Settings opens in the middle of the window, at a size that fits it. It
+  grew as tall as every setting and opened mostly out of view at the bottom.
+- Zia Settings has an icon in the ⋯ menu, as the items round it have.
+
+## [2.109.0] — 2026-10-24
+
+### Added
+
+- **Zia Settings**, in the ⋯ menu: Zia's settings on a page of their own, in
+  the welcome tour's glass over the dimmed window, rather than only as Sine's
+  long list. Its sections down the side, a search across every setting, and
+  switches, menus and fields; a setting that belongs to another shows only with
+  it, as in Sine, and API keys are hidden as they're typed. Esc, the ✕ or a
+  click outside closes it. Sine's list is still there, and both show the same
+  settings (thanks Bxthesda).
+
+## [2.108.0] — 2026-10-22
+
+### Added
+
+- **Bookmark Folder**, in a folder's right-click menu: bookmarks the folder
+  whole, as a bookmark folder of the same name with one for each of its
+  subfolders, in the order they're in, where new bookmarks go (Firefox's
+  setting). Selecting its tabs and choosing Bookmark Tabs made one flat folder,
+  the subfolders' tabs loose in it (thanks no15).
+
+## [2.107.1] — 2026-10-22
+
+### Fixed
+
+- With Zen's single toolbar and its window controls hidden, the bar that comes
+  out at the window's top (window buttons, bookmarks) is solid over the page with
+  compact mode's see-through sidebar on: it was see-through, and its buttons sat
+  on top of the site's own (thanks Razor Ramen).
+
+## [2.107.0] — 2026-10-22
+
+### Removed
+
+- The Liquid Glass sidebar settings (the see-through sidebar, the desktop's
+  colour through it, and its material), added in 2.104.0 and 2.106.0. They only
+  switched Zen's own settings for the same thing, which stay as you set them.
+
+## [2.106.1] — 2026-10-22
+
+### Fixed
+
+- Several selected tabs dragged together stay under the pointer in a scrolled
+  list too (compact mode's, often). The list scrolled back a moment after the
+  others folded away, and the dragged one hung a row below the pointer for each
+  ([#396](https://github.com/z1n-k/zia/issues/396), thanks @Y4k3d0).
+
+## [2.106.0] — 2026-10-22
+
+### Changed
+
+- On Windows, with Zen's single toolbar and the window controls hidden, the top
+  right corner of the page is the page's again: 2.101.3 made it bring out the
+  window buttons, which got in the way of whatever the site had there. They
+  come out from the window's top edge, as before (thanks Gin The Cerberus).
+
+### Added
+
+- **Liquid Glass material** (macOS, with the see-through sidebar on): Zen's own
+  choice of the glass behind the window, from its heads-up display look to the
+  pop-up one, where the wallpaper's colour glows through as in Zen's menus.
+  It changes at once ([#495](https://github.com/z1n-k/zia/issues/495), thanks
+  @OneGunBullet).
+
+### Fixed
+
+- A tab dragged onto a space's icon, so the drag carries on in that space, no
+  longer vanishes there or lands in the wrong place back in its own: Zia hands
+  the drag on to Zen as the space changes
+  ([#488](https://github.com/z1n-k/zia/issues/488), thanks @OneGunBullet).
+
+## [2.105.0] — 2026-10-22
+
+### Added
+
+- Right-click picture-in-picture to tuck it into your default spot, and again
+  to bring it back out. Right-clicking the tuck button still picks a spot.
+- **A full peek at tucked picture-in-picture** (off by default): pointing at the
+  strip shows the whole video, clear and with its controls, until the pointer
+  leaves the window, rather than nudging it out a little. From
+  [PiP Tuck Away](https://github.com/apoapostolov/Zen-PiP-Tuck-Away) by Apostol
+  Apostolov.
+- **A playing video goes picture-in-picture as you leave its tab** (off by
+  default): Firefox's own setting for it, in Zia's.
+
+## [2.104.0] — 2026-10-22
+
+### Added
+
+- **The sidebar see-through, as Liquid Glass** (Look, off by default): the
+  sidebar lets the desktop show through it, through Zen's own acrylic sidebar,
+  with a second option for whether the desktop's colour shows through it on
+  macOS. Both take effect after a restart, and set the same as Zen's own
+  settings for them ([#486](https://github.com/z1n-k/zia/issues/486), thanks
+  @OneGunBullet).
+
+## [2.103.14] — 2026-10-22
+
+### Changed
+
+- **Zia leaves Little Zen's windows alone,** for the Little Zen mod: it doesn't
+  start in them, and their page and toolbar keep that mod's look
+  ([#490](https://github.com/z1n-k/zia/pull/490), by @Zylaah).
+
+### Fixed
+
+- The space's name starts the sidebar's top row where the window buttons
+  aren't at its start (Windows and Linux layouts), rather than coming after the
+  ⋯ menu and reload ([#489](https://github.com/z1n-k/zia/issues/489), thanks
+  @conqazht).
+
+## [2.103.13] — 2026-10-22
+
+### Fixed
+
+- The Library's spaces each show their own text colour: in a dark space, a
+  light space's card had white text on its light colour, and the other way
+  round ([#487](https://github.com/z1n-k/zia/issues/487), thanks
+  @OneGunBullet).
+- With more spaces than fit in the Library, the card cut off at its edge is cut
+  a little inside it, rather than looking to run on under the page
+  ([#485](https://github.com/z1n-k/zia/issues/485), thanks @OneGunBullet).
+
+## [2.103.12] — 2026-10-21
+
+### Fixed
+
+- Zen 1.23.4: a download's progress ring (in the Library and on its button)
+  keeps its faint track. Zen now draws the track in the ring's own colour,
+  which turned it the same blue as the progress.
+
+## [2.103.11] — 2026-10-21
+
+### Fixed
+
+- A pop-up window (one a site opens) looks like one: no sidebar button (there's
+  no sidebar to show) or extensions menu (its extensions are hidden there), the
+  address row in the window's colour like the title row above it rather than a
+  strip of its own, and the read-only address no longer lights up under the
+  pointer as if it could be typed in
+  ([#482](https://github.com/z1n-k/zia/issues/482), thanks @OneGunBullet).
+
+## [2.103.10] — 2026-10-21
+
+### Fixed
+
+- With the pop-up see-through and in the toolbar's colour, and the address bar
+  in the sidebar, a dark page's pop-up over a light space (or a light one over
+  a dark space) is solid. It was over the sidebar rather than the page, and came
+  out a grey its text barely showed on (thanks Briski).
+
+## [2.103.9] — 2026-10-21
+
+### Fixed
+
+- Tabs no longer show through the music player while it's open. Since it went
+  see-through in 2.102.0 it stayed see-through open too, as it grows over the
+  tabs; open, it's a solid version of the same shade again (thanks EVIL Mist).
+- The address pop-up shows all its results rather than scrolling after about
+  six: arrowing down to the last one hid the first half under the typing box
+  (thanks ocerlisss).
+- Pick from Zia's icons works for an extension that isn't pinned to the
+  toolbar. The picker opened over the extensions panel and closed with it
+  ([#478](https://github.com/z1n-k/zia/issues/478), thanks @OneGunBullet).
+- The toolbar darkens with the page as a screenshot starts, and comes back
+  as it ends, rather than keeping the page's colour until you scroll
+  ([#477](https://github.com/z1n-k/zia/issues/477), thanks @OneGunBullet).
+- In compact mode, the Library keeps its padding along the page's side. Zen
+  moved the page aside by its own gap rather than Zia's, so the page covered
+  the Library's edge
+  ([#476](https://github.com/z1n-k/zia/issues/476), thanks @OneGunBullet).
+- The centred address stays where it is as the bar is clicked. Opened, the
+  bar is wider and elsewhere, and the text jumped across it
+  ([#475](https://github.com/z1n-k/zia/issues/475), thanks @OneGunBullet).
+- Several selected tabs dragged together stay under the pointer. The others
+  folding away moved the dragged one up a row for each above it, and it
+  hung that far below the pointer
+  ([#396](https://github.com/z1n-k/zia/issues/396), thanks @Y4k3d0).
+
+## [2.103.8] — 2026-10-20
+
+### Changed
+
+- The ⋯ menu shows at the end of the toolbar by default. Anyone who switched
+  it off in Zia's settings keeps it hidden.
+
+## [2.103.7] — 2026-10-20
+
+### Fixed
+
+- The toolbar's text and icons stand out on bright site colours. On a bright
+  colour that takes dark ink (a vivid green, a yellow, an orange) the ink, a
+  soft one made for white and cream pages, came out barely darker than the
+  colour; it's darkened there as far as it takes to read as well as on a light
+  grey. White, cream and grey pages keep the ink they had (thanks Bxthesda).
+
+## [2.103.6] — 2026-10-20
+
+### Fixed
+
+- Ultra: an essential you've opened and left keeps the fine edge round its
+  tile. The open essential's drifting colour kept drifting after it was left,
+  on the layer that is then the tile's edge, which went out of the tile: two
+  lines sweeping across it (what 2.103.5 meant to fix), then no edge at all.
+  The colour of the open one turns again, as before 2.103.5 (thanks Bxthesda
+  and Poumpky).
+
+## [2.103.5] — 2026-10-20
+
+### Changed
+
+- An empty name field in the sidebar (a new group's, a folder's, a tab's, in
+  Zen's field or Advanced Tab Groups') says "Type a name" (thanks Briski).
+- In compact mode, a name entered with Enter leaves the sidebar out for a
+  second before it slides away, rather than at once (thanks Briski).
+
+### Fixed
+
+- Ultra: two fine lines no longer sweep across the open essential. Its colour
+  turned slowly, and the edges of the blurred colour's layer showed as it
+  turned; the colour still drifts and swells (thanks Poumpky).
+
+## [2.103.4] — 2026-10-20
+
+### Fixed
+
+- A new tab group's name field takes typing again alongside Advanced Tab
+  Groups. Both opened a name field for the group, and the mod, closing its
+  own, closed Zen's, leaving it stuck: nothing could be typed, Rename stopped
+  taking a name, and the compact sidebar stayed out even after the group was
+  deleted. With the mod, its own field is the one opened; either way it opens
+  once the tab's menu has closed (thanks Briski).
+- In compact mode the sidebar stays out while a group's name is typed in
+  Advanced Tab Groups' field too, and goes once it's done.
+
+## [2.103.3] — 2026-10-20
+
+### Fixed
+
+- Cmd/Ctrl+0 resets the page's zoom again: Zia's tab numbers held it back
+  along with the other digits. A 0 still carries on a number being typed
+  (10, 20) (thanks Charles Darwin).
+
+## [2.103.2] — 2026-10-20
+
+### Changed
+
+- A tab group made from a tab's menu is named in place: its name field opens
+  in the sidebar as it's made, ready to type in, as a new folder's does. It
+  was left nameless, Firefox's own naming box not showing in Zen (thanks
+  Briski).
+- Zen's small loading pill no longer shows at the top of the page with the
+  toolbar hidden in compact mode; a loading page shows on its tab (thanks
+  Briski).
+
+### Fixed
+
+- In compact mode the sidebar stays out while a name in it is being typed (a
+  tab's, a folder's or a group's), rather than sliding away as the pointer
+  leaves it (thanks Briski).
+
+## [2.103.1] — 2026-10-20
+
+### Fixed
+
+- The address bar pop-up reaches down past its last row on Windows, where the
+  row still hung out below its edge: it fits itself again as the list changes
+  size, and its background covers the last row if its height falls short
+  (#450, thanks PowerFactory384).
+- Light spaces on Windows are light whatever's behind the window: with
+  Windows' see-through window (Mica or Acrylic) a light space showed what was
+  behind it, white over a white app and dark over the desktop, so the light
+  look only seemed to work some of the time (thanks Briski).
+
+## [2.103.0] — 2026-10-20
+
+### Added
+
+- With the address bar's text centred, an option to keep the opened pop-up's
+  text from the left, in line with the rows under it (#446, thanks
+  OneGunBullet).
+
+### Fixed
+
+- Centred address bar text stays where it is as the bar is clicked, rather
+  than jumping aside (#443, thanks OneGunBullet).
+- On Settings, scrolling with the address bar pop-up open no longer gives the
+  toolbar the pop-up's colour (#444, thanks OneGunBullet).
+- The screenshot buttons (Save visible, Save full page) are no longer cut off
+  at the top, and take the toolbar's colour; the preview of a page's shot has
+  Zia's buttons, Download in Zia's blue (#445, thanks OneGunBullet).
+- The address bar pop-up's last row no longer hangs out below its bottom
+  edge (#450, thanks PowerFactory384).
+- A new tab with an extension's or Zen's own new tab page no longer opens the
+  floating search box over the page, leaving the toolbar's address empty,
+  unless "New tabs start in the address bar" is on (thanks Briski).
+
+## [2.102.16] — 2026-10-20
+
+### Fixed
+
+- Dragging several selected tabs, they land where they're let go: dragged a
+  few rows down, they could go to the end of the list. The others fold into
+  the dragged tab with the rows closing up smoothly, it shows as a small
+  stack with their count, and on the drop they grow out under it where they
+  land, rather than jumping across from where they'd been (#396, thanks
+  Y4k3d0).
+- With the page edge to edge, compact mode's sidebar keeps a small gap from
+  the window's edges, so its corners match (the window's own corner cut into
+  it), and the opened address bar pop-up stays inside the window rather than
+  being cut off at its edge (#418, thanks OneGunBullet).
+
+## [2.102.15] — 2026-10-20
+
+### Fixed
+
+- After a folder inside a closed folder has been opened and shut where it is,
+  opening the folder round it no longer drops the tab shown down for a moment
+  and back up: its other tabs are held shut as Zen leaves the tabs it hides
+  (thanks Bxthesda).
+
+## [2.102.14] — 2026-10-20
+
+### Fixed
+
+- With Ultra on, a loading tab's orb is centred on the tab's own icon, in
+  line with the site icons above and below: 2.102.8 had it a few pixels to
+  their left.
+
+## [2.102.13] — 2026-10-20
+
+### Fixed
+
+- A folder opened where it is inside a closed folder grows and shrinks
+  smoothly both ways: closing, its tabs dropped to nothing at once and faded
+  on top of the tab shown; opening again, they were there at once (thanks
+  Bxthesda).
+- With Ultra on, the drifting colour round the open essential carries on
+  where it was when a glance on it closes, rather than jumping back to the
+  start of its cycle.
+
+## [2.102.12] — 2026-10-20
+
+### Fixed
+
+- Opening a folder holding the selected tab, its other tabs grow back to
+  their height, rather than fading in squashed onto one row and popping to
+  their height once done (thanks Bxthesda).
+- With "Zen's own Library look" on, no empty box sits under the Library's
+  sections: Zia's sliding tile was still put in there, unstyled.
+
+## [2.102.11] — 2026-10-20
+
+### Fixed
+
+- A folder opened where it is inside a closed folder grows and shrinks every
+  time it's clicked, rather than only the first time and snapping after
+  that (thanks Bxthesda).
+- The welcome tour's liquid-metal wordmark shows its letters whole: the last
+  letter was sliced off flat at its right edge.
+
+## [2.102.10] — 2026-10-20
+
+### Changed
+
+- The address bar's loading line is Zia's blue again with Ultra on, rather
+  than silver; Ultra's liquid-metal loading line is gone, and the welcome
+  tour's Ultra page no longer lists it.
+
+## [2.102.9] — 2026-10-20
+
+### Removed
+
+- Ultra's pixel mosaic that the Library's Media pictures dissolved in from:
+  opening Media could crash the browser (thanks Bxthesda).
+
+## [2.102.8] — 2026-10-20
+
+### Fixed
+
+- Tucking away a space's pinned tabs with the selected tab in a folder among
+  them, the selected tab and its folder's name stay in place while the rest
+  shrink away, and come back the same way. The whole list slid up out of
+  sight, the selected tab with it, and snapped back once done; opening, it
+  went blank and slid back down (thanks Bxthesda).
+- With Ultra on, a loading tab's orb sits in line with the site icons above
+  and below it, rather than a few pixels to their right.
+
+## [2.102.7] — 2026-10-20
+
+### Fixed
+
+- In compact mode with Zen's toolbar hidden, + New Tab and Cmd/Ctrl+T open a
+  real tab again, with its address bar floating over it, as Zen's own new
+  tab's does, so the hidden toolbar stays hidden. 2.102.5 had made a new tab
+  Zen's floating address bar, with no tab opened till something was typed
+  (thanks Briski).
+- Zen's floating address bar no longer brings the hidden toolbar down with it
+  in compact mode, an empty bar above, or pulls the page up under it
+  (thanks Briski).
+- Clicking the name of a folder kept inside a closed folder (it holds the tab
+  the closed one shows) opens just that folder, where it is: the folders round
+  it opened too, bringing back every other folder in them. Clicked again, it
+  closes back to the tab it shows (thanks Bxthesda).
+- With the space's pinned tabs tucked away, a closed folder showing a tab from
+  a folder inside it no longer leaves that inner folder's name behind on its
+  own (thanks Bxthesda).
+
+## [2.102.6] — 2026-10-20
+
+### Changed
+
+- In compact mode with Zen's toolbar hidden, the toolbar opens in the
+  window's gap above the page, as Zen's does: clear, on the space's own
+  colour, with the page under it the rounded card. It had been drawn inside
+  the page's card in the site's colour, so it came in as another bar below
+  the gap. The site stays where it is as the toolbar shows (thanks Briski).
+
+## [2.102.5] — 2026-10-20
+
+### Fixed
+
+- In compact mode with Zen's toolbar hidden, + New Tab and Cmd/Ctrl+T open
+  Zen's floating address bar rather than a real tab. A real tab's address
+  bar, ready for typing, brought the hidden toolbar out and kept it there
+  until another tab was chosen (thanks Briski).
+
+## [2.102.4] — 2026-10-20
+
+### Changed
+
+- In compact mode with Zen's toolbar hidden, the toolbar grows in and pushes
+  the page down as it shows, as Zen's does, on Zen's own timing (Zia's colour
+  fade had taken the place of its grow, so it came and went at once). Zia's
+  toolbar over the page, the page staying put, is now a setting in its place
+  (thanks Briski).
+
+## [2.102.3] — 2026-10-20
+
+### Added
+
+- A setting (Look, with Zen's toolbar hidden in compact mode) for Zen's own
+  hidden toolbar: it pushes the page down as it shows, rather than fading in
+  over the page as Zia's does (thanks Briski).
+
+### Fixed
+
+- With Ultra, the Library's Media pictures dissolve in from the pixel mosaic
+  each time Media is opened, not only the first time they load.
+
+## [2.102.2] — 2026-10-20
+
+### Fixed
+
+- In a light space, the sound badge on an essential's (or a pinned tab's) icon
+  is a white disc with dark bars, as the selected tab is a white card. The dark
+  disc sat heavy on the pale tiles, with the bars dark on it.
+
+## [2.102.1] — 2026-10-20
+
+### Changed
+
+- In a light space, the selected tab has a soft shadow beneath it in place of
+  its glow (light can't glow on white), lifting it off the sidebar. It goes
+  with the glow when that's hidden.
+- With Ultra, the Library's chosen-section tile bounces much more gently: a
+  slight stretch and squash on a softer spring.
+
+## [2.102.0] — 2026-10-20
+
+### Added
+
+- **Ultra**, on by default (under Look), a set of extra effects. Switch it off
+  for Zia as it was; under your system's reduced motion they stand still.
+  - A loading tab's spinner becomes a small dotted orb that turns while the
+    page connects and loads, once it's been loading a moment (a quick load
+    keeps its icon).
+  - The address bar's loading line is liquid metal: silver, with the metal's
+    light moving along it, or gunmetal grey on a light space. It keeps its
+    width, thickness and movement, and with the loading bar in Zen's accent
+    colour it keeps that colour.
+  - The music player glows along its bottom edge in its artwork's colours
+    while you point at it as it plays, rising and falling like music, cut to
+    the card's corners. The artwork's colour behind it on hover gives way to
+    it.
+  - The colour Zen draws round the open essential (its "essentials favicon
+    background") slowly drifts about.
+  - The Library's Media pictures dissolve in from a moving pixel mosaic as they
+    load, the mosaic taking each picture's shape.
+  - The Library's chosen-section tile stretches as it springs to the section
+    you pick, and squashes as it lands.
+  - The welcome tour's Zia wordmark is liquid metal.
+- What's new shows Ultra once after this update, and the welcome tour shows it
+  second.
+
+### Changed
+
+- The music player card is see-through, as the selected tab is: a darker shade
+  of whatever's under it rather than a solid colour, so a space's colour and
+  grain show through it.
+
+## [2.101.7] — 2026-10-19
+
+### Fixed
+
+- With Zen's single toolbar, compact mode's sidebar floats with the same even
+  gap from the window's edges as with the top toolbar. It sat flush against
+  them, and the window's own rounded corner cut into the sidebar's beside it,
+  so that corner came out rounder than the rest (thanks @OneGunBullet).
+
+## [2.101.6] — 2026-10-19
+
+### Changed
+
+- The music player card is the same shade as the selected tab, in dark and
+  light spaces, rather than a shade of its own.
+
+## [2.101.5] — 2026-10-19
+
+### Changed
+
+- With Zen's single toolbar, the address bar in the sidebar has a tab's
+  corners as well as its height, rather than its own tighter ones.
+
+## [2.101.4] — 2026-10-19
+
+### Fixed
+
+- On macOS, dragging several selected tabs no longer shows a blue dot on the
+  dragged tab: Zia's count there doubled macOS's own red badge by the pointer.
+
+## [2.101.3] — 2026-10-19
+
+### Changed
+
+- On Windows and Linux, Zen's "Hide window controls" is left as you have it
+  again: 2.101.2 turned it off, so the window buttons stayed on screen, which
+  wasn't wanted.
+
+### Fixed
+
+- On Windows, with Zen's single toolbar and the window controls hidden, the
+  corner where the window buttons show opens them, so pointing straight at
+  close works; only the window's very edge above it did (thanks Gin The
+  Cerberus).
+
+- On Windows, a space's emoji or icon sits level with its name and the
+  sidebar's buttons. An old Windows rule still pushed it 2px down, from when
+  the whole name sat lower, and 2.101.2's lift didn't outweigh it, so it
+  stayed low (thanks Gin The Cerberus).
+
+## [2.101.2] — 2026-10-19
+
+### Changed
+
+- On Windows and Linux, with Zen's single toolbar, the window buttons are in a
+  strip above the page that's always there, as Dia's title bar is, rather than
+  hidden until the pointer reached the window's very top and then laid over the
+  site's own top right. Zen's "Hide window controls" brings the old way back
+  (thanks Gin The Cerberus).
+
+### Fixed
+
+- On Windows, a space's emoji is level with its name and the sidebar's
+  buttons: Windows draws emoji lower in their line than macOS, so it sat
+  about 2px low (thanks Gin The Cerberus).
+
+## [2.101.1] — 2026-10-19
+
+### Changed
+
+- Compact mode's sidebar has Zia's card corners, as its hover cards and
+  pop-ups do, the same all round: the window's own corner could cut into the
+  one beside it, which came out rounder than the rest (thanks @OneGunBullet).
+- In a light space, compact mode's sidebar, nearly white and see-through,
+  has stronger tab names; they read faint there (thanks Briski).
+
+### Fixed
+
+- With Zen's single toolbar and the window controls hidden, the bar with the
+  window buttons grows and fades in and out again: Zia's toolbar colour fade
+  had replaced Zen's animation, so it came and went at once (thanks Gin The
+  Cerberus).
+- Where the window buttons aren't beside it (Windows and Linux), the space's
+  name and icon sit level with the sidebar's buttons rather than 1.5px below
+  them (thanks Gin The Cerberus).
+- With "Show the space's name above the tabs, as Zen does" on, the sidebar's
+  top row lets go of Zia's arrangement: its empty slot for the name kept the
+  row's buttons pushed to the end (thanks Gin The Cerberus).
+
+## [2.101.0] — 2026-10-19
+
+### Changed
+
+- The ⋯ menu at the end of the toolbar is hidden, as Dia and Arc have none.
+  "Show the ⋯ menu at the end of the toolbar" (Page) brings it back
+  (thanks @OneGunBullet).
+- The screenshot buttons (Save visible, Save full page) are Zia's card, with
+  its colour, corners and edge, light in a light space, and the buttons are
+  Zia's tiles rather than Firefox's (thanks @OneGunBullet).
+- With "Centre the address bar's text" on, the address is centred on the
+  toolbar rather than in the bar, which the buttons either side pushed off
+  the middle, and it stays put as the bar's own buttons show on hover
+  instead of sliding aside (thanks @OneGunBullet).
+- With Glass on, the floating address bar's pop-up has the glass edge the
+  toolbar's has, and with the pop-up's blur on it's see-through from the
+  moment it opens, not only once it lists something (thanks @OneGunBullet).
+- The site panel is see-through on macOS again, in Zen's own colours, light
+  or dark with macOS, with Zia's tiles and corners (thanks @OneGunBullet).
+- With asleep tabs dimmed, a light space's asleep tabs fade less, so they're
+  still easy to read on the pale sidebar (thanks Briski).
+
+### Fixed
+
+- With Zen's single toolbar and the window controls hidden, the bar shows
+  over the page with or without the bookmarks bar, the page no longer jumps
+  up and down as the pointer reaches the window's top, and the gap above
+  the page is the same as at its sides (thanks @PowerFactory384 and
+  @RvatyGraty).
+- A new tab opening your search engine's page with the address bar ready
+  to type is empty straight away, rather than showing the page's address
+  until it loaded (thanks @thoroughmas).
+- Extension buttons in the toolbar are spaced as Zen's own beside them; the
+  gaps grew wherever an extension sat (thanks @OneGunBullet).
+- A download in progress keeps the row's ring size as its icon flies from
+  the Library button, rather than landing big and snapping small (thanks
+  @OneGunBullet).
+- In an empty space, the toolbar is the same colour as the page under it,
+  not a greyer shade (thanks @OneGunBullet).
+- The Library's Media, Downloads and History lists scroll without a bar, so
+  they no longer jump narrower as the Library finishes opening where scroll
+  bars always show (thanks @OneGunBullet).
+- Several selected tabs dragged together land where they're let go, beside
+  each other in their order, rather than at the end of the list (thanks
+  @Y4k3d0).
+
+## [2.100.17] — 2026-10-18
+
+### Fixed
+
+- With Zen's single toolbar, a bookmarks bar and the window controls hidden,
+  the bar shows over the page as the pointer reaches the top, rather than
+  pushing the page down and pulling it back up each time (thanks
+  @RvatyGraty).
+
+## [2.100.16] — 2026-10-18
+
+### Fixed
+
+- Dragging several selected tabs: the rows move out of the dragged tab's way
+  at every step, as with one tab. The others folded into it still counted as
+  rows, so for a few steps nothing moved and it slid over the rows instead
+  (thanks @Y4k3d0).
+
+## [2.100.15] — 2026-10-18
+
+### Fixed
+
+- The site panel is always Zia's card, dark in a dark space and light in a
+  light one, with its text and icons to match. On macOS it showed the
+  system's own see-through backing instead, which follows macOS's mode (or
+  Zen's theme) rather than the space, so a light space under dark macOS
+  had dark text on a dark panel, and Zen's light theme in a dark space
+  white text on a white one (thanks @OneGunBullet). 2.100.10's fix for
+  this didn't take: Zen's own rule outranked it.
+
+## [2.100.14] — 2026-10-18
+
+### Removed
+
+- The ⋯ menu as a macOS menu, and its option: the menu is Firefox's (and
+  Zen's) again.
+
+## [2.100.13] — 2026-10-18
+
+### Fixed
+
+- In a light space, the music card has the glass edge with Liquid Glass on,
+  as everything else does, and opening it no longer turns it a muddy grey
+  when the system is in dark mode (thanks @OneGunBullet).
+- Switching the Library from Spaces to Media (or another section) no
+  longer jitters: the media grid stays laid out at its final width as the
+  Library narrows, rather than re-wrapping all the way down (thanks
+  @OneGunBullet).
+- Firefox's own buttons in the address bar (translate, reader view and the
+  rest, when they show) are the same small square tile as Zia's, with the
+  same faint highlight: they were rounder and brighter (thanks @OneGunBullet).
+- In a light space, the swipe-back arrow and its card of pages have dark
+  arrows and text, as they're light there: they stayed white (thanks
+  @OneGunBullet).
+- The ⋯ menu as a macOS menu, tidied (thanks @OneGunBullet): its separators
+  show again, a page with no icons (Help and Report...) isn't indented for
+  them, the corners follow the last row's, a page's footer button (Manage
+  bookmarks) sits as far from the bottom as any last row, a page's header
+  is spaced as the first row is, and the zoom row keeps Zen's straight line
+  above it, with its −, % and + each lighting up on their own rather than
+  the whole row.
+
+## [2.100.12] — 2026-10-16
+
+### Added
+
+- An option to show the page's full address in the address bar rather than
+  its domain and title (Zia's settings: "Show the page's full address rather
+  than its domain and title"; off by default).
+
+## [2.100.11] — 2026-10-16
+
+### Fixed
+
+- For Zen 1.23.3: the address bar's results have their gap above and below
+  again (the last row sat on the pop-up's edge), and the pop-up opens without
+  its edge jumping as it settles. Zen took out a box around the results
+  that Zia spaced them by.
+- For Zen 1.23.3: with Zen's toolbar hidden in compact mode, the toolbar
+  reaches up over the gap above the page again, so it doesn't flash on and
+  off as the pointer crosses it.
+
+## [2.100.10] — 2026-10-16
+
+### Changed
+
+- The ⋯ menu is drawn as a macOS menu: compact rows, the one you point at in
+  your system's accent colour, thin separators and a rounder panel (off in
+  Zia's settings: "The ⋯ menu as a macOS menu").
+- The site panel's buttons and extensions are flat tiles, as macOS's own
+  pop-ups' buttons are, without the glass edge on each.
+
+### Fixed
+
+- Dragging one of several selected tabs takes them all: the others fold into
+  it (out of the list, the rows closing up, a count on the dragged tab) and
+  land with it. Only the dragged one moved, and the rest jumped across on
+  the drop.
+- With Liquid Glass on, a light space's essentials have the glass edge as
+  everything else does; the light theme's own plain line took its place.
+- With Zen's toolbar hidden in compact mode, the toolbar is only the page's
+  colour when it shows: Zen's space-coloured background lay over it there
+  and tinted it the space's (green over a dark page).
+- In a light space with the system in dark mode, the site panel is light, as
+  its text and glass edge are: it stayed dark, with dark text on it.
+- The Library's spaces keep their round corners with the page edge to edge,
+  and no longer shrink as the Library finishes opening where scroll bars
+  always show (the row's bar appeared under them).
+- Moving off a tab's hover card over the compact sidebar no longer makes the
+  sidebar flicker shut and open (thanks @Sylbird).
+- A tab's hover card shows its page's picture through Firefox's own
+  thumbnails, as intended; that call was made wrongly and always fell back
+  (thanks @Sylbird).
+
+## [2.100.9] — 2026-10-12
+
+### Fixed
+
+- An empty tab is the same colour as the toolbar and the sidebar: Zen laid a
+  faint white wash over it (stronger in light mode), so it showed a shade
+  lighter.
+
+## [2.100.8] — 2026-10-11
+
+### Fixed
+
+- On Windows, a tab's site icon in the sidebar lines up with the folders'
+  icons and the New Tab + (it sat a point and a half to their left; macOS
+  already lined up).
+
+## [2.100.7] — 2026-10-11
+
+### Fixed
+
+- A folder's own icon and its name line up with the tabs' icons and names
+  (and the New Tab +) below it; both sat a point and a half to their left.
+
+## [2.100.6] — 2026-10-11
+
+### Fixed
+
+- The toolbar matches Settings, the other about: pages and an empty tab: with
+  no web address, they were taken to have a toolbar colour picked for them
+  (an empty one), so the page was never read and the toolbar showed the
+  fallback colour (the space's, or grey). 2.100.5's fix only took effect
+  with this one.
+
+## [2.100.5] — 2026-10-11
+
+### Fixed
+
+- The toolbar takes the colour Settings, the other about: pages and an empty
+  tab actually show: they can be see-through, and it took the space's colour
+  behind them (red over a dark Settings page) rather than the page's.
+
+## [2.100.4] — 2026-10-11
+
+### Fixed
+
+- Dragging tabs between spaces in the Library is Zen's own again: the tab
+  follows the pointer and Zen's line shows where it lands. Zia's sidebar drag
+  had taken it over, leaving the tab parked over the space it came from with
+  a gap behind it until it was let go.
+- An essential dragged down into a closed folder stays in it until its bottom
+  meets the bottom of the folder's opened slot, as a tab does; it left with
+  its bottom still well inside.
+
+## [2.100.3] — 2026-10-11
+
+### Fixed
+
+- Address bar commands show only when what you type names them: each word
+  starts a word of the command's name, or you type its initials ("pip").
+  "zia settings" found Sync Settings too, and Zen put it first once it had
+  been used, so Enter opened Sync.
+- "Zia Settings" opens Sine Mods the first time too; a Settings page that
+  was only just opening showed the last page you'd looked at.
+
+## [2.100.2] — 2026-10-11
+
+### Added
+
+- With Zen's toolbar hidden in compact mode, Zen's small loading pill shows
+  at the top of the page, in Zia's loading colour, while a page loads (the
+  address bar's loading line was out of sight until the toolbar came out).
+
+## [2.100.1] — 2026-10-11
+
+### Changed
+
+- An extension's sidebar panel (Bitwarden, Claude and the like) beside the
+  page has the page's rounded corners, as the page does; it was a square
+  block.
+
+## [2.100.0] — 2026-10-11
+
+### Added
+
+- Commands in the address bar, alongside Zen's: settings pages in one step
+  (Zia's settings, keyboard shortcuts, look and feel, spaces and tabs,
+  search engine, privacy, sync), passwords, the task manager, copy the
+  link as Markdown or without tracking, mute and unmute, picture-in-picture,
+  reader view, translate, bookmark, reset zoom, site settings, clear a
+  site's cookies and data, developer tools, move a tab to another space or
+  a new window, close or unload the other tabs, add to Multiview,
+  downloads, clear recent history, what's new in Zia, and the page edge to
+  edge on or off.
+- Answers in the address bar: maths, units and time zones (Firefox's own,
+  now on by default) and colours, shown with a swatch; picking one copies it.
+
+### Changed
+
+- Zen's address bar commands that nobody types (next and previous tab or
+  space, reload, new blank window) are left out, and a few are named the
+  way people search for them: Copy Link, Duplicate Tab, Hard Refresh,
+  Unsplit View.
+
+## [2.99.0] — 2026-10-10
+
+### Added
+
+- Subtitles in picture-in-picture with Zia's look: Firefox's own subtitles
+  button, hidden along with its bottom corner controls, is back beside the
+  tuck button, with its panel (subtitles on or off, and the text size)
+  restyled to match.
+
+### Changed
+
+- Compact mode's flyout sidebar floats with an even gap at its top, side
+  and bottom, as Dia's does (it sat almost flush with the window's edges).
+
+### Fixed
+
+- With Zen's hidden toolbar, the compact flyout sidebar no longer has a
+  wider gap at its top than at its bottom.
+- The address bar opened from a new tab no longer sometimes jumps up and to
+  the left: a position left over from an earlier opening was used.
+
+## [2.98.2] — 2026-10-10
+
+### Changed
+
+- The copy link and site settings buttons in the address bar are square,
+  as Dia's are, with smaller icons and a fainter tile on hover.
+
+### Fixed
+
+- The opened address bar reaches the window's top edge, as Dia's does (it
+  stopped a few pixels short); the address and results don't move.
+
+## [2.98.1] — 2026-10-10
+
+### Fixed
+
+- An essential dragged down into the list has the same place after the
+  last folder, above the line, as a tab does: it went into the folder
+  sooner and passed the line almost at once, so that place was a sliver.
+- No stray line over a closed folder's arrow (seen on Windows at 125%
+  scaling): the arrow is drawn as a line of its own rather than cut out of
+  a square, whose edge showed once the arrow was turned.
+
+## [2.98.0] — 2026-10-10
+
+### Changed
+
+- A full clean-up of Zia's code, every one of its 83 files, with no change
+  in behaviour: 2,515 lines taken out and 1,210 rewritten, 1,305 fewer in
+  all, duplicate code merged into shared helpers and dead code removed.
+  With this release's fixes added back, Zia is 990 lines (3.5%) smaller
+  than 2.97.1.
+- Zia now supports Zen's **Only Sidebar** layout as well as **Sidebar and
+  Top Toolbar** (Collapsed Sidebar isn't supported yet), and the README
+  says so.
+- The selected tab's fine edge fades further between its corners, as
+  Dia's does: it read as a whole border.
+- The site settings and copy-link buttons in the address bar are Dia's
+  size and shape, a softly rounded square rather than near round, set as
+  far apart as Dia's and their tile fainter (it nearly filled the bar's
+  height and was twice as bright).
+- "Clear" and its arrow beside the separator show with the pointer on the
+  sidebar, as in Zen, the line running the full width otherwise (they
+  showed all the time, faint).
+
+### Fixed
+
+- A folder with one tab: the sheet in its icon is in the middle (it sat
+  half a pixel left).
+- An essential dragged down into the list taps (haptics) going into or
+  out of a folder's opening, as a tab does: it only tapped as the rows
+  moved.
+- A folder dropped into an empty folder lands inside it, the folder
+  opening to just its size at once. It landed below, the folder opening
+  round twice the room and shutting again.
+- A folder taken out of a folder, leaving it empty, shuts it without a
+  bounce jolting the line below.
+- A folder inside a folder sits as far into its box as one outside does
+  (its box ran 2px further left), as the dragged one showed.
+- No flash as a folder lands in or out of another folder: for a frame the
+  folder it left wrapped it again, or the one it went into shut round it.
+- Glance's buttons show in light spaces and light mode (white on the light
+  card, they were invisible).
+- Compact mode with Zen's "hide the toolbar": the toolbar comes in over
+  the top of the page instead of pushing it down (the page bounced and the
+  hover flickered), and the page keeps its round top corners while it's
+  hidden. The address bar opens as wide as it is closed (it opened at its
+  width from beside the sidebar). Moving the pointer up to the window's edge no
+  longer hides it for a moment, and it fades out as it fades in.
+- Zen's "Only Sidebar" layout (single toolbar): the address bar in the
+  sidebar is a field of its own, a faint fill as tall as a tab; its pop-up
+  opens inside the window (it was cut off on the left); its copy link and
+  site settings buttons show and fade with the extensions beside it (only
+  the extensions showed, and faster); extensions that don't fit sit on a
+  row of plain icon buttons rather than tiles; and Reload in the "..."
+  menu has its icon in its place (it sat right of the name, beside an
+  empty square).
+- Pressing an essential presses it in again, as in Zen.
+- Dragging a tab over the essentials: the tiles slide aside within their
+  own columns. Zen's drop cell made the grid change its columns (eight
+  essentials and the cell went three to a row) while the tiles still slid
+  by the old ones, so some were pushed past the sidebar's edge and cut off.
+- Dragging an essential out over the page (to split it): only its page's
+  picture shows, as for a tab. Its tile stayed behind at the sidebar's
+  edge as well.
+- A tab dragged into the essentials and back out (before it became one)
+  settles into its row at once, where it dipped and jolted while the list
+  caught up.
+- A selected split glows as brightly as a selected tab (it had only part
+  of the tab's glow).
+- A split dropped into the essentials keeps its halves where the dragged
+  tile showed them (each landed 2px wider, the two moving apart).
+- The first essential pressed after starting Zen no longer shows a black
+  cross on it.
+- An essential dragged down into the list goes into folders as a tab does:
+  the folder opens round it, it takes the folder's width, and it goes in and
+  out at the same points. The folder didn't open, and it went in early.
+- Dragging a space's only essential down into the list: the list stays
+  still, where it jumped up and the tab flashed over the first one.
+- An empty folder's "Drag tabs here" box fades as the folder closes over
+  it, as the tabs in a folder do; it was gone before the folder moved.
+- Dropping a tab: its × (or −) stays on, where it blinked off until the
+  pointer moved (Zen 1.23 hides them a new way). Dropping a folder into
+  another: the outer folder's box stays lit rather than blinking off.
+
+## [2.97.1] — 2026-10-08
+
+### Fixed
+
+- "Clear" beside the separator shows again, faint, a little brighter with
+  the pointer on the sidebar: on Zen 1.23.1 it came only with Zen's own
+  hover, and the separator stopped short with nothing after it.
+- The Library's search and lists are as far in from its edges as the
+  sidebar's tabs (they were a pixel short on each side).
+
+## [2.97.0] — 2026-10-08
+
+### Changed
+
+- The site panel (the site icon at the start of the address bar) is drawn
+  as Zia draws the rest: Zia's card, its share, reader view, screenshot
+  and bookmark buttons and its extensions as Zia's tiles, the headings
+  small and quiet as the Library's, and the settings as rows that light
+  up as tabs do, their icons on a tile rather than a bright disc, with no
+  lines between them, every tile a tab's corner. Light spaces and light
+  mode get a light panel, its icons and Zen's own colours in it dark.
+- Creating a space: the form in the sidebar is drawn as Zia's too, the
+  name and profile in soft wells at a tab's height, Edit Theme and Cancel
+  as Zia's tiles, and Create in white with dark text, quiet until the
+  space has a name.
+- The Library's boosts: one that's off has its tile and icon faded and
+  the icon grey, rather than a line struck through them, and the switch
+  beside each is smaller and on in Dia's blue rather than green, its knob
+  going all the way to the end (it stopped 2px short); each boost's tile
+  sits as far in from the row's left edge as from its top and bottom.
+- The Library's sections, its search and its lists are as far in from its
+  edges as the sidebar's essentials and tabs are from the sidebar's (7px
+  on macOS): the sections sat closer to the edges (5px), the search
+  further in.
+
+## [2.96.48] — 2026-10-08
+
+### Fixed
+
+- A pinned tab moved off its page: the light over its icon, pointed at to
+  take it back, has the tab's corner (it was rounder) and sits just inside
+  the tab's fine edge, which showed brighter under it; the name and the
+  "Separate from pinned tab" line under it are centred in the row (they
+  sat low).
+
+## [2.96.47] — 2026-10-08
+
+### Fixed
+
+- The swipe's circle no longer now and then shows a see-through cross as
+  it grows once fully in: it grew by being scaled, which Firefox sometimes
+  drew with the middle of the rounded box missing; it now grows in size.
+
+## [2.96.46] — 2026-10-08
+
+### Fixed
+
+- The swipe's card of pages is as wide as the tab and folder hover cards
+  (230px); it was 6px wider.
+
+## [2.96.45] — 2026-10-08
+
+### Changed
+
+- The folder icon's tab, at the top left behind it, is about half as wide
+  again.
+
+## [2.96.44] — 2026-10-08
+
+### Changed
+
+- The swipe's card closes as Dia's does, scaling out where it is and
+  blurring away, rather than sliding back off the edge: a page picked
+  from it, a click around it, or Escape.
+
+## [2.96.43] — 2026-10-08
+
+### Fixed
+
+- The swipe card's page names keep the tails of their letters (g, p, y),
+  which were cut off.
+
+## [2.96.42] — 2026-10-08
+
+### Changed
+
+- The swipe's arrow turns into the card of pages as Dia's does: the
+  circle stays round as it widens into the card, quicker (0.2s, from
+  0.34s) with a touch of overshoot, the arrow blurring away and the pages
+  blurring in. Its corners squared off into a blob as it began to change.
+- The swipe's circle is a little smaller as it slides in and grows to full
+  size once letting go would go back, as Dia's does (only its arrow grew).
+- Every morph of a dragged tab comes into focus out of a blur, as Dia's
+  do: a tab, split or essential turning into its page's picture over the
+  page and back, and a tab or split turning into an essential's tile and
+  back. Not with reduced motion.
+
+## [2.96.41] — 2026-10-08
+
+### Changed
+
+- The swipe's arrow turns into the card of pages a little sooner when
+  held still: after 0.45s, from about 0.57s.
+
+### Fixed
+
+- macOS: holding a swipe still until its arrow turns into the card of
+  pages, the tap plays as the card opens, as in Dia. It waited for the
+  fingers to move again: Zen's tap leaves its timing to macOS, which
+  doesn't play it while nothing on the trackpad moves, so Zia now asks
+  macOS for this one to play at once.
+
+## [2.96.40] — 2026-10-08
+
+### Fixed
+
+- "Drag tabs here": its dashes no longer stretch while you resize the
+  sidebar. They're drawn on a canvas, redrawn to size at every step, so
+  they stay 3px on and 3px off throughout, rather than stretching until
+  the sidebar held still.
+
+## [2.96.39] — 2026-10-08
+
+### Fixed
+
+- With the sidebar on the right, the tabs and essentials are as far from
+  the page as from the window's edge. The page kept its own gap on the
+  sidebar's side too, so the space between them was about twice as wide.
+
+## [2.96.38] — 2026-10-08
+
+### Fixed
+
+- "Drag tabs here": its dashes stay put while you resize the sidebar. They
+  were drawn afresh at every step and blanked while each new drawing
+  loaded; now the drawing stretches with the sidebar and is redrawn to
+  size once it's still, swapped in only when it's ready.
+
+## [2.96.37] — 2026-10-08
+
+### Fixed
+
+- "Drag tabs here": its dashes are even all the way around at any sidebar
+  width. 2.96.36's ran around from the top-left and came back to it short
+  or long; each slot's are now drawn to its size, two dashes on each
+  corner and the sides' spread evenly between, every one on a whole
+  pixel. A tab dragged in wears the same.
+
+## [2.96.36] — 2026-10-08
+
+### Fixed
+
+- "Drag tabs here": its dashes are even all the way along. Firefox spread
+  its own dashes to fit each side, so along the top and bottom their gaps
+  fell between pixels and ran grey in places; Zia now draws them itself,
+  3px on and 3px off, on the slot and on a tab dragged in.
+
+## [2.96.35] — 2026-10-08
+
+### Changed
+
+- "Drag tabs here": thinner dashes (1px, from 1.5px), on the slot and on a
+  tab dragged in, which wears the same ones.
+
+## [2.96.34] — 2026-10-08
+
+### Fixed
+
+- "Drag tabs here": its dashes are the same on all four sides. Firefox drew
+  the dashed border's right side brighter than the rest; they're now drawn
+  as an outline, at the strength the other sides had.
+
+## [2.96.33] — 2026-10-08
+
+### Changed
+
+- "Drag tabs here": its dashed outline is fainter (about a third less),
+  in a coloured folder and on a light space too, as is the outline a tab
+  wears while it's dragged in.
+
+## [2.96.32] — 2026-10-08
+
+### Removed
+
+- Dead code found in a full sweep (nothing you'd see): two arrow pictures
+  the "Drag tabs here" slot no longer uses, a colour variable and three
+  marks the script set that nothing read, a style the light spaces'
+  essentials set twice, a doubled line on the name cards, and five copies
+  of the same constant, now one.
+
+## [2.96.31] — 2026-10-08
+
+### Changed
+
+- "Drag tabs here": its arrow sits level with the middle of the words
+  (it rode high), and the light passes through them a little slower.
+
+## [2.96.30] — 2026-10-08
+
+### Changed
+
+- The light through "Drag tabs here" starts on its arrow: the arrow is now
+  drawn as a letter, the same arrow, so the light passes through it on its
+  way to the words.
+
+## [2.96.29] — 2026-10-08
+
+### Added
+
+- As an empty folder opens, a light passes once through its "Drag tabs
+  here", left to right, the way an AI's answer shines as it's written,
+  then the words rest in their usual grey. Not with reduced motion.
+
+## [2.96.28] — 2026-10-07
+
+### Fixed
+
+- Only the space's name (and its icon) at the top of the sidebar folds
+  the space when clicked: a click well past it, in the empty row beside
+  it, did too. That part of the row drags the window again.
+
+## [2.96.27] — 2026-10-07
+
+### Fixed
+
+- A glance's picture on its tab is whole again, tipped at the tab's end,
+  rather than cut down to a sliver past it. It was placed from the close
+  button's width, and the close kept out of sight while the tab isn't
+  hovered now comes to nothing wide (Zen 1.23.1), so the picture slid
+  past the tab's end; it's now placed from the tab's end itself.
+
+## [2.96.26] — 2026-10-07
+
+### Fixed
+
+- The keyword search pill has Zia's gap around it at last: the same gap
+  after the search icon and after the pill, before the text. Zia lines the
+  text up with the rows below, and in a keyword search the pill pushing the
+  text along made it shrink that gap to nothing, for the pill and, until
+  the window changed size, for the bar's text afterwards too.
+
+### Changed
+
+- The traffic lights are left as they were while the Library slides
+  (2.96.25 hid them).
+
+## [2.96.25] — 2026-10-07
+
+### Changed
+
+- macOS: the traffic lights step out of the way while the Library slides
+  in or out, and are back once it's settled. They stayed solid over the
+  fading sidebar, with the Library's buttons sliding across them; macOS
+  draws them itself, so they can't fade with the rest.
+
+## [2.96.24] — 2026-10-07
+
+### Fixed
+
+- The keyword search pill's gap after it, before the text, is there: in
+  2.96.23 the text touched the pill. It's the same gap as before it.
+
+## [2.96.23] — 2026-10-07
+
+### Fixed
+
+- The keyword search pill keeps Zia's gap on both sides: the same gap
+  after it, before the text, as before it, after the search icon (the one
+  after was about three times as wide).
+
+## [2.96.22] — 2026-10-07
+
+### Fixed
+
+- A keyword search's pill is back in the address bar: type a search
+  keyword (or pick an engine, Bookmarks or Tabs) and the bar says which,
+  in a squircle chip in Zia's look that reads on any pop-up colour, with
+  an x to leave it. It was hidden
+  ([#347](https://github.com/z1n-k/zia/issues/347)).
+
+## [2.96.21] — 2026-10-07
+
+### Fixed
+
+- "Hide the space's name at the top of the sidebar" only shows in settings
+  while the name is at the top: with "Show the space's name above the
+  tabs" on, it did nothing ([#340](https://github.com/z1n-k/zia/issues/340)).
+
+## [2.96.20] — 2026-10-07
+
+### Fixed
+
+- Tooltips are back: a page's own (a link's or a picture's title, also
+  shown on keyboard focus) and the browser's, all hidden since 2.77
+  ([#341](https://github.com/z1n-k/zia/issues/341)). Only a tab's own tip
+  and Firefox's tab preview stay hidden, for Zia's hover cards, and come
+  back too with the hover cards off.
+
+## [2.96.19] — 2026-10-07
+
+### Added
+
+- The space icons at the foot of the sidebar and the extension buttons
+  show their names in Zia's cards, as tabs do: the first takes a moment,
+  then sweeping across the rest shows each at once, as in Arc (#339).
+  Thanks to [malachyfernandez](https://github.com/malachyfernandez)
+  ([#342](https://github.com/z1n-k/zia/pull/342)).
+
+### Fixed
+
+- A tab's buttons say what they do: on a tab holding a glance, the close
+  is "Close glance"; on a pinned tab the minus is "Unload tab", as
+  nothing switches (#338). A glance's tab no longer shows the minus,
+  which did what the close does. Thanks to malachyfernandez.
+
+### Changed
+
+- The README is up to date: every setting, in the same eight sections and
+  words as Zia's settings, and the features it was missing (picking a
+  site's toolbar colour, Glass, Dia's squircles, the archive box and Show
+  Icon on Folder, the names of space and extension buttons, where links
+  go, the sidebar's text size, renaming downloads with AI).
+
+## [2.96.18] — 2026-10-07
+
+### Fixed
+
+- The chosen essential, held down: dark lines no longer show across it.
+  The mask that cuts it to Zia's squircle is made of pieces that met edge
+  to edge, and shrunk under the press their seams showed; they now overlap
+  by a pixel, as the shine rings' already did.
+
+## [2.96.17] — 2026-10-07
+
+### Added
+
+- A toolbar colour of your own for any site: right-click the address bar or
+  the toolbar, Toolbar Color for This Site…, and click any bit of the page
+  (a dark sidebar, say). The toolbar shows each colour under the cursor as
+  you move, and the click keeps it, for that site from then on; or type a
+  hex colour into the box instead. Its text still turns light or dark to
+  suit. Reset Toolbar Color, in the same menu, gives the site back its own.
+
+## [2.96.16] — 2026-10-06
+
+### Fixed
+
+- The music player's edge, with glass off, is now only the essentials' fine
+  shine, fading into the corners, and subtler still: an old hairline all the
+  way around it had stayed on top, so it read as an even outline. With glass
+  on, it now gets the glass edge, which that hairline had hidden too.
+
+## [2.96.15] — 2026-10-06
+
+### Changed
+
+- The music player's fine shine, with glass off, is subtler: still the
+  essentials' shine, fading into the corners, at about half its strength, as
+  on a card that dark and long it read as an outline.
+
+## [2.96.14] — 2026-10-06
+
+### Fixed
+
+- Essentials, folders and the Library's tiles on a Zen that can't draw
+  squircles (seen on Windows): their corners came out oversized and round,
+  and the fine shine around them showed only along the straight sides. There
+  the corners are now round at their usual size, with the shine around the
+  whole edge, and the music player's progress ring follows suit.
+
+## [2.96.13] — 2026-10-06
+
+### Changed
+
+- The music player in Zia's own shapes and icons: the card a squircle like
+  Zia's other cards (its glow and the cards stacked behind it too), with
+  the essentials' fine shine around it (the glass edge, with glass on); the
+  artwork a squircle tile like an essential's, its progress ring the same
+  squircle around it, starting from the top in the middle; its buttons
+  Zia's squircle buttons, in Zia's icons (play, pause, back, forward,
+  picture-in-picture, close).
+
+## [2.96.12] — 2026-10-06
+
+### Changed
+
+- Folders' fine shine is Dia's rows': measured off Dia's folder rows, lit
+  along the top and bottom only, softer, fading out around each corner to
+  about half, with the short ends unlit (Zia's shone evenly all around, as
+  an essential's does; Dia's essentials do, its rows don't).
+
+### Fixed
+
+- The Library's media tiles' shine follows their squircle all the way
+  around, as the essentials' does (it thickened into each corner).
+
+## [2.96.11] — 2026-10-06
+
+### Changed
+
+- The fine shine around the essentials, folders and the Library's tiles is
+  Dia's: as bright down the sides as along the top and bottom, a touch
+  softer overall, and fading much further into the corners (measured off
+  Dia's essentials: the corner about half the sides').
+
+### Fixed
+
+- The card of pages from swiping back or forward has the hover cards'
+  spacing, rows and edge: rows as far in from the edge, the same gap
+  between them, a tab's height, corner, text and hover, and its hairline
+  following its corners (the glass edge, with glass on).
+
+## [2.96.10] — 2026-10-06
+
+### Changed
+
+- Every icon in the toolbar (reload, back and forward, the sidebar button,
+  the menu, extensions) is the same colour as the address, as in Dia,
+  rather than Zen's softer shade.
+
+## [2.96.9] — 2026-10-06
+
+### Fixed
+
+- Extension icons in the toolbar really are reload's shade now: Zen draws
+  toolbar icons in each button's own text colour, a little softened, and
+  the extensions' text colour had stayed plain white while the other
+  buttons took the site's ink.
+
+## [2.96.8] — 2026-10-06
+
+### Fixed
+
+- Icons you've given an extension are the same shade as reload and the
+  sidebar button too, as the other extension icons are since 2.96.6 (they
+  were still brighter, in the address's colour).
+
+## [2.96.7] — 2026-10-06
+
+### Fixed
+
+- The numbers on essentials (and on tabs with the sidebar collapsed) sit in
+  the same squircle key as on tabs: their corner had been left short, so
+  they came out nearly square.
+- The mute button on a folder's hover card is a squircle too, as the
+  close and unload buttons beside it are.
+
+## [2.96.6] — 2026-10-06
+
+### Changed
+
+- The sidebar's bottom buttons (the Library, the spaces' dots, the tab
+  list's arrow) have no tile behind them, hovered, pressed or open: only
+  their icons brighten.
+
+### Fixed
+
+- Extension icons in the toolbar are the same shade as reload, back and
+  the sidebar button beside them (they were brighter).
+
+## [2.96.5] — 2026-10-06
+
+### Fixed
+
+- A folder's paper no longer snaps a touch as it settles after the folder
+  closes: it stays drawn the same way from start to end (and the box's
+  pile with it).
+
+## [2.96.4] — 2026-10-06
+
+### Fixed
+
+- Folders have Dia's shape at last: a later rule kept their corners round,
+  so they came out as a big round corner with the shine missing at each
+  one. Now, fitted off Dia's folder row, only a touch squarer than a circle
+  (superellipse(1.3)) over a 13.8px corner, the shine following it.
+
+### Changed
+
+- The space's name sits in Dia's pill: a squircle (superellipse(1.5)) over
+  a 14px corner, fitted off Dia's, where Zia's was a round 10px.
+
+## [2.96.3] — 2026-10-06
+
+### Changed
+
+- Folders take Dia's row shape: measured off Dia's folder and tab rows, a
+  softer squircle than its essentials' (superellipse(1.5)) over a corner
+  of about 14px. Their fine shine follows it all the way around.
+- The essentials' squircle corner is Dia's 18px.
+
+### Fixed
+
+- The Library's Clear has the same fine shine as Filter and the
+  essentials, with glass off.
+
+## [2.96.2] — 2026-10-06
+
+### Fixed
+
+- Every essential has Dia's squircle, not only the chosen one: a leftover
+  rule held the others at the old, shorter corner.
+- With glass off, the essentials' and the Library's edge is the fine shine
+  they had before glass, brightest along the middle of each side and
+  fading into the corners, now following the squircle all the way around.
+
+## [2.96.1] — 2026-10-06
+
+### Fixed
+
+- With glass off, the essentials' and the Library's corners are clean:
+  their fine shine is drawn as a hairline that follows the squircle,
+  rather than a ring whose inside stayed square, which thickened into a
+  point at each corner.
+- The chosen essential keeps the same squircle as the others: the colour
+  around it was cut to a round corner, so it came out rounder.
+
+## [2.96.0] — 2026-10-06
+
+### Added
+
+- Glass is now an option, off by default: "Glass" under Look. Off, Zia
+  looks as it did before glass came in: the fine shine around the
+  essentials and the Library's buttons, a hairline around the hover cards,
+  the old edges on the selected essential's tile, a glance's card, the
+  split cards and the find bar, and no light where you press. On, it's the
+  macOS Tahoe glass edge and press light, as in 2.94 and since.
+
+### Changed
+
+- Zia's squircles are Dia's: fitted to the edge of Dia's essentials pixel
+  by pixel, a true squircle (superellipse(1.93)) whose corner eases in
+  half as far again along each side, cutting in as deep at the middle as
+  before. On the essentials, cards, pop-ups, the Library and the small
+  buttons; toolbar icon buttons keep the softer curve.
+
+## [2.95.20] — 2026-10-05
+
+### Changed
+
+- A folder given an icon shows the icon by itself, in the folder's place;
+  to wear it on the front of the glass folder instead, right-click the
+  folder and choose Show Icon on Folder. A folder without an icon is the
+  plain folder, as before.
+
+## [2.95.19] — 2026-10-05
+
+### Changed
+
+- A folder's own icon, on the front of its folder, has no shadow.
+
+## [2.95.18] — 2026-10-05
+
+### Fixed
+
+- The Library's rows end as a tab does: their buttons are a tab's close
+  button's size, as far in from the row's end as from its top and bottom
+  (they sat further in, and were larger).
+
+## [2.95.17] — 2026-10-05
+
+### Fixed
+
+- The sidebar's text size option takes effect: it's now read straight off
+  the option, as soon as it's changed, rather than through Zia's script.
+- With Firefox's tab hover previews on, Zen's and Firefox's own pages
+  (settings, about:config and the like) get a picture in their hover card
+  too, as web pages do (#292). (After updating Zia, restart Zen once so its
+  new script loads.)
+
+## [2.95.16] — 2026-10-05
+
+### Fixed
+
+- A folder's hover card sits level with the folder again: its first tab
+  lines up with the folder's row, centre to centre, so a folder of one tab
+  has its card centred on it, as a tab's is.
+
+## [2.95.15] — 2026-10-05
+
+### Changed
+
+- The address bar option now reads as the others do: "Zia's address bar
+  (off: Zen's own)", on by default. Anyone who'd turned Zen's on keeps it
+  (#302).
+
+### Fixed
+
+- With Zen's single toolbar (the address bar in the sidebar), the address
+  bar lines up with the sidebar's edges and the essentials under it: the
+  toolbar's own spacing pushed it in.
+- With Zen's own address bar, the address keeps Zen's softer colour.
+
+## [2.95.14] — 2026-10-05
+
+### Fixed
+
+- The download's flight eases more gently, a little longer, at no more
+  than one and a half times its average speed: mid-flight it crossed
+  over 100px between frames, and read as jumpy.
+
+## [2.95.13] — 2026-10-05
+
+### Fixed
+
+- The download's trailing glow and the bloom where it lands are back as
+  they were (2.95.12 flattened them); the row itself stays free of the
+  blur that made the flight stutter.
+
+## [2.95.12] — 2026-10-05
+
+### Fixed
+
+- The download's flight is smooth: it moved in uneven jumps, as its
+  fading blur and the light's blending were drawn frame by frame
+  alongside everything a download starts. Now it only moves and fades,
+  which the graphics card does.
+
+## [2.95.11] — 2026-10-05
+
+### Added
+
+- "Zen's own address bar, as it looks without Zia" (off by default):
+  the address bar and its pop-up as Zen draws them, with the rest of Zia
+  kept, the toolbar's colours and buttons among it (#302).
+
+## [2.95.10] — 2026-10-05
+
+### Fixed
+
+- Firefox's "What should Zen do with this file?" box opens in the middle
+  of the page, every time: it opened wherever the system put it, often
+  top left.
+- Saving from that box sends the download's flight to the Library from
+  where the box was: there was none, as the box, not the browser, was in
+  front when the download began.
+
+## [2.95.9] — 2026-10-05
+
+### Added
+
+- The welcome tour shows a download flying to the Library, in the tour
+  for newcomers and in this update's tour of what's new.
+
+## [2.95.8] — 2026-10-05
+
+### Fixed
+
+- Cmd/Ctrl+Z after closing several tabs at once (selected with Shift)
+  brings them all back: only some came back, and not always the same
+  ones, as Zen closes them a moment apart.
+
+## [2.95.7] — 2026-10-05
+
+### Fixed
+
+- The flying download's name keeps the tails of its letters (g, p, y):
+  they were cut off.
+
+## [2.95.6] — 2026-10-05
+
+### Fixed
+
+- The download's flight leans smoothly: one lean that builds through the
+  turn and eases off across the sweep, where it flipped side to side as
+  it rose. Its path is finer too.
+- After AI renaming, the Library button's badge shows the same file
+  picture as the card: Zen drew it from the file's old name, gone once
+  renamed, and fell back to a plain icon.
+- The file's picture on the card, the Library button and the downloads
+  list has Zia's squircle corners.
+
+## [2.95.5] — 2026-10-05
+
+### Added
+
+- "Text size in the sidebar" (Default, Small, Smaller or Large), for a
+  narrow sidebar where long tab names were cut short.
+- With Firefox's tab hover previews on (browser.tabs.hoverPreview.enabled),
+  a tab's hover card shows a picture of the page above its name, as
+  Firefox's own preview does, for a loaded page you're not on.
+
+### Fixed
+
+- The compact sidebar keeps its rounded corners on Windows with the page
+  edge to edge: it took the page's corners, which that squares off.
+- The toolbar's buttons and extension icons are always in the same ink
+  as the address: extension icons came out fainter, and on dark sites
+  the buttons were whiter than the address.
+
+## [2.95.4] — 2026-10-05
+
+### Removed
+
+- 2.95.3's tracking of the pointer inside pages for the download's
+  flight, which didn't work: the flight starts above where you last
+  clicked, as before, until it's done properly.
+
+## [2.95.3] — 2026-10-05
+
+### Changed
+
+- The download's flight swoops as Dia's does: from just above the
+  pointer it drops away from the Library button, rounds the turn and
+  sweeps off in a long curve to it, slow through the turn and fast
+  across the sweep, tilting with the curve.
+
+### Fixed
+
+- The flight starts above the pointer when you click inside a page too:
+  the browser window never saw those clicks, so it started where the
+  last click outside the page had been.
+
+## [2.95.2] — 2026-10-05
+
+### Fixed
+
+- The download's flight starts above where the pointer is when the
+  download begins: after Save Image As, it started back where the menu
+  had been.
+- Its light is a faint glow trailing the row along its own path, rather
+  than a bright band from start to finish that moved on its own; the
+  bloom where it lands is softer too.
+
+## [2.95.1] — 2026-10-05
+
+### Changed
+
+- The download's flight to the Library button moves as Dia's does: it
+  starts centred just above where you clicked, winds up for a moment,
+  drifting back and tilting, then is flung along a shallow curve,
+  levelling out and fading as it lands; the window dims while it flies,
+  with a beam of light to the button and a bloom where it lands. In
+  light mode the row is white and the dim a light grey.
+
+## [2.95.0] — 2026-10-05
+
+### Added
+
+- A download flies to the Library button as a row, as in Dia: a small
+  glass row with the file's icon and name pops up where you clicked,
+  then arcs off to the Library button, shrinking as it goes, and the
+  button gives a nudge as it lands. In place of Zen's circle; Zen's own
+  switch for that animation turns it off.
+
+## [2.94.13] — 2026-10-05
+
+### Changed
+
+- Tab numbers are quieter: a fainter outline around each number, and the
+  numbers a touch dimmer.
+
+## [2.94.12] — 2026-10-05
+
+### Fixed
+
+- Pointing at the Library button dismisses AI renaming's card, rather
+  than hiding it under the downloads for it to come back after.
+
+## [2.94.11] — 2026-10-05
+
+### Fixed
+
+- AI renaming's card is solid, in the space's colour: it was see-through
+  over the music card, and could stay grey whatever the space, where
+  Zia misread a space's mixed colour (which the music card's colour
+  comes from too).
+- The download badge flying from the Library button keeps the list's
+  icon size on Zen 1.23 too: 2.94.10's fix only took on newer Zen.
+
+## [2.94.10] — 2026-10-05
+
+### Changed
+
+- AI renaming's card takes the space's colour, as the music card does,
+  rather than a fixed grey that looked off on a coloured space.
+
+### Fixed
+
+- The download badge flying from the Library button to the newest
+  download stays the list's icon size, rather than growing to twice its
+  size over the name and snapping small as it landed.
+
+## [2.94.9] — 2026-10-05
+
+### Fixed
+
+- The Library's search and buttons start level with the traffic lights,
+  as far from the top as in the sidebar (they sat 5px higher).
+
+## [2.94.8] — 2026-10-05
+
+### Fixed
+
+- With "Toolbar in the site's colour" off, the toolbar takes Zen's own
+  colour, the sidebar's, as the option says, rather than Zia's
+  near-black; the page is then a card with all four corners round
+  (#271).
+
+## [2.94.7] — 2026-10-05
+
+### Changed
+
+- Folders are no longer glass: a hovered folder's box has the soft
+  shine border it had before, with round corners, and no light where
+  it's pressed.
+
+### Fixed
+
+- AI renaming's "Renamed from" card shows again on newer Zen, which
+  left it empty, so it never appeared (the file was still renamed).
+
+## [2.94.6] — 2026-10-05
+
+### Changed
+
+- The tab and folder hover cards' glass has faint light sides, as the
+  find bar's does, rather than dark ones.
+
+### Fixed
+
+- A page glanced at from an essential no longer sometimes shows a thin
+  line of colour down the left of its card.
+- The Library's Filter and Clear buttons look square; they were a touch
+  taller than wide.
+
+## [2.94.5] — 2026-10-05
+
+### Changed
+
+- The glass on the tile inside a selected essential, and on the glance
+  card, is softer: its light top and bottom a touch dimmer, its dark
+  sides a touch lighter.
+- The Library's traffic lights, search and buttons sit as far down from
+  the top as the sidebar's traffic lights do (they were 5px higher).
+
+### Removed
+
+- The blue outline around the Library button while AI renaming names a
+  download.
+
+## [2.94.4] — 2026-10-05
+
+### Changed
+
+- A page glanced at from an essential shows as a small card of Zia's
+  glass, like the essential it sits on.
+- The edge of the glass tile inside a selected essential is a touch
+  dimmer.
+
+## [2.94.3] — 2026-10-05
+
+### Changed
+
+- The glass tile inside a selected essential has a slightly thicker
+  edge, so it no longer gets lost against the essential's colour.
+
+## [2.94.2] — 2026-10-05
+
+### Changed
+
+- The glass edge's light lines along the top and bottom are a touch
+  sharper.
+
+## [2.94.1] — 2026-10-05
+
+### Fixed
+
+- The find bar's close button is the same grey as its arrows, brighter on
+  hover, rather than white beside them.
+- The folders' boxes and the find bar have a faint light line down their
+  sides in place of the dark ones, which were lost against a dark sidebar
+  or page.
+
+## [2.94.0] — 2026-10-05
+
+### Added
+
+- Liquid glass is Zia's look: a glass edge (a soft light grey hairline
+  along the top and bottom glowing into the fill, and a dark one down the
+  sides) replaces Zia's old shine and outlines on essentials (the chosen
+  one's inner tile too, keeping its colour), folders as you hover or press
+  them, the tab and folder cards, the split cards, the address pop-up, the
+  find bar, the sidebar as it flies out in compact mode, and the Library's
+  buttons and section tile. Pressing an essential, a folder, a Library
+  button or one of the Library's sections (the chosen one too, just for
+  the shine) lights it up under the pointer: the light snaps on, follows
+  the pointer while it's held, and fades once let go.
+- The welcome tour shows the liquid glass and downloads that name
+  themselves, and anyone updating sees the two of them as what's new.
+- Zia's settings are tidier: in eight sections (Look, Tabs and
+  essentials, Sidebar and folders, Address bar and new tabs, Page, Media,
+  Rename downloads with AI, Welcome tour) with shorter names, and a
+  setting that only matters with another one (the AI service's key and
+  model, the hover cards' blur, the tab numbers' colour, where
+  picture-in-picture tucks) shows only while that one's on: 45 to start
+  with rather than 77. The window buttons' settings only show on Windows
+  and Linux. Sine showed every such setting until the one it hangs on was
+  changed; Zia now shows and hides them as the page opens.
+- The glass folders and the archive box are a touch smaller.
+- Show where links go: an option (off to start with) that brings back the
+  status bar at the foot of the page as you hover a link, as a small pill
+  of Zia's glass ([#270](https://github.com/z1n-k/zia/issues/270)).
+- A squircle corner, as Dia's (only a touch squarer than a circle), one
+  shape for everything with the glass edge and every small icon button
+  (the workspaces' icons, toolbar and sidebar buttons, close and unload
+  buttons, tab number keys, the cards' buttons, even the blank icon of a
+  tab without its own), at the sizes their round corners had. Tab rows,
+  the page and menus keep their round corners.
+- Rename finished downloads with AI: [Tidy Downloads](https://github.com/Vertex-Mods/Zen-Tidy-Downloads)
+  by Bxthesda and Zylaah is part of Zia, with their permission. As a
+  download finishes, an AI service gives it a clearer name, shown in a
+  card above the Library button with an Undo. Off until you turn on
+  **Rename finished downloads with AI** in settings and add a key for
+  Mistral, OpenAI, Anthropic, Google, OpenRouter or any OpenAI-compatible
+  endpoint, or use Ollama on your own machine. Remove Tidy Downloads if
+  you have it as its own mod; Zia's copy uses the same settings. Its code
+  is slimmed for Zia (about 4,800 lines to 1,300, leftovers of an older
+  download pile gone). While a file's being renamed, only a glowing
+  outline shows around the Library button; once it has its new name, a
+  small glass pop-up in Zia's look floats above the sidebar's foot,
+  moving nothing, out of the way while the Library is open; in compact
+  mode a toast says it, with an Undo. Downloads from private
+  windows are never sent to an AI service. The card has Zia's glass edge.
+  The AI is told the page's address too (stock photo sites describe the
+  picture there), and is sent a small copy of a downloaded picture, so it
+  can name it by what it shows (a model that can't see pictures is asked
+  again without it).
+
+### Fixed
+
+- The small picture of the last download on the Library button clears
+  itself a few seconds after the download finishes, rather than staying
+  until the button is next hovered (a download under way keeps its ring).
+- The last downloads fan out above the Library button again, as tab rows,
+  and the Library button shows the picture of the latest one again: 2.92.0
+  and 2.93.4 hid them by mistake.
+- An essential's hover card meets the tile's corner again, rather than
+  sitting a little to the left of it under the new squircle corners.
+- Shapes meant to be squircles drawn as circles: the tab number keys, the
+  hover cards' buttons and the Glance buttons lost to the rule that rounds
+  every other corner. The tab close button is now the same squircle as the
+  unload button beside it.
+
+## [2.93.4] — 2026-10-04
+
+### Removed
+
+- The last downloads no longer fan out above the Library button as one
+  finishes or as you hover it; they're in the Library's Downloads.
+
+## [2.93.3] — 2026-10-04
+
+### Fixed
+
+- Spaces with no icon, dots at the foot of the sidebar, sit close
+  together again, as before 2.93.1; a dot beside a space with an icon
+  still keeps a little room from it.
+
+## [2.93.2] — 2026-10-04
+
+### Fixed
+
+- On Windows, the page keeps its gap down the right again: 2.92.0 ran it
+  to the window's right edge for the scrollbar's sake, which looked like
+  the page had lost its right border.
+
+### Changed
+
+- The Library's sliding section tile, Filter and Clear, and Media's tiles
+  have the essentials' fine edge, brightest along the middle of each side
+  and fading into the corners, rather than an even line all around.
+
+## [2.93.1] — 2026-10-04
+
+### Fixed
+
+- A space with no icon, a dot at the foot of the sidebar, is spaced like
+  the spaces beside it, rather than squashed against the one before.
+- The space beside the one shown really no longer peeks in at the
+  sidebar's edge on Windows: 2.93.0 hid it, but its folders' names set
+  themselves visible again, so the coloured slivers stayed. It's faded out
+  whole while it rests to one side.
+- No more "XML Parsing Error: syntax error" in the Browser Console for
+  each space with an icon: two of Zia's functions shared a name, so the
+  space icons went through the one meant for your own extension icons'
+  files, which tried to read the icon as text.
+
+### Changed
+
+- Folder icons, and the box they turn into, are a touch smaller.
+- The Library's empty-list notes ("No boosts yet" and the like) are at
+  the tabs' text size.
+
+## [2.93.0] — 2026-10-04
+
+### Fixed
+
+- The space beside the one shown no longer peeks in at the sidebar's edge:
+  its coloured folders showed as thin coloured slivers down the side (seen
+  on Windows).
+
+### Added
+
+- A Clear button in the Library's History too, the eraser beside the
+  filter, as in Downloads. It opens Firefox's own Clear browsing data and
+  cookies dialog, to choose what goes.
+- In the Library's Media, a tile catches the light: it leans towards the
+  cursor, its fine edge lights up nearest it, and its picture lifts, its
+  soft layered shadow falling the other way. It springs back as you leave,
+  and stays still for anyone whose system asks for less motion.
+- The Library's chosen section is lit by one tile that slides along the
+  column to the section you choose, with Zia's spring, rather than one
+  going out and another coming on.
+
+### Changed
+
+- The Library's search fields, and the filters' buttons, are at the tabs'
+  text size.
+- The Library's sections are back in Zen's own animated icons, drawn at
+  18px, a little further apart, with more room between each icon and its
+  name.
+
+## [2.92.0] — 2026-10-04
+
+### Fixed
+
+- On Windows, compact mode's sidebar has the same corners as the page
+  card, rather than far rounder ones: Zen sizes them for its squarer
+  Windows curve, which Zia draws as a circle.
+
+### Added
+
+- Zen's Library (Zen 1.23) is drawn like the rest of Zia, kept in Zen's
+  layout: its sections are essentials-style tiles, the chosen one lit;
+  history, downloads and boosts are tab rows with Zia's hover; the search
+  field and filters are Zia's tiles; pictures and boost icons sit on
+  essential-shaped tiles; download progress is Zia's loading blue; and it
+  follows light spaces and light mode.
+- The last downloads that fan out above the Library button are tab rows:
+  a tab's height and hover, the file's icon at a favicon's size, and its
+  size or state beside the name. Zen's were half as tall again as a tab.
+- A Clear button in the Library's Downloads, an eraser beside the
+  filter. It empties the list as Firefox's Clear Downloads does: the files
+  stay on disk, and a download still under way stays in the list.
+- The Library's row buttons use Zia's icons: forget and reopen in
+  History, cancel and retry in Downloads. So does the icon picker's remove
+  button, shown while an icon is chosen.
+- In the Library, rows highlight as tabs do, snapping on and off; the
+  sections' column is narrower, with the others' icons as faint as their
+  names and no fill on the chosen one; Filter and Clear are icon buttons,
+  so the search field keeps its room; and the footer has no Donate.
+- The list beside the Library's sections runs to the Library's edge (it
+  stopped short, leaving a gap at the right).
+- The Library's rows, and the downloads above its button, have the tabs'
+  own padding before the icon and gap after it, measured off a tab, with
+  each icon at a favicon's size.
+- A setting, **Zen's own Library look**, off by default, to keep Zen's
+  Library as Zen draws it.
+- The Library button at the foot of the sidebar is as faint as the tab
+  list's arrow beside it, at full strength while hovered, and no longer
+  keeps a small picture of the last download on it.
+
+### Changed
+
+- On Windows, the page meets the window's right edge, so its scrollbar is
+  at the edge: a flick of the mouse to the right of the screen, in a
+  full-size window, lands on it. Not with the tabs on the right, a panel
+  open on the right, or a split.
+
+## [2.91.5] — 2026-10-04
+
+### Fixed
+
+- Light mode (a light space, or no space colour in light mode):
+  - The tab and folder hover cards are light cards with dark text.
+  - The find in page bar is light.
+  - The address bar pop-up is light, whatever the websites' own
+    appearance setting.
+  - Sound bars on playing tabs and the music card are dark, rather than
+    white on the white selected tab.
+  - The icon picker's search text, its placeholder and the Outline and
+    Solid switch are dark on the light panel.
+  - The find in page bar's close button is the same grey as its arrows.
+  - The address bar pop-up's site and result icons are dark.
+  - The toolbar no longer flashes black while a site loads.
+  - An open folder is a shade darker, and its selected tab stays a white
+    card rather than fading into it.
+- The space name is less washed out by the space colour, in light and
+  dark mode.
+
+## [2.91.4] — 2026-10-04
+
+### Fixed
+
+- Picture-in-picture's buttons, shrunk to just their icons in a small
+  window, have their icons centred rather than a little to the left.
+- With more than one screen, picture-in-picture tucks into every side
+  that has no other screen beyond it. Where Windows scales the display,
+  the screens were measured in mixed units: only the left side was
+  offered, and with a second screen on the left the tuck button was gone
+  altogether.
+- Kick streams get their music card again, reading LIVE. Since Zen's
+  update, a card was dropped as it was made if the stream didn't say
+  where it was up to, which Kick's live player doesn't; and Kick's player
+  then gives a few seconds' position at a time, which showed as a
+  progress line looping around every three seconds.
+- Switching spaces, the tabs no longer slide in under the essentials.
+  Zen keeps every space's tabs clear of the essentials, but a space made
+  since Zen started wasn't always given that room (seen on Windows); Zia
+  gives it to every space.
+
+## [2.91.3] — 2026-10-04
+
+### Fixed
+
+- In a split, each pane's corners (and the focused pane's outline) sit
+  evenly inside the frame around them. On Windows they were rounder or
+  tighter than the page's corners, which take the window's.
+
+## [2.91.2] — 2026-10-04
+
+### Fixed
+
+- A deleted folder brought back with Reopen Closed Tab (Cmd/Ctrl+Shift+T,
+  or Cmd/Ctrl+Z) comes back as a folder again, with its name, icon and
+  colour: it collapses and animates like any other, rather than staying
+  open for good, and the local model no longer tries to name it afresh.
+
+## [2.91.1] — 2026-10-04
+
+### Fixed
+
+- With New Tab at the top of the tabs, dragging an essential back into
+  the list no longer opens a space above New Tab, where a tab can't go;
+  the space opens under it, where the tab lands, as it does for a tab.
+
+## [2.91.0] — 2026-10-04
+
+### Changed
+
+- A folder's hover card (the card listing its tabs) keeps its tabs as
+  far in from its edges, all around, as a tab's icon sits in from the
+  tab's edge in the sidebar.
+
+### Fixed
+
+- Clicking the address bar now always selects the whole address. Now
+  and then it selected only the start ("youtub"), because the text
+  moved under the pointer as the bar opened while the button was still
+  down.
+- The address bar pop-up's last row has the same gap below it as at the
+  sides again, with the list scrolling or not, rather than the extra
+  space at the bottom since Zen's update. The pop-up ends under the last
+  row that fits whole, and the list scrolls on from there.
+
+## [2.90.4] — 2026-10-04
+
+### Fixed
+
+- Showing the sidebar again by clicking (leaving compact mode), it no
+  longer slides in a little high and drops into place as it settles.
+
+## [2.90.3] — 2026-10-04
+
+### Fixed
+
+- In a split, the sidebar button at the start of each pane's toolbar
+  shows and hides the sidebar again.
+
+## [2.90.2] — 2026-10-04
+
+### Changed
+
+- In Settings → Sine Mods → Zia, the loading bar option reads "colour"
+  and "(off: Zia blue)" like the rest, and the Multiview icon's choices
+  match the tab numbers' ("The space's colour").
+- The readme's settings table follows the order of the settings
+  themselves, and its list of Zen settings Zia changes is complete:
+  Zen's tab drop on the page, Zen's acrylic look, picture-in-picture's
+  improved controls and the address bar's `https://` trimming are listed
+  with the rest.
+
+### Removed
+
+- Leftover code, a style and two icons nothing used any more, so the
+  download is a little smaller. Nothing looks or works differently.
+
+## [2.90.1] — 2026-10-03
+
+### Fixed
+
+- With Cmd/Ctrl+T set to leave the address bar ready to type in, the
+  search page's address no longer appears in it as the page loads, so
+  there's nothing to delete before typing.
+- An empty folder's dashed "Drag tabs here" box no longer shows its edge
+  under the folder's name as the folder closes.
+
+## [2.90.0] — 2026-10-03
+
+### Changed
+
+- Light mode with no space colour gets the light look light spaces have
+  (dark text, white cards), rather than white text on the pale window.
+
+### Fixed
+
+- Hiding a space's pinned tabs and folders, the line above its other tabs
+  no longer slides away with them and snaps back a moment later, pushing
+  the tabs down, and the line and the tabs bounce together.
+
+## [2.89.0] — 2026-10-03
+
+### Changed
+
+- A tab without its own icon shows just a translucent square, without
+  Zen's logo in it.
+- Hiding or showing a space's pinned tabs and folders by clicking its
+  name springs like a folder opening and closing: the tabs below go a
+  little past and settle back (with folders' gentle spring on, Settings
+  → Sine Mods → Zia → Folders).
+- Zen's donate button is gone from the note Zen shows after an update.
+- A white folder's icon has no shadow behind it; coloured folders keep
+  theirs.
+
+### Fixed
+
+- Reload has its hover square again on Zen 1.23, like back and forward.
+- Zen 1.23 turned its "acrylic" look on for everyone, drawing the
+  sidebar part see-through under Zia's own, so it came out far too
+  transparent (and the compact sidebar and address bar pop-up changed
+  too). Zia switches it back off once, for anyone who hadn't chosen it
+  themselves; it takes from the next start. (It's
+  zen.theme.acrylic-elements in about:config, to turn back on.)
+
+## [2.88.0] — 2026-10-03
+
+### Added
+
+- A folder given an icon of its own keeps the glass folder (and the
+  archive box past three tabs), wearing its icon on the glass front; it
+  tips with the front as the folder opens, white with a soft shadow so it
+  reads on any tint. Emoji icons keep their colours. The glass folder is
+  a touch larger for it. To show a folder's icon alone instead, as
+  before, right-click it and choose Show Icon Only.
+
+## [2.87.4] — 2026-10-03
+
+### Fixed
+
+- The glass folder sat a little high on its row; it's centred again.
+
+## [2.87.3] — 2026-10-03
+
+### Changed
+
+- The glass folder and the archive box are a touch narrower, still the
+  same width as each other, and each edge is bowed out slightly, a
+  squircle's, so their lines aren't ruler-straight; the corners are as
+  they were.
+
+### Fixed
+
+- A folder inside another showed its parent's state, not its own: in an
+  open folder it looked open even when shut, so opening and closing it
+  didn't animate, and it took the parent's sheets, or its archive box.
+  Each folder's icon now follows only its own folder.
+
+- Closing a folder ended in a snap, its glass icon's bright bottom edge
+  suddenly sharpening as the front landed: Firefox drew the front one way
+  while it tipped and another once it was shut. It's drawn the same way
+  throughout now, so it closes smoothly; the archive box's lid too.
+
+## [2.87.2] — 2026-10-03
+
+### Changed
+
+- The archive box is the glass folder's width, so the icon stays the same
+  size when a folder passes three tabs.
+
+## [2.87.1] — 2026-10-03
+
+### Fixed
+
+- Light spaces: the music card was a grey wash with white writing, the
+  essentials faint white tiles, the buttons on tabs (close, unload) white,
+  and an open folder's box and the fine edges around tabs and folders
+  white on cream, so they all but disappeared; so did the glass folder in
+  the space's pale colour, and the arrow in an empty folder's "Drag tabs
+  here". The music card is now a white card in the dark ink, the
+  essentials firmer white tiles with a fine dark edge, the tab buttons a
+  soft dark (as the folders' close mark), the folder box and edges a
+  faint shade of black, the glass folder and box a deeper tint with a
+  fine dark edge, and the arrow dark.
+
+## [2.87.0] — 2026-10-03
+
+### Added
+
+- A folder of more than three tabs becomes a glass archive box: the
+  folder shrinks and blurs away and the box grows into focus. For each tab
+  added its lid opens, a sheet drops into the pile and the lid shuts; for
+  each one taken out a sheet rises back out. The pile shows up to eight;
+  past that a sheet still goes in or out each time. The lid stays open
+  while the folder is, and back at three it turns into the folder again.
+  Closed, both sit centred on the folder's row.
+
+### Changed
+
+- The swipe card (the round arrow, and the list of pages it opens into)
+  is drawn like the tab and folder hover cards: their background, their
+  hairline edge rather than a thicker outline, their corners, and
+  see-through with them when they are.
+
+
+## [2.86.2] — 2026-10-03
+
+### Fixed
+
+- Windows: the page's corners came out too sharp after 2.85.0 matched
+  them to the window's. They're Zen's own corners there now, worked out
+  from the window's, which sit evenly inside it. Thanks to KRY.
+
+## [2.86.1] — 2026-10-03
+
+### Fixed
+
+- PDF viewer: the ⋮ menu was still PDF.js's own, a square grey box with a
+  caret and tall rows (taller still with the pen's row open). It's Zia's
+  dark rounded panel now, with rounded rows, a quieter icon beside each,
+  and the chosen cursor, scrolling and spread in Zia blue. The pen tools'
+  pop-ups get the same panel.
+
+## [2.86.0] — 2026-10-03
+
+### Added
+
+- Optional: the space's name above the tabs, where Zen puts it, rather
+  than up at the top of the sidebar beside the window buttons (Settings →
+  Sine Mods → Zia → Sidebar, off by default). Thanks to $loth.
+
+## [2.85.2] — 2026-10-03
+
+### Fixed
+
+- The copy link button (the paperclip shown when you hover over the address
+  bar) could go missing for good: Zia puts it beside Zen's site settings
+  button and gave up if Zen hadn't added that button yet when Zia started,
+  as could happen just after installing Zia. Zia now waits for it, and if
+  the paperclip still isn't there, Zen's own copy button stays instead of
+  being hidden. Thanks to $loth.
+
+## [2.85.1] — 2026-10-03
+
+### Fixed
+
+- Updates: Sine could go on offering an older Zia, or none at all, as the
+  date Zia gives Sine for its last update hadn't moved since 2.72. It
+  moves with every release now.
+- The tap as the swipe arrow opens into its card of pages didn't play on
+  macOS, which only plays one while the trackpad's own events are being
+  handled; it plays with the swipe now.
+
+## [2.85.0] — 2026-10-03
+
+### Added
+
+- Swiping back or forward with two fingers shows Dia's round arrow,
+  sliding in from the page's edge, level with its middle, in place of
+  Firefox's, with a tap on the trackpad as it comes fully in. Hold the
+  swipe and it opens, with another tap, into a card of the pages it goes
+  through, the next one first; it stays when you let go, to click the
+  page you want, and a click anywhere around it (or Escape) closes it. A
+  quick swipe goes back a page as before (Settings → Sine Mods → Zia →
+  Page, on by default).
+- Optional: hide the glow around the selected tab, keeping its highlight
+  (Settings → Sine Mods → Zia → Tabs, off by default).
+- Optional: two essentials to a row, however wide the sidebar, so it can
+  be made narrower (Settings → Sine Mods → Zia → Tabs, off by default).
+- Optional: the page edge to edge, with no gap, rounded corners or shadow
+  around it (Settings → Sine Mods → Zia → Page, off by default). Zen's
+  own `zen.theme.content-element-separation` set to 0 now does the same,
+  where before Zia kept its gap.
+
+### Changed
+
+- Windows: the page's corners match the window's own. Windows 11's
+  corner is 8px and the page sits a few pixels inside it, so the page's
+  8px corners looked rounder than the window around them; they're the
+  window's curve less that gap now, the two sitting evenly together.
+- While a glance is open, the toolbar steps back: clear on the window's
+  own background, in the sidebar's ink, rather than in the glanced site's
+  colour across the whole window. The page behind it is a quieter card
+  (8px corners, no shadow) and the glance a rounder one (16px). Thanks to
+  meteulku for the design.
+
+### Fixed
+
+- Zen 1.23: the buttons along the sidebar's foot (the library, the tab
+  list) came out bigger; they're the toolbar's 16px again, set by Zia so a
+  Zen update can't change them.
+- Light spaces (a pale space colour, or light mode): the sidebar was
+  drawn for dark spaces only, white text and white-tinted surfaces on a
+  cream sidebar. Its text is dark there now, with the selected tab and
+  essential white cards, and the tab numbers, folder names, space name,
+  separator and space dots to match.
+- Zen 1.23: the address bar pop-up's rows were taller and further apart
+  (Zen gave each a least height and a clear border); they're Zia's size
+  again.
+- Zen 1.23: the floating music notes Zen added over playing tabs and the
+  media card are hidden; Zia's sound bars already show what's playing.
+- Zen 1.23: switching spaces could cut off the selected tab's glow again,
+  as Zen now marks the sidebar rather than the window while it switches.
+- Windows: a click in the top-right corner of a full-size window, just
+  past the close button, landed in the gap beside the page and did
+  nothing. Close's click area now reaches the screen's right edge and the
+  corner above it, as in Windows and Dia.
+- A video gone full screen inside the window (rather than taking over the
+  screen) kept the page's rounded corners, with grey showing behind them.
+  Zia now notices any page going full screen and shows it square, black
+  and edge to edge.
+- With Zen's single toolbar (the address bar in the sidebar), a dark strip
+  ran across the top of the page: the bar there holds only the window
+  buttons, but Zia drew it as a toolbar in the site's colour, with a line
+  under it and the page's top corners squared off below. The bar is left
+  clear and the page is the rounded card, all four corners round.
+
+## [2.84.3] — 2026-10-02
+
+### Changed
+
+- Tab number keys have no fill at all, just their outline, and their
+  corners are a little less round.
+
+## [2.84.2] — 2026-10-02
+
+### Changed
+
+- Tab numbers are outlined squircle keys in the system's own font, like
+  the shortcuts in Zen's pop-ups, rather than filled keys in a monospace
+  one. A single digit's key is always square (two digits widen it), and
+  the digits sit exactly in its middle.
+- Letting go of Cmd/Ctrl, the tab numbers slide back off to the right the
+  way they came in, rather than vanishing.
+
+## [2.84.1] — 2026-10-02
+
+### Changed
+
+- The welcome tour for a new install shows everything the update card
+  does too: glass folders, a glance kept in its tab, and Bookmarks and
+  History beside your tabs.
+
+## [2.84.0] — 2026-10-02
+
+### Added
+
+- Optional: hide the space's name at the top of the sidebar, keeping its
+  icon, so a long name no longer widens the sidebar as you switch spaces
+  (Settings → Sine Mods → Zia → Tabs, off by default).
+
+## [2.83.2] — 2026-10-02
+
+### Changed
+
+- The folder icon's sheets stack from left to right: one sits in the
+  middle, a second slides in behind it on the right and pushes it
+  left, a third goes in behind those two. The back one is a little
+  dimmer, so it reads as further back.
+
+### Fixed
+
+- With folder naming by the local model on, a folder still called *New
+  Folder* was renamed after restarting the browser (or bringing it back
+  with Cmd+Z): Zen announces restored folders as if they were new. Only
+  folders you make now get named.
+- A tab dropped into a folder put down its sheet in the two-sheet spot,
+  which then jumped wider: while Zen drops a tab in, the folder holds an
+  extra child for a moment, and it was counted. The sheets are counted
+  once the folder has settled, and move between spots smoothly.
+
+## [2.83.1] — 2026-10-02
+
+### Changed
+
+- The glass folder icon's corners are a little rounder, front and back.
+- An opening folder's front tips further open, so it reads clearly as
+  open, falling a touch past and settling back up. The spring was meant
+  to be there all along, but a more specific rule kept every part of the
+  icon easing plainly.
+
+## [2.83.0] — 2026-10-02
+
+### Added
+
+- The welcome card comes back once after this update, with what's new
+  since it last showed: glass folders, a glance's picture kept in its tab,
+  Bookmarks and History beside your tabs, and the toolbar in each site's
+  own ink. As before, it can be switched off after updates in settings,
+  and **Show what's new in this version again** brings it back (Show the
+  welcome tour again still shows the full tour).
+
+### Fixed
+
+- On a site with a thin strip of another colour along its top edge, the
+  toolbar kept flicking between the strip's colour and the page's, even
+  with nothing moving. Every reading of the site's colour now looks at the
+  same band at the top of the page, so they no longer disagree.
+
+## [2.82.3] — 2026-10-02
+
+### Fixed
+
+- On Windows, the minimise, maximise and close buttons lost their icons in
+  v2.81.2: the wider click area above them took the place Firefox draws
+  the icons in.
+
+## [2.82.2] — 2026-10-02
+
+### Changed
+
+- The folder icon of a folder left white (the default) is a touch
+  brighter.
+
+## [2.82.1] — 2026-10-02
+
+### Changed
+
+- A tab whose site is waiting to play (autoplay blocked) showed Zen's
+  music note in a plain black badge. It's now a small play button in the
+  same round badge as Zia's sound bars, and a click still plays it.
+
+## [2.82.0] — 2026-10-02
+
+### Added
+
+- Folders without an icon of their own show a glass folder in their
+  colour (or the space's) instead of Zia's rings, holding a sheet of paper
+  for each tab or folder in it, up to three: an empty folder is just the
+  folder. It opens and closes with the folder, the sheets fanning out, and
+  a tab dropped in drops a sheet in with it; dragged out, its sheet lifts
+  out and away.
+- Optional: Cmd/Ctrl+T can leave the address bar ready to type in, with
+  your search engine's page behind it, instead of the page's own search
+  box (Settings → Sine Mods → Zia → New tabs).
+
+### Changed
+
+- The toolbar's text and buttons take the site's own colour, as in Dia:
+  on a cream page they're a soft brown, on a white one a soft grey, the
+  buttons (and the icons you've given extensions) the same ink as the
+  address.
+- The find bar is as tall as the address bar, and a touch see-through
+  with the page blurred behind it.
+
+### Fixed
+
+- Find in page (Cmd/Ctrl+F) opened with your last search still in it (on
+  macOS, from the system's shared find clipboard): it opens empty now, as
+  in Dia. Text selected on the page still fills it in.
+- With the address bar's text centred, the floating address bar in the
+  middle of the window was centred too: only the toolbar's is now.
+- An empty folder's "Drag tabs here" slot shrank while a glance was open:
+  it was sized from the glance's small picture.
+- A new, empty folder (New Folder) briefly showed a loading placeholder
+  and got a plain folder icon, with naming folders by a local model on:
+  Zen's hidden placeholder tab counted as a tab to name it by.
+
+## [2.81.2] — 2026-10-01
+
+### Fixed
+
+- Windows: flicking the mouse to the top of the screen missed minimise,
+  maximise and close, landing in the gap above the page's card instead.
+  Their click area now reaches the window's top edge, as in Windows
+  itself; they look just the same.
+
+## [2.81.1] — 2026-10-01
+
+### Fixed
+
+- Dragging a tab onto the essentials did nothing: it no longer turned into
+  a tile on the way, and didn't become an essential when dropped. The
+  dragged tab's section was raised over the essentials (so their icons
+  didn't show through it), which hid them from Zen, and with separate
+  essentials per container Zia looked for them in an empty box.
+
+## [2.81.0] — 2026-10-01
+
+### Added
+
+- Glance's picture on a tab sinks back into the tab when the glance is
+  opened as a tab of its own, closed, or opened into a split, instead of
+  vanishing and covering the site's icon. Thanks to
+  [Zylaah](https://github.com/Zylaah).
+
+## [2.80.4] — 2026-10-01
+
+### Fixed
+
+- The Bookmarks, History and Synced Tabs panel's close button was still
+  white: it takes the downloads button's light grey now, copied from it.
+
+## [2.80.3] — 2026-10-01
+
+### Changed
+
+- The Bookmarks, History and Synced Tabs panel's close button is the light
+  grey of the toolbar's icons, like the downloads button.
+- README: Bookmarks and History comes after Split view.
+
+### Fixed
+
+- The downloads button beside the space's name had more room below its
+  icon than above, in its hover background, and sat a little lower than
+  the toolbar's icons beside it: it's a square, the icon in its middle, a touch
+  smaller, level with the toolbar's icons (the toolbar is a pixel taller
+  for it), as in Dia.
+
+## [2.80.2] — 2026-10-01
+
+### Fixed
+
+- The Bookmarks, History and Synced Tabs panel on the same side as the tab
+  sidebar ran straight into it: a hairline, like the sidebar's separator,
+  parts them now, the window's full height, with the same gap on both
+  sides of it, and the panel slides in and out from under the page
+  rather than across the tabs. Opposite sides are unchanged.
+
+## [2.80.1] — 2026-10-01
+
+### Fixed
+
+- With an extension open in the sidebar panel (Bitwarden and the like),
+  the compact sidebar, hover cards and address pop-up lost their blur on
+  macOS. The panel is drawn the way the page is for them, so they blur
+  again.
+
+## [2.80.0] — 2026-10-01
+
+### Added
+
+- An option to keep the sound bars moving even when the system asks for
+  less motion (macOS's Reduce motion, Windows' Animation effects off), off
+  by default. The README explains reduced motion on each system, and how
+  to let Zen animate without changing the system's setting.
+
+### Fixed
+
+- The floating address bar with nothing listed under it had its address
+  and icon 5px below the middle: the bar was drawn 10px shorter than the
+  row it holds. It's as tall as its row now.
+
+## [2.79.1] — 2026-10-01
+
+### Fixed
+
+- With "New tabs open your default search engine's page" off, a new tab
+  page set by an extension (Yet another speed dial and the like) is left
+  alone: Zia had reset it to an empty page. Zia now only undoes the page
+  it set itself, and puts an extension's back if it had replaced it.
+  Splitting a tab by dropping it on itself opens that page too.
+
+## [2.79.0] — 2026-10-01
+
+### Added
+
+- The Bookmarks, History and Synced Tabs panel slides in from the
+  window's edge as it opens, the page giving way to it, and back out as it
+  closes, with Zen's own spring, exactly as the tab sidebar does.
+
+### Fixed
+
+- The floating address bar with nothing to list under it (history, top
+  sites and suggestions all off) looks like the pop-up it is, in its
+  colour, corners and shadow, with its text centred, rather than a flat
+  box with the address sitting low.
+- Collapsing or opening the sidebar no longer flashes a black strip at the
+  page's edge while the site catches up with its new width: the strip is
+  the site's own colour. (Dia shows it too.)
+
+## [2.78.3] — 2026-10-01
+
+### Fixed
+
+- Bookmarks and History rows could open with their icon at the very edge
+  and a wide gap before the name, if a tab was hovered as the panel opened.
+
+## [2.78.2] — 2026-10-01
+
+### Fixed
+
+- With asleep tabs dimmed, collapsing a folder hides a folder inside it
+  again: the dimming had kept the inner folder showing.
+
+## [2.78.1] — 2026-10-01
+
+### Fixed
+
+- The Bookmarks, History and Synced Tabs panel can no longer be dragged
+  wider than the tab sidebar can.
+
+## [2.78.0] — 2026-10-01
+
+### Added
+
+- Firefox's Bookmarks, History and Synced Tabs panels (Cmd+B,
+  Cmd+Shift+H, or View > Sidebar) are a second sidebar: beside the page,
+  full height on the window's own background like the tabs, and no wider
+  than the tab sidebar may be. Their rows are measured off your tabs
+  (text, colours, height, gaps, padding, folder indent), with highlights
+  shaped like the space name's and long titles fading as a tab's do. The
+  title sits level with the space's name in its colour, with Zia's close
+  button; Zia's solid icons replace Firefox's, and the search field gets a
+  soft fill and a faint focus line. Its look and its place beside the page
+  can each be switched off in settings.
+
+## [2.77.4] — 2026-10-01
+
+### Fixed
+
+- A folder (or tab) dragged up over the essentials stays on top of them,
+  instead of their icons showing through it.
+
+## [2.77.3] — 2026-10-01
+
+### Fixed
+
+- Searching bookmarks, history or tabs from the address bar: the text and
+  icons sit in the middle of the bar, not lower down with less room below.
+- Tab numbers go away as soon as another shortcut is pressed with Cmd (or
+  Ctrl), such as Cmd+W to close tabs, instead of staying up after Cmd is
+  let go.
+
+## [2.77.2] — 2026-10-01
+
+### Changed
+
+- A glance's picture on a tab no longer tilts as it drops back from its
+  bounce: it tips into place on the way up only. The small bounces after
+  the big one are slower, so it settles more naturally.
+
+## [2.77.1] — 2026-10-01
+
+### Changed
+
+- A glance's picture on a tab rises out of the tab as the glance opens,
+  overshoots, tips back on the way down and settles after two small bounces,
+  as in Dia.
+
+## [2.77.0] — 2026-10-01
+
+### Added
+
+- A glance on a normal tab shows as a small picture of the page, tipped at an
+  angle and cut off by the tab's bottom edge as in Dia, instead of an icon.
+  Hovering the tab tips it a little further and brings its close button
+  over it: the first click closes the glance, the next closes the tab. It
+  can be switched off in settings.
+
+## [2.76.0] — 2026-09-30
+
+### Added
+
+- A welcome tour: a short card with moving pictures of what Zia does, shown
+  once when you first install it, and after updates that bring something
+  worth showing. Step through it, close it, or see it again from settings.
+
+### Changed
+
+- Tab hover card: the pin and paperclip icons are the same size, as in Dia
+  (the paperclip was drawn larger than the pin).
+
+## [2.75.0] — 2026-09-30
+
+### Changed
+
+- Numbered tabs: typing a number now lights its key up, in Zia blue or your
+  space's colour (a new setting), and the tab is only chosen when you let
+  go of Cmd/Ctrl, so a single digit never loads a tab by accident. Past
+  nine, type the digits in turn at any pace (Cmd + 1 + 2, then let go, for
+  tab 12). Pressing another key, or letting go with nothing typed, changes
+  nothing.
+
+## [2.74.3] — 2026-09-30
+
+### Changed
+
+- A folder's hover card spaces its tabs as the sidebar does (4px apart).
+
+## [2.74.2] — 2026-09-30
+
+### Changed
+
+- Essentials are 1px shorter (41px), as in Dia.
+
+## [2.74.1] — 2026-09-30
+
+### Changed
+
+- Tab numbers are set in a monospaced font, like keys, and a little smaller.
+
+## [2.74.0] — 2026-09-30
+
+### Added
+
+- Numbered tabs, one of the simplest and most useful features yet. Hold
+  Cmd (Ctrl on Windows and Linux) and every tab and essential shows its
+  number; press the number to jump straight there. They only show while
+  you hold the key, so there's no extra clutter the rest of the time. It's
+  on by default and can be turned off in settings.
+- Tabs past 9 are reachable too: keep holding Cmd and type the digits in
+  turn. Cmd + 1 + 2 goes to tab 1, then on to tab 12, so single digits
+  stay instant.
+
+## [2.73.1] — 2026-09-30
+
+### Fixed
+
+- On black and near-black sites (GitHub) the address is white again, and
+  the grey after it lighter, as in Dia: only the pure black ones got white
+  text, the rest a dim grey.
+
+## [2.73.0] — 2026-09-30
+
+### Added
+
+- Your own SVG icons for folders and spaces, as for extensions: right-click
+  a folder or space, then Change icon → Choose an SVG…. It takes the
+  sidebar's colour, like Zia's own icons, or keeps its own colours. The
+  same menu opens the icon picker, or takes the icon off.
+
+### Fixed
+
+- The toolbar no longer flashes white on sites that show a white splash
+  before their dark page (Discord): a reading unlike the site's remembered
+  colour is only believed when a second, a moment later, agrees.
+
+## [2.72.23] — 2026-09-30
+
+### Changed
+
+- Tabs, folders and the rows in folder cards are 1px shorter (34px), as in Dia.
+
+## [2.72.22] — 2026-09-30
+
+### Changed
+
+- A folder's hover card: its selected tab stays dark too, with the same thin
+  edge as in the sidebar.
+
+## [2.72.21] — 2026-09-30
+
+### Changed
+
+- The selected tab stays dark inside a folder, as in Dia, rather than turning
+  grey on the folder's lighter box.
+
+## [2.72.20] — 2026-09-30
+
+### Changed
+
+- Tab hover card: its buttons' icons are drawn with thinner lines, as in Dia,
+  and split is a wider box.
+- The selected tab, as in Dia: its background a touch lighter, and its edge
+  an even thin line all the way around instead of bright corners.
+
+## [2.72.19] — 2026-09-30
+
+### Changed
+
+- Windows: minimise, maximise and close light up on hover as Windows and Dia
+  do, red behind close, the close button in the window's corner (thanks to
+  Zylaah). The old dimming is a setting: **Windows window buttons just dim
+  on hover**.
+
+## [2.72.18] — 2026-09-30
+
+### Changed
+
+- Address bar: the **Switch to tab** tag is in regular weight, not medium.
+
+## [2.72.17] — 2026-09-30
+
+### Fixed
+
+- A folder's card with more than ten tabs shows exactly ten, without a
+  sliver of the eleventh under them.
+
+## [2.72.16] — 2026-09-30
+
+### Added
+
+- Setting: **A coloured folder's card takes the folder's colour** (off by
+  default), the card of tabs shown on hovering a closed folder.
+
+## [2.72.15] — 2026-09-30
+
+### Added
+
+- Setting: **Address bar text is centred** (off by default).
+
+### Fixed
+
+- Dragging a folder onto the page doesn't bring up the split cards: a folder
+  can't be split (the tabs in one still can).
+- Dragging an essential onto the page: it turns into its page's picture, as
+  a tab does, and back into its tile coming back.
+
+## [2.72.14] — 2026-09-30
+
+### Fixed
+
+- Dropping a folder into a closed folder: it stays closed, without opening
+  to show all its tabs (the dropped folder missing from them for a frame).
+- The fine edge around essentials, folders and cards shows on 1x screens
+  (most Windows ones): at half a pixel it rounded to nothing there.
+
+## [2.72.13] — 2026-09-29
+
+### Fixed
+
+- Spaces: with the pinned tabs tucked away, choosing another tab shuts them
+  as smoothly as the shown tab's "-" does (its folder's name went first,
+  the tab lingered, then it all snapped shut).
+
+## [2.72.12] — 2026-09-29
+
+### Fixed
+
+- Spaces: with the pinned tabs tucked away, the separator travels up to its
+  place once the tab shown among them is unloaded or another tab is chosen
+  (it shot up out of sight and snapped back, or stayed gone).
+
+## [2.72.11] — 2026-09-29
+
+### Fixed
+
+- Dragging a tab: now and then the folders above it all jumped up out of its
+  way as it was barely moved (the tabs' order was read from a count that
+  can lag a moment behind a move).
+
+## [2.72.10] — 2026-09-29
+
+### Fixed
+
+- Folders: tucking the workspace's folders away (clicking its name) leaves no
+  gaps above or below the one still showing.
+- Spaces: with the pinned tabs tucked away, choosing a tab outside them
+  tucks away the one that was open among them too (it stayed showing).
+- Folders: a folder inside another that's open opens along with it, its tabs
+  sliding in, not snapping in afterwards.
+
+## [2.72.9] — 2026-09-29
+
+### Fixed
+
+- Folders: an empty folder's drop box shows at once as it opens and fades as
+  it closes, as its tabs would (it was the wrong way around).
+
+## [2.72.8] — 2026-09-29
+
+### Fixed
+
+- Folders: a closed folder showing its open tab keeps its padding below the
+  tab again; the extra room under the folder's name goes instead. Open
+  folders get the same tighter gap under their name.
+- Folders: the tabs in one no longer drop a few pixels as it closes.
+- Dragging a tab over the essentials: it taps as the tiles move aside for
+  it, as a split does, not for every tile crossed.
+- Dragging a tab back out of the essentials: it turns back into its row as
+  it grows, as a split does, not a tile stretched to a row's width first.
+- Dragging a tab out of a folder: the folder loses its highlight at once
+  (it lingered after the drop), and its box closes all the way as the tab
+  leaves.
+- Dragging a tab out of a folder: everything moves by a whole tab's height
+  (it was measured from the folder's name, now a little closer), so nothing
+  below snaps down on the drop.
+- Dragging a tab out of a folder: it widens back to a full tab at once, as
+  it narrowed going in.
+- Essentials: a row of fewer than would fit fills the sidebar, and the tiles
+  no longer jump as the sidebar widens.
+- Essentials: they close up behind one dragged out, and a tab dragged over
+  them no longer flips between a tile and a row.
+- Dragging a tab out of a folder: the folder eases shut to its closed height,
+  without opening a little first or the folders below snapping.
+
+## [2.72.7] — 2026-09-29
+
+### Changed
+
+- Back to the latest: 2.72.6's return to 2.71.5 is undone, and the fixes
+  made since 2.72.5 are in.
+
+### Fixed
+
+- Splits: they go into closed and empty folders, show both halves in a closed
+  folder, stay put dropped at the top, lose their glow at the top like a tab,
+  don't bring up the split cards, morph to and from the essentials, and open
+  a cell among the essentials where the pointer is (the tiles sliding aside).
+- Dropping tabs: no flash, jump or width jolt as a row lands in a folder or
+  out of one; no full-width sliver between folders inside another; a closed
+  folder whose tab is dragged out goes to its closed height, without a bounce.
+- Essentials dragged into the list can go into folders; no phantom copy
+  over the essentials; New Tab closes up with the list.
+- Empty folders slide open; reload eases into its hover look after loading;
+  closing one of a split's tabs doesn't jump.
+
+## [2.72.6] — 2026-09-29
+
+### Changed
+
+- Back to 2.71.5: everything since (Zia animating folders itself and its
+  undoing, the separator and gap changes to tab dragging, the split outline
+  over empty folders, and the tab list's scrollbar fix) is taken out.
+
+## [2.72.5] — 2026-09-29
+
+### Fixed
+
+- A split dragged over an empty folder now wears the dashed outline, around
+  its box (2.72.4 put it on its tabs, which a split draws no background
+  for, so it never showed).
+
+## [2.72.4] — 2026-09-29
+
+### Fixed
+
+- A split dragged over an empty folder wears the folder's dashed outline,
+  as a single tab does (its tabs were left plain).
+
+## [2.72.3] — 2026-09-29
+
+### Changed
+
+- Folders are back to how they were in 2.71.5: Zen animates them, with
+  Zia's adjustments on top. Zia animating folders itself (2.72.0) is gone,
+  and with it the glitches it brought (nested folders showing a tab
+  flashing and bouncing as they opened or shut, an empty folder snapping
+  open, split tabs no longer dragging into folders). The drag and
+  scrollbar fixes from 2.72.0 and 2.72.1 stay.
+
+## [2.72.2] — 2026-09-29
+
+### Fixed
+
+- A folder opened and shut again quickly shuts properly, instead of its
+  bottom tabs staying on show under it until it was next opened.
+
+## [2.72.1] — 2026-09-29
+
+### Fixed
+
+- A tab dropped into an empty closed folder keeps the folder shut, showing
+  the tab, instead of the folder flashing open (Zen opens a folder whose
+  only tab is the open one).
+
+## [2.72.0] — 2026-09-29
+
+### Changed
+
+- Folders are animated by Zia alone. Zen's own folder animations are
+  switched off, so Zen goes straight to each new layout (opening, closing,
+  showing just the open tab, letting go of it, unloading), and Zia
+  animates from what was on screen to it, the same way every time. The
+  many fixes for Zen's animations going stale when a folder was clicked
+  again part way, or for Zen writing its own values back after Zia's, are
+  gone with them.
+
+### Fixed
+
+- Dragging a tab up past the separator, it lands in the gap below the last
+  folder first, then goes in still sitting in the space made for it: it
+  counted as past the separator at the same point it went in, so it went
+  straight in.
+- Dragging a tab back down out of the last folder, it leaves once its
+  bottom meets the folder's, and past the separator again at the point it
+  crossed it, so no empty space shows above it.
+- No scrollbar shows down the tab list (Zen gives each space's list its own,
+  which the stylesheet didn't reach).
+
+## [2.71.5] — 2026-09-29
+
+### Fixed
+
+- The buttons on tab cards (pin, split, copy link), in split view panes
+  and in Glance no longer show brighter spots where an icon's strokes
+  overlap.
+- Dragging a tab past a closed folder showing its open tab, the folder
+  moves aside as one: the tab it shows no longer came apart from its name,
+  and the tabs it hides no longer showed (one appeared as "Revert").
+- A tab can be dropped at the top of a closed folder showing its open tab,
+  between the folder's name and that tab, which moves down to make room.
+- Opening a tab no longer leaves the tabs' right edge out of line with the
+  pinned tiles above until the sidebar is resized.
+- Just after dropping a tab, the tab you hover shows its x straight away,
+  a tab dropped into a folder no longer shows its x and its - at once,
+  and moving on to the next tab in the folder, the dropped one's - goes
+  (both showed one).
+
+## [2.71.4] — 2026-09-29
+
+### Fixed
+
+- A YouTube live stream in the music player shows LIVE, as Twitch and Kick
+  do, instead of a progress line that jumped about.
+
+## [2.71.3] — 2026-09-28
+
+### Fixed
+
+- The + and "New Tab" line up with the icons and names of the tabs above
+  (they sat a pixel and a half to the left).
+
+## [2.71.2] — 2026-09-28
+
+### Fixed
+
+- The music player's time no longer cuts off for something an hour or
+  longer (-1:54:45 lost its last digit).
+
+## [2.71.1] — 2026-09-28
+
+### Changed
+
+- The music player showing YouTube channel pictures is now off by
+  default; the setting turns it on.
+
+## [2.71.0] — 2026-09-28
+
+### Added
+
+- The music player shows a YouTube channel's picture instead of the
+  video's thumbnail. On by default; a setting turns it off.
+
+### Fixed
+
+- Picture-in-picture shows the video's site again on newer versions of
+  Zen, which moved the part of Firefox it's read from.
+- Picture-in-picture with Dia's look no longer shows a dark bar and a
+  play button in the top left corner when something else styles
+  Firefox's control bar as a floating pill.
+
+## [2.70.13] — 2026-09-28
+
+### Fixed
+
+- Opening a folder that showed just its open tab, its other tabs fade in
+  as it opens, instead of staying invisible and all showing at once at
+  the end.
+
+## [2.70.12] — 2026-09-28
+
+### Fixed
+
+- Dragging a tab up into the last folder above the separator, it goes in
+  sooner, rather than sitting below the folder for a stretch first.
+
+## [2.70.11] — 2026-09-28
+
+### Fixed
+
+- Opening a closed folder showing a tab from a folder inside it, the
+  inner folder's name stays put as it opens, instead of going at once so
+  the tab jumped up and back down.
+
+## [2.70.10] — 2026-09-28
+
+### Fixed
+
+- Opening a folder that showed just its open tab, its other tabs fade in
+  as they grow back, instead of a strip of each showing for a moment.
+- Clicking the name of a closed folder kept inside a closed folder opens
+  it as well as the folder around it (it only opened the outer one).
+- A closed folder showing its selected tab no longer leaves a gap under
+  it when a folder inside it is open (the fix in 2.70.9 lost out to
+  another rule).
+- Selecting a tab elsewhere while a closed folder shows a tab from a
+  folder inside it, that tab and the inner folder's name fade and the
+  folder shrinks shut, instead of vanishing at once.
+
+## [2.70.9] — 2026-09-28
+
+### Fixed
+
+- A closed folder showing its selected tab no longer leaves a gap under
+  the tab when a folder inside it is open: the inner folder's other tabs
+  and room shrink away with the rest.
+- Clicking the name of a folder kept inside a closed folder opens both,
+  instead of seeming to do nothing, and the tabs the closed folder hides
+  fade as they go rather than leaving an empty gap for a moment.
+- Selecting a tab elsewhere, a closed folder still showing its last tab
+  keeps the inner folder's name above it.
+- Opening or shutting a folder holding the open tab no longer cuts off
+  that tab's glow for a moment, and its other tabs no longer show piled up
+  as they grow back.
+
+## [2.70.8] — 2026-09-28
+
+### Fixed
+
+- Clicking an empty folder open and shut quickly, it springs smoothly
+  every time, instead of moving in jumps or sometimes not bouncing.
+- Clicking a folder open and shut quickly no longer sometimes leaves it
+  shut with an empty gap under its name.
+- Opening a folder again while it's still closing, its tabs no longer
+  slide down from above: it grows back open over them.
+- In a closed folder showing its selected tab, a folder inside it that's
+  hidden no longer leaves a thin line that can be hovered, and an empty
+  one's "Drag tabs here" box shrinks away smoothly with the rest.
+
+## [2.70.7] — 2026-09-28
+
+### Fixed
+
+- A Kick stream in the music player shows the streamer's picture, as Twitch
+  does, instead of Kick's icon.
+- Picking a tab from a closed folder's list no longer pops the folder open
+  empty and shrinks it back (2.70.5).
+- An empty folder inside a closed folder, with a tab selected in the outer
+  one, no longer leaves its "Drag tabs here" box showing.
+- A closed folder showing a selected tab that sits in a folder inside it
+  keeps that inner folder's name above the tab, as it is open, instead of
+  a bare box around the tab.
+- Unloading a closed folder showing its selected tab, its tabs no longer
+  flash up piled on one row as it shuts.
+- When the front music player goes away, the one behind shows as it moves
+  up, instead of an almost empty card for a moment.
+
+## [2.70.6] — 2026-09-28
+
+### Fixed
+
+- With the downloads button hidden until there's a download, the first
+  download flies to the button as it appears, instead of dropping a square
+  in the bottom corner.
+
+## [2.70.5] — 2026-09-28
+
+### Fixed
+
+- Opening a folder again while it's still closing, it grows back smoothly
+  from where it had got to instead of snapping open.
+- Clicking a folder open and shut quickly, it no longer sometimes snaps or
+  slides its tabs up: Zia now reads which way the folder is going from the
+  folder itself, since Zen's own start and end points go stale mid-way.
+- An empty folder's "Drag tabs here" box stays put while the folder opens
+  and closes, fading out like the tabs do, instead of shrinking and sliding.
+
+## [2.70.4] — 2026-09-28
+
+### Fixed
+
+- Opening and closing a folder quickly over and over no longer leaves it
+  open with its tabs invisible.
+
+## [2.70.3] — 2026-09-28
+
+### Fixed
+
+- "+ New Tab" in the sidebar is the same size as the tabs' names (it was a
+  little bigger).
+
+## [2.70.2] — 2026-09-28
+
+### Fixed
+
+- Dragging a tab into the last folder above the separator, it sits in the
+  space the folder makes for it, instead of over the folder's name.
+
+## [2.70.1] — 2026-09-28
+
+### Fixed
+
+- A new, empty folder is no longer given a suggested icon (it only ever
+  had its default name to go by).
+- Renaming a tab or folder, the text stays the size it is in the list.
+- The address bar's "Switch to tab" tag no longer slips off the end of a
+  row with a long title (a sliver of it showed at the edge).
+- "Switch to tab:" in the address itself is the same size as the address.
+
+## [2.70.0] — 2026-09-28
+
+### Added
+
+- An option for coloured folders to show their colour only when hovered or
+  open ("Coloured folders only show their colour when hovered or open", off
+  by default): closed, they're just their coloured name.
+
+## [2.69.5] — 2026-09-28
+
+### Fixed
+
+- On vivid site colours a little on the dark side (a strong red, say), the
+  address is white and the rest of it after the slash stays readable,
+  instead of a soft grey that all but vanished.
+
+## [2.69.4] — 2026-09-28
+
+### Fixed
+
+- With the folder spring off, an empty folder opens in one smooth motion:
+  its "Drag tabs here" slot now keeps Zen's own timing, where it paused for
+  a moment part way (thanks Bxthesda).
+- With the folder spring off, folders still open over their tabs and fade
+  them out in place as in Dia (the setting only turns off the bounce);
+  they had gone back to Zen's slide.
+
+## [2.69.3] — 2026-09-28
+
+### Fixed
+
+- With the folder spring turned off, an empty folder's "Drag tabs here"
+  slot (as on a Live Folder with nothing in it) no longer springs open and
+  shut (thanks Bxthesda).
+
+## [2.69.2] — 2026-09-28
+
+### Fixed
+
+- A collapsed space no longer shows a thin bright line above the folder it
+  keeps (the squashed edges of the coloured folders it hides).
+
+## [2.69.1] — 2026-09-28
+
+### Changed
+
+- Collapsing a space (clicking its name) with a tab open inside a folder
+  keeps that folder's name showing above the tab, instead of leaving the
+  tab on its own (thanks Bxthesda).
+
+## [2.69.0] — 2026-09-28
+
+### Changed
+
+- Opening or closing a folder, its tabs stay in place, as in Dia, instead
+  of sliding down from under the folder's name: the folder opens over
+  them, and closing, they fade out where they are.
+- Tabs you're not on are a little dimmer (in folders and splits too),
+  going white once selected, as in Dia.
+
+### Fixed
+
+- Dragging a tab, folder or split into or out of a folder (open or
+  closed), or across the separator, now gives a haptic tap, like the other
+  moments in a drag.
+- Dragging a tab up past the separator opens a space below the last
+  folder, instead of dropping it straight into that folder.
+
+## [2.68.0] — 2026-09-28
+
+### Added
+
+- Open tabs are marked in the address bar's suggestions: a small "Switch to
+  tab" tag at the end of the row.
+
+### Changed
+
+- The page's outline against the sidebar is lighter.
+- Corners are round throughout (except Zen's menus and panels), which
+  fixes squarer corners on Windows (thanks Zylaah).
+
+### Fixed
+
+- Picture-in-picture: pulling a tucked window out keeps going once it's
+  fully on the screen, instead of stopping at the edge until you let go,
+  and can be tucked away again in the same drag.
+- With a long tab list, an empty band no longer sits between the tabs and
+  the media cards (room kept for the last tab's glow, now inside the list).
+- The address bar let you type "twitch.tv" but not the "/" after it (the
+  autofilled slash that Zia hides took the typed one with it).
+
+## [2.67.11] — 2026-09-27
+
+### Fixed
+
+- The icon picker's bin button puts an extension's own icon back, and
+  shows after picking one of Zia's icons too, not only Zen's (and straight
+  away for an extension that already has a custom icon).
+
+## [2.67.10] — 2026-09-27
+
+### Fixed
+
+- Picking an extension's icon from the icon picker changes it again: each
+  icon clicked goes straight on the button, with the picker left open.
+
+## [2.67.9] — 2026-09-27
+
+### Fixed
+
+- Picking one of Zia's icons (for an extension, folder or space) could be
+  followed by Zen handing on a broken icon address, which replaced the
+  one picked when the picker stays open.
+
+## [2.67.8] — 2026-09-27
+
+### Fixed
+
+- Picking an extension's icon from the icon picker: the picker really
+  stays open now as you click through icons (each is shown on the button
+  as you go and saved when the picker closes), also when the extension was
+  right-clicked in the extensions menu.
+
+## [2.67.7] — 2026-09-27
+
+### Fixed
+
+- Sine could say Zia was up to date while an older version was installed,
+  after several releases close together. Zia now tells Sine when each
+  release was made, so an update always brings the files that match.
+
+## [2.67.6] — 2026-09-27
+
+### Fixed
+
+- Picking an extension's icon from the icon picker: the Zen tab can be
+  gone back to after opening the Zia tab, and the picker stays open so you
+  can click through icons, each one tried on the button straight away.
+
+## [2.67.5] — 2026-09-27
+
+### Fixed
+
+- The reload icon is back to how it was before 2.67.3: the changes to where
+  its line meets the arrowhead made it misbehave.
+
+## [2.67.4] — 2026-09-27
+
+### Fixed
+
+- The reload icon's line meets its arrowhead again with no gap, at rest
+  and on hover, and still without a brighter spot where they join.
+
+## [2.67.3] — 2026-09-27
+
+### Fixed
+
+- The sidebar icon no longer shows brighter spots where its divider meets
+  the outline (it's drawn as one line now, so nothing overlaps), and
+  its lines are a touch thinner, closer to Dia's.
+- The reload icon no longer shows a brighter spot where its line meets the
+  arrowhead.
+
+## [2.67.2] — 2026-09-27
+
+### Fixed
+
+- The sidebar and menu (···) buttons are the same shade as back, forward
+  and reload, instead of a little brighter or darker.
+
+## [2.67.1] — 2026-09-27
+
+### Fixed
+
+- Custom extension icons are the same colour as the back, forward and
+  reload icons, instead of a shade darker.
+
+## [2.67.0] — 2026-09-27
+
+### Added
+
+- A setting to give essentials back Zen's own widths: turn off "Essentials
+  are Zia's narrower tiles". Zia's tiles stay the default.
+
+## [2.66.0] — 2026-09-27
+
+### Added
+
+- Extensions can have icons of your own: right-click an extension's button
+  (in the toolbar or the extensions menu) and choose Change icon, then pick
+  an SVG from your computer or one of Zia's icons. SVGs take the toolbar's
+  colour like Zia's own icons, unless you tick Keep the SVG's own colours.
+  Scripts, links and anything embedded are stripped from them first.
+  Extensions that change their own icon (on or off, or per site) are noted,
+  and Zia asks before covering that up. Reset puts the original back.
+
+### Fixed
+
+- Picture-in-picture: on live streams the sound controls now move down to
+  the bottom on sites where they stayed up, since Zia now
+  also goes by Firefox hiding the progress line.
+
+## [2.65.1] — 2026-09-27
+
+### Changed
+
+- Picture-in-picture has rounded corners on Windows 11 too, as on macOS.
+- Picture-in-picture: on a live stream (no progress line), the sound
+  controls sit down at the bottom instead of floating above the gap.
+
+## [2.65.0] — 2026-09-27
+
+### Added
+
+- Picture-in-picture has a Minimise button beside Close: it puts the window
+  away and the video keeps playing in its tab (Close still stops it).
+
+### Changed
+
+- Picture-in-picture: where the window tucks is chosen by right-clicking
+  the tuck button, instead of from the small arrow that sat beside it.
+
+## [2.64.0] — 2026-09-27
+
+### Changed
+
+- Zen's glance buttons (close, open as a tab, split) are in Zia's look:
+  one dark card like the hover cards, with Zia's icons.
+
+## [2.63.0] — 2026-09-26
+
+### Added
+
+- The music player card stays when its video goes picture-in-picture (from
+  the card's own button or anywhere else), still showing and controlling
+  it: a setting, on by default (off: the card goes away, as before).
+
+## [2.62.0] — 2026-09-26
+
+### Added
+
+- A setting to hide the window buttons (minimise, maximise, close) on
+  Windows and Linux, for anyone who uses the keyboard for those (off by
+  default).
+- A setting for the address bar to show only the page's title, in the
+  domain's colour, until it's clicked (off by default).
+
+## [2.61.4] — 2026-09-26
+
+### Fixed
+
+- The first essential dragged back into the list after a restart can be
+  closed again (and so can the window): the tile Zia draws during the drag
+  stayed in the browser's list of tabs after it was removed, and closing
+  failed trying to switch to it.
+
+## [2.61.3] — 2026-09-26
+
+### Fixed
+
+- An essential dragged back into the list no longer leaves a duplicate row
+  where it was dropped, showing when the tab is hovered and gone at the next
+  click: Zen took the tile Zia draws during the drag for a real tab, and put
+  it back in the list after the drop.
+
+## [2.61.2] — 2026-09-26
+
+### Fixed
+
+- The music player's picture has rounded corners on Windows too, as on
+  macOS, instead of showing square.
+- Folders can be dragged into folders again, landing where the drag shows
+  them (as deep as Zen allows); dragged anywhere else, a folder still never
+  ends up inside one by accident.
+- A folder dragged over a folder narrows to the width of the folders inside
+  it, as a tab does.
+
+## [2.61.1] — 2026-09-26
+
+### Fixed
+
+- A tucked picture-in-picture stays tucked when its video changes (the next
+  track in a playlist), keeping its size and taking the new video's shape,
+  instead of popping back out at Firefox's default size.
+- A tab dragged below New Tab no longer shows twice (the tab stopped at the
+  end of the list, its drag picture going on with the pointer): it follows
+  the pointer the whole way.
+
+## [2.61.0] — 2026-09-26
+
+### Added
+
+- A setting to hide compact mode's top toolbar while the sidebar is out, as
+  before 2.60.0 (off by default).
+
+## [2.60.0] — 2026-09-26
+
+### Changed
+
+- Compact mode: the top toolbar (address, back, forward, reload and the rest)
+  stays up while the sidebar is out, instead of hiding. It's cut away only
+  where the sidebar covers it, following it as it slides, so the address
+  never shows through the sidebar.
+
+## [2.59.6] — 2026-09-26
+
+### Fixed
+
+- A split dragged up into the essentials opens a space for its tile, a new
+  row when the last one is full, as a tab does.
+
+## [2.59.5] — 2026-09-26
+
+### Fixed
+
+- An essential dragged back into the tab list keeps its × (or −) on as it
+  lands under the pointer, instead of it flashing in once the pointer moves.
+- Dragged straight back up into the essentials, it no longer keeps that ×
+  on its tile for a moment.
+- An essential dragged down again straight after it was dropped no longer
+  gets stuck at the top of the sidebar instead of following the pointer.
+- An essential dragged into the list over its last tab (or the New Tab
+  button) makes a whole tab's room above New Tab, not half.
+
+## [2.59.4] — 2026-09-26
+
+### Fixed
+
+- Dragging the open tab back out of a collapsed folder no longer makes it
+  vanish as soon as it leaves the folder (it was cut off by the folder's
+  own edge), so it's easy to see where it goes.
+- Dropping a tab into a collapsed folder no longer makes it blink out and
+  drop in from a row above: it stays where it landed, and the folder keeps
+  its hover box until the pointer leaves.
+- A dropped tab no longer jolts (down a step, back up, then down again)
+  before gliding into place: Firefox's end of the drag let it go for a
+  frame, and it's now held where it was let go until the glide starts.
+- A tab dropped into a folder no longer steps left and slides back as it
+  lands: the narrower look it has over the folder now goes before the
+  glide, which starts from where its background showed.
+- A tab dropped into a folder (or pulled out of one) no longer flashes an
+  × before its − (or the other way around): it swaps the moment it's let go.
+- Dropping an essential no longer throws an error in the Browser Console
+  (and skips the end of the drop's tidy-up).
+- Dragging an essential again straight after dropping one now opens a gap
+  for it among the others: the first drop's tidy-up was still running and
+  kept undoing it.
+
+## [2.59.3] — 2026-09-26
+
+### Fixed
+
+- The pin (Add to Essentials) in a tab's hover card turns a split into a
+  split essential, instead of pinning one of its tabs and leaving the other
+  without its title; Zen's own **Add to Essentials** is hidden for tabs in a
+  split, where it did the same.
+
+- An essential dragged back into the tab list lands where it's dropped
+  (pinned, if that's above the separator), instead of vanishing for a
+  moment and turning up at the end of the list below the separator.
+
+- The PDF viewer's ⋮ menu shows its items at full width again, instead of
+  squeezing each into a narrow strip with its words wrapped one or two to a
+  line.
+
+## [2.59.2] — 2026-09-26
+
+### Fixed
+
+- With **Last essential fills its row** on, the essentials no longer squeeze
+  some tiles into slivers on top of each other at some sidebar widths (and
+  the tabs no longer reach out to meet them): Zia counted the columns the
+  stretched tile itself added as real ones, and stretched it further.
+
+## [2.59.1] — 2026-09-26
+
+### Fixed
+
+- Tabs no longer reach out past the sidebar to touch the page (seen on
+  Linux after selecting a tab): Zia lines tabs up with the essentials, and
+  measured other spaces' essentials too, some of them shifted aside.
+
+- The tab list can't be scrolled sideways, which could shift the tabs over
+  against the page and cut the essentials off at both sides.
+
+- The glow of the active tab is no longer cut off when it's the last tab
+  in the list: Firefox's inner scroll box ended at the last row and cut off
+  whatever went past it.
+
+- Zen's "Clear" button beside the separator fades out as soon as you
+  leave the sidebar, as quickly as it fades in, instead of lingering.
+
+### Changed
+
+- Zia no longer writes notes to the Browser Console as it works (only
+  real problems, at the debug level), and some unused code and styles are
+  gone.
+
+## [2.59.0] — 2026-09-26
+
+### Added
+
+- Split essentials (experimental): keep a split of two sites as one
+  essential, as Dia can. Drag a two-site split onto the essentials, or
+  right-click one of its tabs and choose **Add Split to Essentials**. The
+  tile shows both sites in upright halves; clicking it opens the split, at
+  the half you clicked, and while it's open the tile takes the colour of
+  the half you're in, as does its hover card. Drag it back to the tab list
+  (or remove it from the essentials) and it's an ordinary split again. Zen
+  can't hold a split among its essentials yet, so the split is kept as two
+  ordinary tabs hidden from the tab list.
+
+### Changed
+
+- Zia's download is about a third of the size (1.9 MB down to 0.64 MB):
+  the folder icons ship as one compact file, from which Zia makes its icon
+  pack in your profile the first time it starts. Icons you've already
+  picked keep working.
+
+- The × in a split pane's own address bar closes that pane's tab, as in
+  Dia, instead of taking it out of the split into a tab of its own.
+
+### Fixed
+
+- With a split essential kept, tabs can be dragged into closed folders
+  again (the split's hidden tabs got in the way).
+
+- A split's two sites sit in the same boxes while it's dragged onto the
+  essentials as once it lands, instead of snapping into place.
+
+- An open folder shuts the moment you start dragging it, and is dragged
+  and dropped as a closed folder, instead of jumbling the rows below it.
+
+- A dragged folder lands exactly where it's shown, as a row of its own:
+  it no longer drops inside the folder under the pointer, and it's easy to
+  take right to the top of the list.
+
+- A split dragged into or out of a folder narrows and widens to fit, as a
+  tab does.
+
+- No blue block flashes on a split as it's dragged or dropped (the split's
+  own label, or Zen's drop-to-split marker).
+
+- A tab dragged up to the last folder before the separator behaves as it
+  does with the other folders: the space opened for it takes it into the
+  folder (its top half) or into the gap after the folder, above the
+  separator (its bottom half).
+
+- The suggestion to paste a copied link no longer shows the search
+  engine's name in a chip beside it.
+
+- The tab you're dragging keeps its ×.
+
+- A dragged essential no longer stretches into a band across the whole
+  window as it's let go.
+
+- Dragging a split essential back to the tab list no longer sometimes
+  leaves a stray tab behind that can't be closed.
+
+- A dragged essential glides into its new place when you let go, instead
+  of jumping there, following the tiles as they slide into their new order,
+  at the same speed as a dropped tab or folder.
+
+- A tab, split or folder you've just dropped keeps its × and − until the
+  pointer leaves it, instead of them blinking out.
+
+- A split dragged over the essentials already shows the colour it will
+  have as an essential, instead of looking inactive until it's let go.
+
+- A dragged folder no longer vanishes for a moment as it lands.
+
+- A dragged essential stays a tile while it's dragged along the last row
+  of the essentials, instead of flickering into a wide list row.
+
+- A split can be dragged across the separator, among the pinned tabs and
+  folders, like a single tab.
+
+- A split pane's toolbar buttons can always be clicked; the invisible box
+  around Zen's little move-and-expand handle sometimes sat over them.
+
+- Folder and space icons show again. Since 2.58.0 they could go missing,
+  because Zen draws them before Zia had pointed Firefox at its icons.
+
+## [2.58.1] — 2026-09-26
+
+### Changed
+
+- Windows: minimise, maximise and close dim when hovered, now that they've
+  no coloured block behind them.
+
+## [2.58.0] — 2026-09-26
+
+### Changed
+
+- Installing and updating Zia is quick again: its 6,000-odd icons come as
+  one file instead of thousands, which Sine took up to a minute to unpack
+  on some computers, freezing Zen meanwhile. Zia copies the icon file into
+  your Zen profile the first time and reads icons from it; folders and
+  spaces using one of Zia's icons move over to it by themselves.
+
+- Dimming asleep tabs is off by default (and switched off once for anyone
+  who had it on from when it was on by default); turn on **Asleep
+  (unloaded) tabs, essentials and folders look dimmed** in Zia's settings.
+
+- Windows: minimise, maximise and close have no coloured block behind them
+  on hover; the icon brightens, and close's cross turns red.
+
+### Fixed
+
+- The address bar's copy link button is as faint as the site settings
+  icon beside it again, still following the toolbar's colour.
+
+- The last tab in the list has its whole glow; it was cut off at the
+  bottom on macOS and Linux.
+
+- Windows: the space's name shows again at the top of the sidebar when it
+  slides out in compact mode.
+
+- On dark sites the toolbar's buttons are white, as in Dia, instead of a
+  mid grey, so back and forward are easy to see even when there's nowhere
+  to go.
+
+- The glance card on an essential springs out once, instead of playing
+  its animation twice as the glance opens.
+
+- The toolbar catches up with pages that recolour their header a few
+  seconds after loading (GitHub's goes from grey to black).
+
+## [2.57.0] — 2026-09-25
+
+### Changed
+
+- A page glanced at from an essential shows as a small card fanned out from
+  behind the essential's icon, springing out of it as the glance opens and
+  sucked back in as it closes, instead of a tile hanging off the corner.
+  It stays empty while the page loads, then the site's icon fades and grows
+  in.
+
+## [2.56.2] — 2026-09-25
+
+### Fixed
+
+- The open tab in a collapsed folder has its whole glow again; it was cut
+  off by the folder's edge.
+
+- The address bar's copy link (paperclip) button follows the toolbar's
+  colour like the icons beside it; it stayed white on light sites.
+
+## [2.56.1] — 2026-09-25
+
+### Fixed
+
+- Windows: with the sidebar hidden (compact mode), the minimise, maximise
+  and close buttons are back top right where they belong, instead of in
+  the sidebar, and stay there while the sidebar slides out.
+
+## [2.56.0] — 2026-09-25
+
+### Changed
+
+- Back and forward are easier to see when there's nowhere to go: their
+  dimmed look is lighter, closer to Dia's.
+
+- The toolbar stays readable on strong site colours. On a vivid mid colour
+  like a bright red, its text, buttons and bookmarks are full white and the
+  end of the address is much less faint; on bright colours white can't be
+  read on (a vivid green, say), the text turns dark.
+
+- Tab groups from Advanced Tab Groups wear their own colour, like Zia's
+  folders (gradient colours use their first colour).
+
+### Fixed
+
+- Windows: folder colours are less vivid, at rest and on hover, closer to
+  how they look on macOS. macOS is unchanged.
+
+- A collapsed folder with an open tab showing no longer lets you point at
+  its hidden tabs: the space just below the open tab brought up the
+  folder's last tab's card, and clicking there opened it.
+
+- Windows: tabs have the same rounded corners hovered as selected.
+
+- Windows: the page's corners match Windows 11's own window corners.
+
+- Windows: the download button's hover square is an even square.
+
+- Windows: the address bar's hover with no tab open is a light see-through
+  wash instead of a solid grey block.
+
+- Windows: the minimise, maximise and close buttons show again with the
+  sidebar hidden (compact mode); Zia was hiding them.
+
+- Windows: the space's icon sits level with its name.
+
+- Split view no longer puts a solid grey tray behind pages when
+  transparent pages are switched on (Transparent Zen and similar).
+
+## [2.55.0] — 2026-09-25
+
+### Changed
+
+- Back and forward fade to their dim look when there's nowhere left to go,
+  instead of snapping to it (a click that uses up the history settles
+  straight into it after the slide), and their hover square fades too.
+
+- The address bar pop-up is now see-through by default, with the page
+  blurred behind it, like the compact sidebar and the hover cards. Turn
+  off **Address bar pop-up is slightly see-through** in Zia's settings for
+  a solid one.
+
+## [2.54.0] — 2026-09-25
+
+### Added
+
+- **See-through hover cards.** The tab, folder and essential cards get the
+  same frosted look as the compact sidebar and the address bar pop-up:
+  slightly see-through, with the page behind them blurred. It's on by
+  default; turn off **Hover cards are slightly see-through** in Zia's
+  settings for solid cards.
+
+## [2.53.2] — 2026-09-25
+
+### Changed
+
+- Asleep tabs, essentials and folders are dimmed a little less.
+
+### Fixed
+
+- An asleep essential dimmed its icon but not its tile. The tile fades with
+  it now.
+
+## [2.53.1] — 2026-09-25
+
+### Added
+
+- **A close button on Zen's toasts.** The little notes that pop up in the
+  corner ("Copied" and the like) get a small ✕, so you don't have to wait
+  for them to time out (or move the mouse off them first).
+
+### Fixed
+
+- The tile behind a peeked page's icon on its tab (Option-click) was
+  stretched wider than tall, its icon off centre. It's a true square now,
+  the icon in its middle.
+
+## [2.53.0] — 2026-09-25
+
+### Added
+
+- **PDFs in Dia's viewer look.** Firefox's PDF viewer gets Dia's grey
+  toolbar: the document's name on the left; the page ("1 / 2"), zoom
+  (− 100% +), fit to page, rotate, the pen and undo/redo in the middle;
+  download, print and more on the right. The pen opens a slim second row
+  with Firefox's own tools (draw, highlight, text, signature, image and
+  comment), and folds it away again. The sidebar is just the pages, in a
+  square blue frame for the current one, on Dia's darker grey. Turn off
+  **PDFs open in Dia's viewer look** in Zia's settings for Firefox's own.
+- **A see-through address bar pop-up, as an option.** Turn on **Address bar
+  pop-up is slightly see-through, with the page blurred behind it** (it's
+  off by default). It works with the dark, light and site-coloured pop-ups,
+  and blurs web pages as well as Zen's own (on macOS that takes drawing the
+  page as a layer Zen composites itself, a trick from Floaty UI).
+
+- **A see-through compact mode sidebar.** In compact mode the flyout
+  sidebar (and top toolbar) is slightly see-through, with the page blurred
+  behind it, websites included. It's on by default; turn off **Compact
+  mode's sidebar is slightly see-through** in Zia's settings if it ever
+  looks wrong.
+
+- **Asleep tabs look asleep.** A tab or essential that's unloaded (not
+  using memory) fades its icon and title to about half, and a folder does
+  the same once every tab in it is asleep. The selected tab is always
+  awake. It's on by default; turn off **Asleep (unloaded) tabs, essentials
+  and folders look dimmed** in Zia's settings to have them look the same.
+
+### Changed
+
+- A new folder mostly of one site gets that site's own icon when there is
+  one (YouTube's, GitHub's, Reddit's…), rather than one guessed from its
+  tabs' titles, which for a folder of videos or repositories could be
+  anything.
+
+### Fixed
+
+- Zia's helper inside web pages was blocked by newer Firefox, which only
+  lets such helpers into a website's process when they're marked as safe
+  there. It's marked now, so the toolbar's colour follows the page as you
+  scroll again, and PDFs get their Dia look.
+- A page peeked at with Option-click sat on its tab in a dark, blurred box.
+  It's a soft light tile now, without the selected tab's glow or edge.
+- The copy link button on a split pane's bar was an empty square until it
+  was first clicked. It pointed at an icon that went when Zia moved to
+  Tabler's icons; it's the paperclip from the start now.
+
+## [2.52.0] — 2026-09-25
+
+### Added
+
+- **Volume and mute in picture-in-picture.** With Dia-style controls, the
+  bottom left now has a speaker (click to mute), a thin volume line and
+  the time, fading in with the other controls. In a very small window only
+  the speaker shows; live streams still show no time.
+
+## [2.51.0] — 2026-09-25
+
+### Changed
+
+- Back and forward squeeze a little less on hover, and reload's arrowhead
+  draws back a little more slowly.
+- A folder's hover colour (and its edge) comes and goes at once instead of
+  fading, also while a dragged tab passes over it.
+
+### Fixed
+
+- The buttons at the bottom of the sidebar (and the tab list chevron) turn
+  fully white while clicked or while their menu is open, as meant. 2.50.0
+  had them stay at their hover brightness instead. Resting and hovered,
+  they're unchanged.
+- A site's address with nothing after it showed a trailing "/" for a moment
+  (youtube.com/) before it went, and kept it while autofill was completing
+  what you typed. It's never shown now.
+
+### Removed
+
+- The bookmark button on tab hover cards.
+
+## [2.50.0] — 2026-09-25
+
+### Changed
+
+- **Back, forward and reload move like Dia's.** Hover back or forward and
+  the chevron squeezes; click and it slides out the way it points while a
+  fresh one slides in behind it. When a page starts loading, the reload
+  arrow spins as it shrinks away and the stop cross grows out of a small
+  plus; when it's done, the cross turns back into a plus as it shrinks and
+  the arrow spins back in. Hovering reload draws its arrowhead back a
+  little around the circle.
+
+### Fixed
+
+- The buttons at the bottom of the sidebar (and the tab list chevron)
+  turned bright white when clicked or while their menu was open. They now
+  stay at their hover brightness.
+
+## [2.49.0] — 2026-09-25
+
+### Added
+
+- **The address bar's pop-up can take the toolbar's colour.** Turn on
+  **Address bar pop-up takes the toolbar's colour as it opens** (it's off
+  by default). Clicking the address bar then opens the pop-up in the same
+  colour as the site-coloured toolbar, with dark text on light sites and
+  light text on dark ones. The colour is taken once, as the pop-up opens,
+  and kept until it closes, so scrolling the page underneath doesn't change
+  it. With the toolbar in the theme's colour, or Zen's own pop-up, nothing
+  changes.
+
+### Changed
+
+- **Copying a link pops the paperclip into a tick.** In the address bar,
+  on a tab's hover card and on a split pane's bar, the paperclip shrinks,
+  tilts and fades, then the tick springs in, running a touch past full
+  size. After a moment the tick pops back into the paperclip. It used to
+  swap in a single frame.
+- **The reload button is Dia's.** A slightly bigger circle, with no tail
+  on the arrow: just the arrowhead sitting on top of the circle, a little
+  right of centre, and the gap running from it around to three o'clock.
+
+### Fixed
+
+- A folder with a selected tab inside it didn't bounce when it opened or
+  closed. Zen moves that kind of folder differently, shrinking its other
+  tabs away (or growing them back) rather than sliding the folder shut, and
+  Zia's spring only knew the slide. Those tabs now move with the same
+  spring, and the folder stretches a couple of pixels past where it lands
+  opening, or pulls up past it closing, then settles.
+
+## [2.48.0] — 2026-09-25
+
+### Added
+
+- **The toolbar's colour checks itself.** Every few seconds, while the tab is
+  showing and the page has settled, Zia reads the top of the page again. If
+  two readings in a row agree with each other but not with the toolbar,
+  the toolbar changes to match and the colour remembered for that site is
+  corrected. This catches pages that change after loading (a banner
+  closing, a header recolouring itself) and pages whose very top edge is a
+  thin line of another colour. It also checks when the window comes back
+  into view or is resized.
+- **Folder names and icons from a local model are back, as an option.**
+  Turn on **Name new folders and choose their icons with a local model** in
+  Zia's settings (it's off by default, because the first use downloads a
+  model of about 25MB). A new folder with a default name and no icon gets a
+  name and a Tabler icon chosen from its tabs, on your machine. See the
+  README for turning on Firefox's local AI runtime first.
+
+### Fixed
+
+- Tabs' close buttons could vanish until Zen restarted. They're hidden while
+  a tab is dragged, and a drag that ended somewhere the window couldn't see
+  (dropped in another window or on the desktop, or its tab moved or closed
+  mid-drag) never cleared that. Zia now tidies up as soon as the mouse moves
+  with no button held.
+- The bottom edge of a folder's box flickered as the folder's spring
+  settled. The spring moved it by fractions of a pixel, where the box's
+  one-pixel outline fades out for a frame. The motion now lands on a whole
+  screen pixel every step.
+
+## [2.47.0] — 2026-09-24
+
+### Added
+
+- **Tuck picture-in-picture into the bottom and the bottom corners.** They
+  join the left and right sides. Throw the window at one, and a throw that
+  lands near a bottom corner is pulled into it. Tucked in a corner, a small
+  frosted square shows instead of a strip. (No top spots: macOS won't move a
+  window up past the top of the screen.)
+- **Pick where it tucks.** A small arrow beside the tuck button opens a map
+  of the screen with its five spots, and can make one the default, which
+  the tuck button then uses. The default is also in Zia's settings as
+  **Picture-in-picture tucks into**.
+- Drag a tucked strip along its side to move it; near the bottom of a side
+  it snaps into the corner, and dragged out of a corner along an edge it
+  becomes that side again.
+
+### Fixed
+
+- With more than one screen, picture-in-picture no longer tucks into an
+  edge two screens share, where it just showed on the other screen. Those
+  spots are greyed out in the picker, and a throw across that edge moves
+  the window to the other screen as normal.
+
+## [2.46.0] — 2026-09-24
+
+### Changed
+
+- The split view drop cards spring. Drag a tab onto one and it grows a touch
+  past its bigger size before settling; drag it off and it shrinks a touch
+  past its smaller size before settling. The icon and label inside spring
+  with it.
+
+## [2.45.0] — 2026-09-24
+
+### Changed
+
+- **Throw picture-in-picture at the side to tuck it.** The blue "Let go to
+  tuck away" edge is gone. Let go of the window with about a third of it
+  past the left or right side of the screen, or flick it quickly at a side,
+  and it springs the rest of the way into its tucked strip. The video frosts
+  over as it goes past the side, fully frosted where it would tuck, and
+  clears again the same way as you pull it back out.
+
+### Fixed
+
+- Live streams in picture-in-picture no longer show a progress line or time.
+  Firefox only hid them for video with no length at all, and most live
+  streams report one that keeps growing. Zia now counts a stream as live
+  the same way Zen's own music player does.
+
+## [2.44.0] — 2026-09-24
+
+### Changed
+
+- **Tucked picture-in-picture comes out by hand and stays out.** Hold the
+  strip and drag it away from the side to pull the video out under the
+  pointer; let go and it settles fully on the screen. Clicking the strip
+  still brings it out. Either way it no longer tucks itself away again when
+  the pointer leaves, which covered the video with its controls. The tuck
+  button puts it back.
+- The media stack opens without the spring, which made the top card bounce.
+  It still springs as it closes, and a single card still springs as it
+  opens.
+
+### Fixed
+
+- The copy-link button in the address bar uses the same Tabler paperclip as
+  the hover cards.
+- A music player card can no longer be dragged out of the sidebar. Dragging
+  one took it away from Zen's media player, which then stayed broken until
+  Zen restarted.
+
+## [2.43.1] — 2026-09-24
+
+### Fixed
+
+- In compact mode, pointing at a tab or folder hover card no longer hides the
+  sidebar. It stays open while the pointer is on the card, and hides as usual
+  a moment after the pointer leaves both.
+
+## [2.43.0] — 2026-09-24
+
+### Changed
+
+- **Folders open and close with a spring.** The folder slides open or shut,
+  runs a couple of pixels past and settles back, instead of Zen's even slide
+  followed by a separate 1px nudge of the folder's box. Closing, whatever is
+  below the folder bounces up very slightly. The bounce is the same size
+  whatever the folder's size. The setting is now called **Folders open and
+  close with a gentle spring**.
+- The music player opens on hover with the same kind of spring, and its
+  buttons and progress bar spring in with it.
+- The sidebar no longer shows a scrollbar anywhere. It still scrolls.
+
+## [2.42.0] — 2026-09-24
+
+### Changed
+
+- **New icons: Tabler.** The icon picker now has the 5,166
+  [Tabler](https://tabler.io/icons) icons in place of Phosphor's 1,512. A switch at the top of the picker shows
+  them as outline or solid (about a thousand have a solid version), and Zia
+  remembers which you chose. Search now looks at each icon's tags as well as
+  its name, so *money* also finds cash, coins and wallets, and results load as
+  you scroll, so the picker opens quickly.
+- Folders and spaces that already use a Phosphor icon switch to the closest
+  Tabler icon on their own.
+- The icons on hover cards and the copy-link button are Tabler's too.
+
+### Removed
+
+- Folder names and icons from a local model. Zia no longer names new folders
+  or picks their icons, and the setting is gone. The icon names it cached in
+  your profile are deleted.
+
+## [2.41.0] — 2026-09-24
+
+### Added
+
+- **Empty folders say so.** Zia lets you make a folder before it has any
+  tabs, so an open empty folder shows a dashed, tab-sized **Drag tabs here**
+  slot where the first tab will go. A folder emptied by moving its last tab
+  out collapses. While you drag a tab into an empty folder, open or
+  collapsed, the tab carries the slot's dashes. The slot is outlined in the
+  folder's colour (a soft white for white and uncoloured folders). It's sized
+  from a real tab, so a tab dragged in takes its place exactly, without the
+  folder growing.
+  It shrinks away smoothly when the folder collapses, and moves with the
+  folder when other tabs are dragged past.
+
+### Fixed
+
+- A coloured folder keeps its colour while a tab is dragged into it, instead
+  of turning to the plain hover colour.
+- A folder's colour fades to its hover colour and back instead of snapping,
+  so dropping a tab in or dragging one out no longer flashes.
+- The gap below an open folder is the same as the gap between two tabs; it
+  was thinner.
+
+## [2.40.1] — 2026-09-24
+
+### Fixed
+
+- Zen's haptic feedback could stay switched off for good. Zia mutes it for
+  the length of a tab drag, and a drag that didn't finish cleanly (Zen quit
+  mid-drag, a cancelled drop) left it muted, even after a restart. Zia now
+  puts it back shortly after the pointer is released, or on the next launch
+  at the latest, and undoes its own change instead of saving a new value.
+- Zia's drag taps no longer switch Zen's haptics on if you'd turned them off.
+- If haptics were left switched off by the old version, this version switches
+  them back on once, the first time it runs. Turning them off again
+  afterwards is respected.
+- Dragging an essential one place along now taps as it passes the
+  neighbouring tile, and taps again if you change your mind and move it
+  back, either way. It only tapped from the second tile on, and not at all
+  going back.
+
+## [2.40.0] — 2026-09-24
+
+### Changed
+
+- Multiview reads as part of the browser: the address bar shows
+  **Multiview · 3** instead of `z1n-k.github.io / Multiview · 3`, and so do
+  split panes and the tab's hover card. Clicking into the address bar to
+  type still shows the page's real address.
+
+## [2.39.3] — 2026-09-24
+
+### Changed
+
+- Errors Zia works around are no longer swallowed silently. Each is logged
+  once, at debug level, in the Browser Console (labelled with the feature,
+  e.g. `[Zia] multiview: multiviewPosition`), so problems can be tracked
+  down. Nothing changes in how Zia behaves.
+
+## [2.39.2] — 2026-09-24
+
+### Changed
+
+- The source is split into per-feature parts in `src/js` and `src/css`, and
+  `zia.uc.js` and `chrome.css` are built from them with `scripts/build.sh`.
+  The built files are the same as before apart from a note at the top, so
+  nothing changes in the browser.
+- The download Sine installs no longer includes the source parts, the build
+  script or the Multiview page, which lives on GitHub Pages.
+
+## [2.39.1] — 2026-09-24
+
+### Changed
+
+- Stronger blur behind a tucked picture-in-picture's strip (16px, up from
+  8px), for a more frosted look.
+
+## [2.39.0] — 2026-09-24
+
+### Changed
+
+- A tucked picture-in-picture's strip takes on your space's colour and
+  fades to the new one when you switch spaces. It's see-through, over the
+  video blurred behind it like frosted glass; the blur clears as the video
+  comes back out.
+
+## [2.38.1] — 2026-09-24
+
+### Fixed
+
+- Hovering a tucked picture-in-picture no longer shows a slice of video
+  beside the strip while it nudges out. The strip is now always wide enough
+  to cover the nudge.
+- The strip's arrow stays by its inner edge and moves out with the video
+  when you hover, instead of drifting right, and no longer brightens.
+
+## [2.38.0] — 2026-09-24
+
+### Added
+
+- Drag the strip of a tucked picture-in-picture up or down to move it along
+  the side of the screen. It stays tucked wherever you leave it; a click
+  without dragging still brings it out.
+
+### Fixed
+
+- Bringing a tucked picture-in-picture back out no longer flashes a thin
+  slice of video at the edge of the screen. The strip now stays over the
+  window's edge and fades as it slides in.
+
+## [2.37.0] — 2026-09-24
+
+### Changed
+
+- Tucked picture-in-picture no longer springs out when the pointer passes
+  over its strip. Hovering nudges it out a little to show it's there;
+  click the strip to bring the video all the way back.
+
+## [2.36.1] — 2026-09-24
+
+### Added
+
+- Multiview layouts, from each tile's hover bar:
+  - With two videos, a button puts them **side by side** or **stacked**.
+  - **Make this one bigger** turns a tile into the main one, with the
+    others in a row below it, or in a column beside it on a wide window.
+    Press it again to go back to the grid.
+  Tiles glide into their new places without the videos reloading, and the
+  layout you pick is remembered.
+
+## [2.36.0] — 2026-09-24
+
+### Added
+
+- The Multiview tab's grid icon fills one square per video, in Zia's blue or,
+  with **Multiview tab icon colour** set to **Space colour**, the space's own
+  colour.
+
+### Changed
+
+- Multiview holds up to four videos. With four in it, the right-click item
+  becomes **Replace in Multiview**, listing the four; pick one and the new
+  video takes its place while the others keep playing.
+- Multiview tiles show the video's title (or the stream's) instead of only
+  the site's name.
+
+## [2.35.0] — 2026-09-24
+
+### Added
+
+- **Multiview.** Right-click a video, a video's page or its tab and choose
+  **Add to Multiview**. The first one opens a Multiview tab and later ones
+  join it, in a grid that re-tiles itself to fill the tab as videos come and
+  go. Hover a tile to drag it somewhere else, give it the sound (only one
+  plays sound at a time), open it on its site or remove it. Videos carry on
+  from where they were, and live streams join live.
+  Works with YouTube, Twitch (live, videos and clips), Kick, Vimeo,
+  Dailymotion and plain video files. Sites with copy protection (Netflix,
+  sports services) can't be added. The Multiview page is hosted on the
+  repo's GitHub Pages, because YouTube and Twitch only play embedded videos
+  on a real web address; the list of videos stays in the page's address and
+  is sent nowhere.
+
+## [2.34.0] — 2026-09-24
+
+### Added
+
+- **Dia-style picture-in-picture.** At rest it's just the video. On hover the
+  video dims and shows **Back to Tab** and **Close** pills at the top, the
+  site's name in the middle, big 15-second back / play-pause / 15-second
+  forward buttons in the centre, and a thin progress line along the bottom.
+  Turn it off in the settings to get Firefox's own controls back.
+- **Tuck picture-in-picture away.** Press the new tuck button beside Close,
+  or drag the window against the left or right side of the screen (a blue
+  edge says "Let go to tuck away"), and it slides off, leaving a thin strip
+  with an arrow pointing back out. Point at the strip to peek the video back
+  out; it tucks away again when you move off it. Press **Keep it out** (the
+  same button) or drag it away from the edge to leave it out.
+- The music player always shows its picture-in-picture button when you hover
+  it. Zen only showed it when a page had exactly one video, so never on
+  YouTube.
+
+### Fixed
+
+- Typing an address no longer flashes between the site's icon and the
+  magnifying glass; the icon changes once, when it's found.
+- Results in the address pop-up show the site's icon when it's saved under
+  the other form of the address (youtube.com vs www.youtube.com), instead of
+  a blank globe.
+
+## [2.33.4] — 2026-09-24
+
+### Fixed
+
+- Scrolled results in the address pop-up are cut off exactly at its bottom
+  edge, and scrolled to the end, the last result has the same gap below it
+  as at the sides. (2.33.2 and 2.33.3 cut them off a few pixels short.)
+
+## [2.33.2] — 2026-09-24
+
+### Fixed
+
+- The address pop-up is 2px taller when its list scrolls, giving the last
+  row a touch more room at the bottom.
+- Scrolled results no longer show through below the bottom edge of the
+  address pop-up.
+
+## [2.33.0] — 2026-09-24
+
+### Added
+
+- **Address bar position** in the settings: Top (the default) or Bottom. At
+  the bottom, the toolbar sits under the page, the page's rounded corners
+  move to the top, and the address pop-up opens upwards from the bar. In
+  split view each pane's toolbar moves to the bottom of its pane, and in
+  compact mode the hidden toolbar slides in from the bottom edge. Zen's
+  single-toolbar layout keeps the address bar in the sidebar.
+
+### Fixed
+
+- The address pop-up is another 4px shorter when its list scrolls, so the
+  space below the last row matches the space at its sides.
+
+## [2.32.0] — 2026-09-24
+
+### Added
+
+- New options in the settings:
+  - **Toolbar takes the colour of the site** (on). Off keeps the toolbar in
+    the theme's colour.
+  - **Zia's rounded page corners** (on). Off uses Zen's own.
+  - **Split view drop cards** (on). Off gives tab drops on the page back to
+    Zen's own split.
+  - **The last essential stretches across the rest of its row** (off).
+
+### Changed
+
+- Cmd/Ctrl+Z after closing a folder, a split or several tabs brings the whole
+  lot back, as Firefox's own "reopen closed tab" does, instead of one tab at a
+  time. Tabs from a split go back into the split, and tabs from a deleted
+  folder go back into a folder with its old name.
+
+### Security
+
+- A Space's SVG icon is only loaded from the browser's or a mod's own files
+  (`chrome:` and `resource:`), and anything in it that could run or load
+  something (scripts, event handlers, outside links) is removed before it
+  goes into the sidebar.
+
+## [2.31.2] — 2026-09-24
+
+### Changed
+
+- The sound bars are back to four bars, shrinking to four dots when muted.
+- Sound bars on tabs are white. The tint option (off by default) now also
+  colours them with the site's artwork or favicon; essentials stay white.
+- The tint option's glow on the selected tab is now mostly the usual white
+  glow with only a hint of the favicon's colours.
+
+### Fixed
+
+- Opening the address bar pop-up no longer nudges the address text for a
+  moment; it stays where it was.
+- The pop-up is 4px shorter when its list scrolls, so the space below the
+  last row matches the space at its sides.
+
+## [2.31.0] — 2026-09-24
+
+### Added
+
+- New options in the settings:
+  - **Sound bars on playing tabs** (on). Off brings back Zen's speaker.
+  - **Selected tab glows faintly in its favicon's colours** (off). The glow
+    blends up to three of the favicon's colours, and a split glows in each
+    side's. Icons with no colour keep the white glow.
+  - **Dia-style address bar pop-up** (on). Off gives you Zen's own.
+  - **Cmd/Ctrl+T and + New Tab open a real tab** (on). Off gives Cmd/Ctrl+T
+    back to Zen's floating address bar, which Zia had no way to return to.
+
+### Changed
+
+- Zen's speaker on playing tabs is replaced by three sound bars in the
+  artwork's colours, in the same spot, which shrink to three dots when
+  muted. Click them to mute or unmute. Until the artwork's colours are
+  known, a tab's bars use its favicon's colours.
+- Essentials and the music player use the same three bars, in place of the
+  four. On essentials they stay white.
+
+ — 2026-09-24
+
+### Fixed
+
+- A tab dropped onto the essentials no longer bounces as it lands. The new
+  essential's grow-in animation sometimes started under the tab gliding into
+  place, which then took the half-grown size and squashed flat for a moment
+  before snapping back.
+
+## [2.30.3] — 2026-09-24
+
+### Fixed
+
+- Pinned tabs that can't be unloaded, such as Settings, show ✕ to close them
+  instead of a "−" that did nothing, in the sidebar and in the folder card.
+
+## [2.30.2] — 2026-09-24
+
+### Added
+
+- A tab dragged out over the page, to make a split, turns into a thumbnail
+  of its page, and back into the tab when it returns to the sidebar.
+
+### Changed
+
+- A dropped tab or folder glides from where it was let go into its place,
+  as in Dia, instead of snapping.
+
+### Fixed
+
+- A tab or folder dragged past the bottom of the list no longer vanishes
+  just under the last tab, or under the essentials' background.
+- A tab dragged into a folder narrows to exactly a folder tab's width; it
+  only narrowed on the left.
+- + New Tab moves down to make room when an essential is dragged into the
+  list above it.
+- An essential dragged off as a tab has a tab's usual gap between its icon
+  and name.
+- No flash after dropping a tab or an essential. Zen hid whatever was
+  dropped until the (invisible) drag picture had slid into place; it now
+  stays in view, a tab's ✕ or "−" no longer blinks under the pointer, and an
+  essential dragged back into the list no longer fades in from nothing.
+- Quick drags onto and off the essentials no longer leave a copy of the tab
+  stuck over the essentials, or the new essential missing for a while.
+- The bottom tab has its glow again (only the top row goes without, next to
+  the essentials).
+
+## [2.30.1] — 2026-09-24
+
+### Added
+
+- An essential dragged over the tab list makes room like any tab: the rows
+  below where it would go slide down a row, and it drops into that gap,
+  pinned or not by which side of the separator it lands.
+
+### Fixed
+
+- Dragging an essential gives the same single tap per step as dragging a
+  tab, instead of Zen's burst of taps.
+
+## [2.30.0] — 2026-09-24
+
+Everything since 2.29.0. The 2.29.1 through 2.29.44 versions were local test
+builds and were never published; what they changed is folded in here as it
+finally stands.
+
+### Added
+
+- **Copy link.** A paperclip in the address bar, just left of site settings,
+  in each split pane's toolbar, and on hover cards. It copies the page's
+  address, shows a tick for a moment, and only appears on web pages.
+- **Essentials back to tabs.** Dragging an essential off the essentials turns
+  it back into a tab, and back into a tile over the essentials.
+- Trackpad taps that follow what you see: one per row a dragged tab passes,
+  and one each time the essentials make room somewhere new. Zen's own taps,
+  which came in bursts during a drag, are switched off for its length.
+
+### Changed
+
+- Hover cards grow in only when none is showing, swap straight over when you
+  move to another tab, folder or essential, and shrink out when they go. They
+  stay up while the pointer is on them and go when it leaves. Copy link and
+  Bookmark keep the card up.
+- Hover cards have an even hairline edge all around, as in Dia, with no
+  shadow, and the grey address on them is a size bigger.
+- The folder card keeps working like the sidebar: closing or unloading tabs
+  from it keeps it open, its "−" turns into ✕ once a tab is unloaded, its
+  buttons sit where a tab's do, and its "+ New Tab" matches the sidebar's.
+- The selected tab has no glow as the very first or last row, including a
+  new tab at the bottom.
+- No icon in the address bar shrinks when clicked.
+
+### Fixed
+
+- A dragged essential can be dropped at the end of the essentials, and the
+  tile a dragged tab turns into is exactly the size of the others.
+- An essential with its hover card up can be clicked all over.
+- Resizing the sidebar no longer shows a dark bar up its edge.
+- No lone "/" while a page is loading.
+
+## [2.29.0] — 2026-09-23
+
+Everything since 2.28.0. The 2.28.1 through 2.28.37 versions were local test
+builds and were never published; what they changed is folded in here as it
+finally stands.
+
+### Added
+
+- **The first essential by dragging.** With no essentials in a space, dragging
+  a tab above the list opens a row and makes it the first one. Zen's dashed
+  "Add to Essentials" box no longer appears.
+
+### Changed
+
+- **Dragging onto the essentials.** The tile a tab turns into is the real
+  essential, favicon glow and rim included, at exactly the size of the tiles
+  beside it, drawn over everything so it's never cut off at the sidebar's
+  edge. Over a full row, the tiles make room properly: the last one moves
+  down to a new row, lined up with the rest.
+- Coloured folders use Dia's strengths: a deeper tint at rest that brightens
+  on hover, and a name that pales as the folder is hovered.
+- On a space with its own colour, the selected result in the address bar is
+  lightly tinted by it.
+- The reload icon matches Dia's more closely, and the address bar's hover box
+  on dark pages is a touch lighter.
+- The selected tab has no glow when it's the very first or last row.
+- A scrolling list of results leaves the panel 4px shorter.
+
+### Fixed
+
+- Dragging a tab no longer shows another space's essentials, and a tab
+  dragged into a folder no longer gets squeezed to a sliver.
+- The separator moves out of the way in every space, by exactly one row, with
+  + New Tab staying in view. With no normal tabs left, it shows again while
+  you drag, so a pinned tab can go back down.
+- A long folder card scrolls without cutting off its edge, and its
+  "+ New Tab" keeps a collapsed folder collapsed.
+- The icon beside a typed address finds sites whose favicon is kept under
+  their www. address (twitch.tv and others) instead of showing the globe.
+- The + New Tab button has exactly a tab's corners.
+- In the address bar's results, the part of an address that matches what
+  you typed stays grey.
+
+## [2.28.0] — 2026-09-23
+
+Everything since 2.27.0. The 2.27.1 through 2.27.51 versions were local test
+builds and were never published; what they changed is folded in here as it
+finally stands.
+
+### Added
+
+- **Tab dragging, like Dia's.** The tab itself follows the pointer and the
+  rows it passes slide aside; there's no ghost tab and no drop line, and a
+  dropped tab doesn't slide into place. Dragged over a folder, the folder
+  opens up by a row to take it, and the tab narrows to a folder tab's width;
+  dropped into a collapsed folder, the folder stays collapsed and shows the
+  tab under its header. Just below a folder, the upper half of the gap drops
+  into it and the lower half next to it, so the space between two folders
+  is reachable. Tabs cross the separator in either direction, a split drags
+  as one row, and over the essentials a tab turns into the tile it will
+  become.
+- **Folder cards.** Hovering a collapsed folder lists the tabs inside it,
+  each with its icon and name. The speaker mutes and unmutes, hovering a row
+  shows ✕ to close the tab or "−" to unload a pinned one, the tab you're on
+  is dark, and "+ New Tab" opens a tab in that folder. It replaces Zen's
+  folder search popup while hover cards are on; the option in Sine is now
+  "Tab and folder hover cards".
+
+### Changed
+
+- Hover cards for internal pages, such as Settings, show the page's name and
+  the action buttons; only a new tab keeps the title-only card. The tab
+  you're on offers Add to Split too, splitting with the tab you used before.
+- An essential's hover card sits right at the tile's corner.
+- The back and forward arrows are the height of the sidebar button beside
+  them, and the reload icon has Dia's shape.
+- Clicking away from the address bar puts the page's address back instead of
+  leaving half-typed text in it.
+- Tabs have the New Tab button's corner shape, and the active tab inside a
+  folder has the same dark background and glow as any active tab.
+- A Dia or Zen icon set on a space shows beside its name, in the name's
+  colour.
+
+### Fixed
+
+- Clicking the address bar no longer puts `https://` or `www.` back, selects
+  the whole address even while the page loads, and typing no longer loses a
+  letter when Firefox fills in an address starting with "www.".
+- A loading tab's address no longer shows bright white before dimming.
+- Hover cards no longer have a thin black line around them, and Add to Split
+  shows its full icon.
+- A coloured folder's name keeps its tint when the folder is open.
+- Hovering a collapsed folder no longer lights up a hidden tab under its
+  header, and the active tab's glow isn't cut off inside one.
+
+## [2.27.0] — 2026-09-23
+
+Everything since 2.23.0. The 2.23.1 through 2.26.x versions were local test
+builds and were never published; what they changed is folded in here as it
+finally stands.
+
+### Added
+
+- **Tab hover cards, like Dia's.** Hovering a tab shows a card with its title
+  and address after 0.6s, growing in from 70%. It carries add to Essentials,
+  bookmark, and add to split, and a pinned tab or an essential shows unpin
+  where the pin would be. Essentials is hidden when the tab is already one,
+  split is hidden for the tab you're on, and a new tab or internal page shows
+  just its title. Zia draws the card itself. There's an option to turn the
+  cards off in Sine's settings for Zia, on by default, and switching it takes
+  effect straight away.
+- **Extensions in split view, like Dia.** In a split, your pinned extension
+  buttons sit in the focused pane's toolbar, just left of its own buttons, and
+  move with the focus. They're Firefox's own buttons, moved rather than
+  copied, so badges, popups and clicks work as usual, and they go back to the
+  main toolbar when the split ends.
+
+### Changed
+
+- **Address bar ink follows the page, like Dia.** On a dark page such as
+  YouTube or Duelbits, the domain, path and toolbar icons are a dull grey
+  rather than white. A literally black page stays white. The hover highlight
+  darkens the bar, or lightens it when the bar is black.
+- **The address never shows `https://`, `http://`, or a leading `www.`**,
+  including once the bar is open. `www.twitch.tv/xqc` shows as `twitch.tv/xqc`.
+- **Split view spacing like Dia's:** 10px between panes, a frame around them,
+  on a slightly darker backdrop.
+- **The hover card's border matches the essentials':** 1px and a little
+  dimmer, brightest along the sides, soft at the corners. The card grows in a
+  little more slowly.
+- **Tab names, folder names and address bar text are 0.1px smaller.** They
+  share one size, so they all moved together.
+
+### Fixed
+
+- An essential's hover card sits just off the tile's bottom-right corner, the
+  way Dia's does, instead of covering the tile. A clear patch at that corner
+  still lets the pointer move onto the card. With the sidebar on the right it
+  hangs off the bottom-left.
+- The hover card's action buttons show their icons.
+- The dragged tab's image is just the tab, without the active tab's glow
+  around it or any of Zia's motion on it.
+- Swiping between spaces no longer lets the sliding tabs run past the sidebar
+  and over the page.
+- The space name highlights over its whole width, and only when the pointer is
+  actually over it. The first letters were missed, and empty space beside the
+  name was lighting it up.
+- The unload (–) button on a folder's header is the same dimmed colour as the
+  × next to it.
+- Pinned extension buttons no longer fade their background in and out. The
+  hover is instant.
+
+## [2.23.0] — 2026-09-22
+
+Everything since 2.13.0, including four community pull requests. The 2.22.x
+versions were local test builds and were never published; what they changed
+is folded in here as it finally stands.
+
+### Added
+
+- **Folder colours.** Right-click a folder and choose **Folder Color**. The
+  eight colours are sampled from Dia's palette. A coloured folder sits at a
+  light wash of its colour and comes up to the full colour on hover, and its
+  name takes a tint of the same colour. **White** returns a folder to the
+  default. Colours are kept across restarts.
+- **Delete a folder from its header.** Hovering a folder's header row shows an
+  ×, drawn dimmed like the folder's chevron, that deletes the folder exactly as
+  **Delete Folder** in the right-click menu does, including closing its tabs.
+- **Advanced Tab Groups support.** Plain tab groups, like the ones
+  [Advanced Tab Groups](https://github.com/Vertex-Mods/Advanced-Tab-Groups)
+  makes, get the same folder treatment as Zen folders, including suggested
+  icons. ([#5](https://github.com/z1n-k/zia/pull/5), by @trashshii007)
+- **Light search panel.** The expanded address bar follows Zen's *Website
+  appearance* setting and turns light when websites are set to light.
+  ([#10](https://github.com/z1n-k/zia/pull/10), by @bsramin)
+
+### Changed
+
+- **Space name and icon are drawn as one element**, built from Zen's
+  workspace data, so the hover pill sits evenly around the name whether or not
+  the space has an icon.
+- **Tab buttons have softer corners.** The close (×) and unload (–) buttons
+  use a 6px squircle, the tab's own shape scaled down, and both now share it.
+- **The download progress ring is thinner**, about 2px.
+- **Essentials are 1px taller.**
+- **The blended address bar works on transparent pages.** Colour sampling
+  accounts for transparency and the frame behind the page.
+  ([#8](https://github.com/z1n-k/zia/pull/8), by @trashshii007)
+
+### Fixed
+
+- Tabs no longer show through the music player. It keeps its translucent look
+  at rest and fades to a solid version of the same colour while hovered, when
+  it grows over the bottom of the sidebar. The colour is worked out from the
+  sidebar's own, so it follows each space's colour.
+- Clicking the address bar selects the whole address, not just its first few
+  characters.
+- With the sidebar on the right, the page has a gap along the window's left
+  edge, and the traffic lights sit in the sidebar beside the space name,
+  whether the sidebar is showing or slides out.
+- The unload (–) button on tabs is the same 22px box as the close (×) button.
+- A space's icon no longer disappears when the space name is hovered, and no
+  longer needs a click to appear after startup.
+- A stray first letter of the space name no longer shows on hover when a
+  space has no icon, and the hover pill no longer has extra room on the right.
+- The floating address bar keeps its own position and rounded corners.
+- Toolbar and address-panel text stays readable under light browser themes.
+  ([#10](https://github.com/z1n-k/zia/pull/10), by @bsramin)
+- Titlebar controls in compact mode on Windows, and the sidebar's open state in
+  compact mode is tracked reliably.
+  ([#7](https://github.com/z1n-k/zia/pull/7), by @trashshii007)
+
+## [2.13.0] — 2026-09-19
+
+### Added
+
+- Folder icons and names are suggested by a local model when a folder is
+  created with its default name and no icon.
+
+## [2.9.2] — 2026-09-19
+
+### Changed
+
+- Active tab glow on Windows, folder icons, essentials columns, drag highlight,
+  new tab panel, space name, unload button and brand label.
+
+## [2.8.3] — 2026-09-18
+
+### Changed
+
+- Essentials fit their columns to the available space instead of using fixed
+  breakpoints.
+
+## [2.8.0] — 2026-09-18
+
+### Changed
+
+- Essentials use three columns on a narrow sidebar.
+
+## [2.7.6] — 2026-09-18
+
+### Fixed
+
+- Folder icons centre in their row.
+
+## [2.7.5] — 2026-09-18
+
+### Added
+
+- Author and homepage in `theme.json` for the Sine store.
+
+## [2.7.3] — 2026-09-18
+
+### Fixed
+
+- Windows: the box that clips the active tab's glow is padded, so the glow
+  isn't cut off.
+
+## [2.7.2] — 2026-09-18
+
+### Fixed
+
+- Windows: room for the active tab's glow at the bottom of the tab list.
+
+## [2.7.1] — 2026-09-18
+
+### Changed
+
+- Firefox is left to hide the downloads button when there are no downloads.
+
+## [2.7.0] — 2026-09-18
+
+### Added
+
+- Feature toggles for the music player, find bar, icon picker and undo close.
+
+## [2.6.0] — 2026-09-18
+
+First tracked release.
+
+[2.27.12]: https://github.com/z1n-k/zia/compare/v2.27.11...v2.27.12
+[2.27.11]: https://github.com/z1n-k/zia/compare/v2.27.10...v2.27.11
+[2.27.10]: https://github.com/z1n-k/zia/compare/v2.27.9...v2.27.10
+[2.27.9]: https://github.com/z1n-k/zia/compare/v2.27.8...v2.27.9
+[2.27.8]: https://github.com/z1n-k/zia/compare/v2.27.7...v2.27.8
+[2.27.7]: https://github.com/z1n-k/zia/compare/v2.27.6...v2.27.7
+[2.27.6]: https://github.com/z1n-k/zia/compare/v2.27.5...v2.27.6
+[2.27.5]: https://github.com/z1n-k/zia/compare/v2.27.4...v2.27.5
+[2.27.4]: https://github.com/z1n-k/zia/compare/v2.27.3...v2.27.4
+[2.27.3]: https://github.com/z1n-k/zia/compare/v2.27.2...v2.27.3
+[2.27.2]: https://github.com/z1n-k/zia/compare/v2.27.1...v2.27.2
+[2.27.1]: https://github.com/z1n-k/zia/compare/v2.27.0...v2.27.1
+[2.27.0]: https://github.com/z1n-k/zia/compare/v2.23.0...v2.27.0
+[2.23.0]: https://github.com/z1n-k/zia/compare/df4a06f...v2.23.0
+[2.13.0]: https://github.com/z1n-k/zia/commit/df4a06f
+[2.9.2]: https://github.com/z1n-k/zia/commit/92b50b8
+[2.8.3]: https://github.com/z1n-k/zia/commit/1eb4259
+[2.8.0]: https://github.com/z1n-k/zia/commit/20829bc
+[2.7.6]: https://github.com/z1n-k/zia/commit/1c2d623
+[2.7.5]: https://github.com/z1n-k/zia/commit/dd3465c
+[2.7.3]: https://github.com/z1n-k/zia/commit/3f3a3bc
+[2.7.2]: https://github.com/z1n-k/zia/commit/40284ea
+[2.7.1]: https://github.com/z1n-k/zia/commit/b5d8b8c
+[2.7.0]: https://github.com/z1n-k/zia/commit/86effde
+[2.6.0]: https://github.com/z1n-k/zia/commit/cfde8c0

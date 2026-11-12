@@ -1,0 +1,69 @@
+.tabbrowser-tab .tab-reset-button,
+zen-folder .tab-reset-button {
+  -moz-context-properties: fill, fill-opacity !important;
+  fill: rgb(255, 255, 255) !important;
+  fill-opacity: 1 !important;
+  color: rgb(255, 255, 255) !important;
+  border-radius: calc(var(--zia-close-radius) * var(--zia-squircle-grow)) !important;
+  corner-shape: var(--zia-squircle) !important;
+  width: var(--zia-close-size) !important;
+  height: var(--zia-close-size) !important;
+  min-width: var(--zia-close-size) !important;
+  padding: 4px !important;
+}
+
+zen-folder .tab-reset-button {
+  fill-opacity: var(--zia-folder-mark-opacity) !important;
+}
+
+/* Zen 1.24.1b draws a tab's close (x) and unload (-) marks from two lines, 15px and 12px long
+   and 1.5px thick, bigger than the icons they replaced in Zia's 22px buttons: back to the
+   icons' size there (an 18px icon drawn at 14px: 12px and 10px long, 1.2px thick) */
+.tabbrowser-tab > .tab-stack > .tab-content > .tab-close-button {
+  --zen-tab-button-line-length: 12px !important;
+}
+
+.tabbrowser-tab > .tab-stack > .tab-content > .tab-reset-button {
+  --zen-tab-button-line-length: 10px !important;
+
+  @media (-moz-pref("zen.pinned-tab-manager.close-shortcut-behavior", "close")) {
+    --zen-tab-button-line-length: 12px !important;
+  }
+}
+
+.tabbrowser-tab > .tab-stack > .tab-content > :is(.tab-close-button, .tab-reset-button)::before,
+.tabbrowser-tab > .tab-stack > .tab-content > :is(.tab-close-button, .tab-reset-button)::after {
+  height: 1.2px !important;
+}
+
+@media -moz-pref("zia.urlbar.zia-look") {
+  #urlbar #identity-icon-label,
+  #urlbar .identity-icon-label {
+    display: none !important;
+  }
+}
+
+/* A folder being named by the local model shimmers (zia.uc.js) */
+.tab-group-label-container[zia-skeleton-on="true"] > *:not(.zia-skeleton-overlay) {
+  opacity: 0 !important;
+}
+
+.zia-skeleton-block {
+  background-image: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.14) 50%,
+    rgba(255, 255, 255, 0.06) 60%
+  );
+  background-size: 300% 100%;
+  animation: zia-suggesting-shimmer 1.1s ease-in-out infinite;
+}
+
+@keyframes zia-suggesting-shimmer {
+  from {
+    background-position: 130% 0;
+  }
+  to {
+    background-position: -30% 0;
+  }
+}

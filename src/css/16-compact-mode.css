@@ -1,0 +1,486 @@
+:root[zen-compact-mode="true"] .zen-toolbar-background::after {
+  box-shadow: var(--zia-glass-edge) !important;
+}
+
+:root[zen-compact-mode="true"] #zen-appcontent-wrapper {
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+:root[zen-compact-mode="true"] #navigator-toolbox:not([animate="true"]) {
+  z-index: 100 !important;
+}
+
+:root[zen-compact-mode="true"] #titlebar > #zen-sidebar-top-buttons {
+  margin-block-start: calc(var(--zia-top-row-space) - 8px) !important;
+}
+
+/* While Zen slides the sidebar in or out on switching compact mode, the
+   top row keeps the spacing it has outside compact mode: with compact's,
+   the row and everything under it rode 5.5px high through the slide and
+   dropped into place as it ended. */
+:root[zen-compact-mode="true"][zen-compact-animating] #navigator-toolbox[animate="true"] #titlebar > #zen-sidebar-top-buttons {
+  margin-block-start: calc(var(--zia-top-row-space) - 2.5px) !important;
+}
+
+/* The flyout sidebar floats with half Zia's card gap all round (as Dia's) (top, side and
+   bottom), whatever Zen's element gap is: Zen's own put it almost flush
+   with the window's edges. (At least the usual gap with the page edge to edge:
+   flush in the window's corner, the window's own rounder corner cut into the
+   sidebar's there, so its corners didn't match.) Its panel sits inside a padding of Zen's float,
+   so the side offset takes that back off. The same with Zen's single toolbar,
+   which it had been left out of: flush there, the window's own rounded corner
+   cut into the sidebar's beside it. (Zen's extra top offset there, for
+   Windows' border along the window's top, is kept.) */
+:root[zen-compact-mode="true"] #navigator-toolbox:not([animate="true"]) {
+  margin-top: 0 !important;
+  top: calc(max(var(--zia-card-gap), 6px) / 2) !important;
+  bottom: calc(max(var(--zia-card-gap), 6px) / 2) !important;
+  height: auto !important;
+}
+
+:root[zen-compact-mode="true"][zen-single-toolbar="true"] #navigator-toolbox:not([animate="true"]) {
+  top: calc(max(var(--zia-card-gap), 6px) / 2 + var(--zen-sidebar-compact-top-offset, 0px)) !important;
+}
+
+/* The Customize Collapsed Sidebar mod (#544): its gaps above and below the collapsed sidebar
+   in compact mode are kept in place of Zia's (the mod sets them only while it's on and the
+   sidebar's collapsed); Zia's own placing had the sidebar start at the window's top. */
+:root[zen-compact-mode="true"]:not([zen-sidebar-expanded="true"]) #navigator-toolbox:not([animate="true"]) {
+  top: var(--custom-sidebar-compact-top-margin, calc(max(var(--zia-card-gap), 6px) / 2)) !important;
+  bottom: var(--custom-sidebar-compact-bottom-margin, calc(max(var(--zia-card-gap), 6px) / 2)) !important;
+}
+
+:root[zen-compact-mode="true"][zen-single-toolbar="true"]:not([zen-sidebar-expanded="true"]) #navigator-toolbox:not([animate="true"]) {
+  top: var(--custom-sidebar-compact-top-margin, calc(max(var(--zia-card-gap), 6px) / 2 + var(--zen-sidebar-compact-top-offset, 0px))) !important;
+}
+
+/* Zen's collapsed sidebar, the toolbar staying up while it's out: the toolbar keeps the
+   window buttons there (31-collapsed-sidebar), so the icon column floats below it, as Zen's
+   does, rather than over them */
+@media not -moz-pref("zen.view.compact.hide-toolbar") {
+  @media not -moz-pref("zia.compact.hide-toolbar") {
+    :root[zen-compact-mode="true"]:not([zen-single-toolbar="true"]):not([zen-sidebar-expanded="true"]) #navigator-toolbox:not([animate="true"]) {
+      top: var(--custom-sidebar-compact-top-margin, calc(var(--zia-card-top-gap) + var(--zen-toolbar-height) + max(var(--zia-card-gap), 6px) / 2)) !important;
+    }
+  }
+}
+
+:root[zen-compact-mode="true"]:not([zen-right-side="true"]) #navigator-toolbox:not([animate="true"]) {
+  left: calc(max(var(--zia-card-gap), 6px) / 2 - var(--zen-compact-float, 6px)) !important;
+}
+
+:root[zen-compact-mode="true"][zen-right-side="true"] #navigator-toolbox:not([animate="true"]) {
+  right: calc(max(var(--zia-card-gap), 6px) / 2 - var(--zen-compact-float, 6px)) !important;
+}
+
+/* With Zen's hidden toolbar, Zen pushes the flyout sidebar's panel down by the
+   element gap; Zia already places it with even gaps, so its top gap came out
+   wider than its bottom one. (Not on Windows, where the window buttons sit up there.) */
+@media -moz-pref("zen.view.compact.hide-toolbar") and (not (-moz-platform: windows)) {
+  :root[zen-compact-mode="true"]:not([zen-single-toolbar="true"]) #navigator-toolbox:not([animate="true"]) #titlebar {
+    margin-top: 0 !important;
+  }
+}
+
+/* Optionally, the top toolbar hides altogether while the sidebar is out
+   (otherwise it stays, cut away under the sidebar: zia.uc.js). On Windows
+   the window buttons in it stay. */
+@media -moz-pref("zia.compact.hide-toolbar") {
+  :root[zen-compact-mode="true"][zia-panel-open="true"] {
+    & #zen-appcontent-navbar-container,
+    & #urlbar:not([breakout-extend]) {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+  }
+
+  #urlbar,
+  #zen-appcontent-navbar-container {
+    transition: opacity 0.12s ease;
+  }
+
+  @media (-moz-platform: windows) {
+    :root[zen-compact-mode="true"][zia-panel-open="true"] #zen-appcontent-navbar-container {
+      opacity: 1 !important;
+      visibility: hidden !important;
+
+      & .titlebar-buttonbox-container {
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+    }
+  }
+}
+
+/* Zen's hidden toolbar (compact mode, "hide the toolbar") opens in the window's gap
+   above the page, as Zen has it: clear, on the space's own colour, and the page under
+   it the rounded card. It had been drawn inside the card, in the site's colour with a
+   line under it, so it came in as another bar below the gap. Hidden, it's the gap
+   itself, as tall as the sides'; it grows on Zen's timing, and the site stays where it
+   is (Zen pulls it up by as much as the toolbar takes), as the card's top comes down. */
+@media -moz-pref("zen.view.compact.hide-toolbar") {
+  @media not -moz-pref("zia.compact.toolbar-over-page") {
+    /* (not in a split, where each pane has its own toolbar and this one is hidden) */
+    :root[zen-compact-mode="true"]:not([zen-single-toolbar="true"], [inDOMFullscreen="true"], [zia-urlbar-position="bottom"], [zia-split="true"]):not(#zia-none) {
+      & #zen-appcontent-wrapper {
+        margin-top: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        /* (Zia's toolbar height, not Zen's: Zen's left it a few pixels taller or shorter
+           than the toolbar in it) */
+        --zen-toolbar-height-with-bookmarks: var(--zia-toolbar-height);
+      }
+
+      &[zen-has-bookmarks] #zen-appcontent-wrapper {
+        --zen-toolbar-height-with-bookmarks: calc(var(--zia-toolbar-height) + 30px);
+      }
+
+      & #zen-appcontent-navbar-wrapper {
+        --zia-gap-ink: rgb(251, 251, 254);
+        background: transparent !important;
+        border-bottom: none !important;
+        border-radius: 0 !important;
+        transition: height var(--zen-hidden-toolbar-transition) !important;
+        color-scheme: dark !important;
+        color: var(--zia-gap-ink) !important;
+        --toolbox-textcolor: var(--zia-gap-ink) !important;
+        --toolbar-color: var(--zia-gap-ink) !important;
+        --toolbar-field-color: var(--zia-gap-ink) !important;
+        --toolbarbutton-icon-fill: var(--zia-gap-ink) !important;
+        --zia-toolbar-ink: var(--zia-gap-ink);
+        --zia-urlbar-hover-bg: rgba(255, 255, 255, 0.09);
+        --zen-toolbar-element-bg: rgba(255, 255, 255, 0.06) !important;
+        --zen-toolbar-element-bg-hover: rgba(255, 255, 255, 0.1) !important;
+
+        /* (the window's own colour shows through: Zen's copy of it, laid over the toolbar,
+           came with an edge and a shadow) */
+        & .zen-toolbar-background {
+          display: none !important;
+        }
+
+        & toolbarbutton:not(.webextension-browser-action, [id$="-browser-action"], [id$="-BAP"]) {
+          color: var(--zia-gap-ink) !important;
+          fill: var(--zia-gap-ink) !important;
+          fill-opacity: 1 !important;
+        }
+
+        & :is(#zia-url-title, #zia-url-plain) .zia-url-title-rest {
+          opacity: 0.55;
+        }
+
+        @media -moz-pref("zia.urlbar.zia-look") {
+          & #urlbar:not([breakout-extend]) .urlbar-input {
+            color: var(--zia-gap-ink) !important;
+          }
+        }
+
+        &:not([zen-has-hover], [has-popup-menu], [zen-compact-mode-active]) {
+          height: var(--zia-card-top-gap) !important;
+        }
+      }
+
+      &[zia-light] #zen-appcontent-navbar-wrapper {
+        --zia-gap-ink: var(--zia-sidebar-ink);
+        --zia-urlbar-hover-bg: rgba(0, 0, 0, 0.06);
+        --zen-toolbar-element-bg: rgba(0, 0, 0, 0.06) !important;
+        --zen-toolbar-element-bg-hover: rgba(0, 0, 0, 0.1) !important;
+        color-scheme: light !important;
+      }
+
+      & #tabbrowser-tabbox {
+        border-radius: var(--zia-card-radius) !important;
+        box-shadow: var(--zia-card-shadow) !important;
+      }
+
+      & #tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
+        border-radius: var(--zia-card-radius) !important;
+      }
+
+      & #tabbrowser-tabpanels :is(.browserSidebarContainer, .browserStack, browser) {
+        clip-path: inset(0 round var(--zia-card-radius));
+      }
+
+      /* (Zen's pull up, from the toolbar's height shown less the gap it had hidden: it
+         counts Zen's gap, wider than Zia's, so the site came down a step) */
+      @media not -moz-pref("zen.view.shift-down-site-on-hover") {
+        @media -moz-pref("zen.view.hide-window-controls") {
+          & #tabbrowser-tabpanels[has-toolbar-hovered] .browserSidebarContainer:is(.deck-selected, [zen-split="true"]) .browserContainer {
+            margin-top: calc(var(--zia-card-top-gap) - var(--zen-toolbar-height-with-bookmarks)) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Optionally (zia.compact.toolbar-over-page), it shows over the top of the page
+   instead, rather than growing into the layout and pushing the page down (the page
+   moves under the pointer). Hidden, it's a clear strip where the pointer finds it,
+   and the page, with nothing above it, has all four corners round. */
+@media -moz-pref("zen.view.compact.hide-toolbar") {
+  @media -moz-pref("zia.compact.toolbar-over-page") {
+    :root[zen-compact-mode="true"]:not([zen-single-toolbar="true"], [inDOMFullscreen="true"], [zia-urlbar-position="bottom"]):not(#zia-none) {
+      & #zen-appcontent-navbar-wrapper {
+        position: absolute !important;
+        top: 0;
+        inset-inline: 0;
+        z-index: 2;
+        /* (its hover reaches up over the gap above the page to the window's edge: crossing
+           that gap, the pointer left it, and it hid and came back, a flash. Still the
+           window's to drag by, and shown even while the rest is clipped away) */
+        overflow-clip-margin: var(--zia-card-top-gap);
+        /* (Zen 1.23.3 contains its paint, which cut that reach back off) */
+        contain: none !important;
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset-inline: 0;
+          bottom: 100%;
+          height: var(--zia-card-top-gap);
+          -moz-window-dragging: drag;
+        }
+      }
+
+      /* Zen gives the toolbar its space-coloured background here (as the flyout sidebar's),
+         which lay over Zia's page colour and tinted it the space's (green over a dark page):
+         the page's colour alone, as in the other layouts */
+      & #zen-appcontent-navbar-wrapper .zen-toolbar-background {
+        display: none !important;
+      }
+
+      /* (with "Toolbar in the site's colour" off, it's on Zen's own toolbar colour, the
+         space's, lined up with the window's as Zen's is: clear over the page, it couldn't be
+         read; #337) */
+      &[zia-theme-toolbar] #zen-appcontent-navbar-wrapper:is([zen-has-hover], [has-popup-menu], [zen-compact-mode-active]) {
+        background: var(--zen-main-browser-background-toolbar) !important;
+        background-attachment: fixed !important;
+      }
+
+      /* (hiding, it keeps its height till its contents have faded, as they fade in: it shut
+         at once and cut them off) */
+      & #zen-appcontent-navbar-wrapper:not([zen-has-hover], [has-popup-menu], [zen-compact-mode-active]) {
+        background-color: transparent !important;
+        border-bottom-color: transparent !important;
+        transition:
+          background-color var(--zen-hidden-toolbar-transition-duration, 0.2s) ease,
+          border-color var(--zen-hidden-toolbar-transition-duration, 0.2s) ease,
+          height 0s var(--zen-hidden-toolbar-transition-duration, 0.2s) !important;
+      }
+
+      /* (Zen pulls the page up as the toolbar shows, to undo its push down: with nothing
+         pushed, that lifted the page under it) */
+      & #tabbrowser-tabpanels[has-toolbar-hovered] .browserContainer {
+        margin-top: 0 !important;
+      }
+
+      & #tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
+        border-radius: var(--zia-card-radius) !important;
+      }
+
+      & #tabbrowser-tabpanels :is(.browserSidebarContainer, .browserStack, browser) {
+        clip-path: inset(0 round var(--zia-card-radius));
+      }
+    }
+  }
+}
+
+/* Zen's floating address bar (a new tab, or typing) opens over the middle of the
+   window, so the hidden toolbar stays hidden: Zen brought it out too, an empty bar
+   above (the address bar it holds was off in the middle), and pulled the page up
+   under it as for the toolbar shown. (Still shown with the pointer up there.) */
+@media -moz-pref("zen.view.compact.hide-toolbar") {
+  :root[zen-compact-mode="true"]:not([zen-single-toolbar="true"], [inDOMFullscreen="true"], [zia-urlbar-position="bottom"], [zia-split="true"]):not(#zia-none):has(#urlbar[zen-floating-urlbar="true"]):not(:has(#zen-appcontent-navbar-wrapper:is([zen-has-hover], [has-popup-menu]))) {
+    & #zen-appcontent-navbar-wrapper {
+      height: var(--zia-card-top-gap) !important;
+      overflow: clip !important;
+    }
+
+    & #zen-appcontent-navbar-container {
+      visibility: hidden !important;
+    }
+
+    & #urlbar {
+      visibility: visible !important;
+    }
+
+    & #tabbrowser-tabpanels[has-toolbar-hovered] .browserContainer {
+      margin-top: 0 !important;
+    }
+  }
+}
+
+/* Zen's single toolbar, collapsed (Zen's "hide window controls"): shown, the bar
+   grew into the layout and pushed the page down, and shrank back, pulling it up,
+   each time the pointer reached the window's top (a jitter there and over the
+   window buttons). Collapsed, its sliver still sat above the page, so the gap
+   there was twice the sides'. It shows over the page instead, on the space's
+   colour (Zen's own layer for it, which it otherwise keeps for compact mode); the
+   page keeps its place, the same gap from the top as from the sides. */
+@media -moz-pref("zen.view.hide-window-controls") {
+  :root[zen-single-toolbar="true"]:not([customizing], [inDOMFullscreen="true"]):not(#zia-none) {
+    & #zen-appcontent-wrapper {
+      position: relative !important;
+    }
+
+    & #zen-appcontent-navbar-wrapper {
+      position: absolute !important;
+      top: 0;
+      inset-inline: 0;
+      z-index: 2;
+      /* (Zen's grow and fade as it shows and hides: Zia's toolbar colour fade took
+         their place, so it came and went at once) */
+      transition:
+        height var(--zen-hidden-toolbar-transition) 0.2s,
+        opacity var(--zen-hidden-toolbar-transition) 0.2s !important;
+      /* (its hover reaches up over the gap above the page to the window's edge,
+         as in compact mode) */
+      overflow-clip-margin: var(--zia-card-top-gap);
+      contain: none !important;
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        bottom: 100%;
+        height: var(--zia-card-top-gap);
+        -moz-window-dragging: drag;
+      }
+
+      & .zen-toolbar-background {
+        display: flex !important;
+        /* (solid, as Zen draws it, even with compact mode's see-through sidebar on: over
+           the site's own top bar, its bookmarks and window buttons were drawn on top of
+           the site's, where the blur behind didn't take) */
+        background: light-dark(#e9e9e9, #131313) !important;
+        backdrop-filter: none !important;
+      }
+    }
+
+    /* (Zen pulls the page up as the bar shows, to undo its push down: with
+       nothing pushed, that lifted the page under it, its top cut off) */
+    & #tabbrowser-tabpanels[has-toolbar-hovered] .browserContainer {
+      margin-top: 0 !important;
+    }
+  }
+}
+
+#zen-dragover-background {
+  display: none !important;
+}
+
+:root[zen-sidebar-expanded]:not([zia-space-name-in-list]) .zen-current-workspace-indicator:not(#zia-workspace-slot > .zen-current-workspace-indicator) {
+  display: none !important;
+}
+
+/* Compact mode's flyout sidebar (and top toolbar) is a touch see-through,
+   with the page blurred behind it; on by default, off in Zia's settings.
+   Zen paints it as an opaque base with two cross-fading colour layers (the
+   old space and the new one); the base goes and both layers are scaled
+   down, so switching spaces still fades as before. Solid, as Zen paints it,
+   while the page shows a video (zia-video, 01-site-colour's watchVideoInView):
+   to be blurred, a video is drawn duller than macOS shows it (#564), and
+   see-through without the blur (2.118.0 to 2.121.3) left the moving video
+   showing behind the text. ("Blur over video" keeps the glass, 01-site-colour) */
+@media -moz-pref("zia.compact.sidebar-blur") {
+  :root[zen-compact-mode="true"]:not([zia-video]) {
+    & .zen-toolbar-background {
+      background: transparent !important;
+      backdrop-filter: blur(28px) saturate(1.6) !important;
+
+      &::after {
+        opacity: calc(var(--zen-background-opacity, 1) * 0.78) !important;
+      }
+
+      &::before {
+        opacity: calc((1 - var(--zen-background-opacity, 1)) * 0.78) !important;
+      }
+    }
+
+    /* On macOS a web page is a separate layer the blur can't see through to;
+       drawn as a layer Firefox composites itself, it can. (From Floaty UI.) Only
+       while the sidebar or toolbar is out over it (as Zen shows them): drawn that
+       way, an HDR video loses its HDR, washed out (#561) */
+    &:is([zen-renaming-tab="true"], :has(#navigator-toolbox:is([zen-has-hover], [zen-user-show], [zen-has-empty-tab], [flash-popup], [has-popup-menu], [movingtab], [zen-compact-mode-active], [animate="true"])), :has(#zen-appcontent-navbar-wrapper:is([zen-has-hover], [has-popup-menu], [zen-compact-mode-active]))) #tabbrowser-tabpanels .browserSidebarContainer {
+      will-change: transform !important;
+      backface-visibility: hidden !important;
+    }
+  }
+}
+
+/* Compact mode's flyout sidebar has Zia's card corners all round, as its hover
+   cards and pop-ups do. Zen sized them from the window's corner as it guesses
+   it (10px on macOS, 11px on Tahoe): where the window's real corner is rounder,
+   it cut into the flyout's corner beside it (top left, or top right with the
+   sidebar on the right), which came out rounder than the other three. Rounder
+   than the window's corner reaches, all four are the same. */
+:root[zen-compact-mode="true"]:not(#zia-none) #zen-toolbar-background {
+  &,
+  &::before,
+  &::after {
+    border-radius: calc(var(--zia-tab-card-radius) * var(--zia-squircle-grow)) !important;
+    corner-shape: var(--zia-squircle) !important;
+  }
+}
+
+/* A group being named in Advanced Tab Groups' own field (zen-renaming-group, where
+   Zen's naming is zen-renaming-tab): the flyout sidebar stays out while the name is
+   typed, as Zen keeps it out for its own, rather than sliding away mid-name. Only
+   while the field is there: a group deleted mid-name leaves the flag up. */
+@media -moz-pref("zen.view.compact.hide-tabbar") or -moz-pref("zen.view.use-single-toolbar") {
+  :root[zen-compact-mode="true"][zen-renaming-group="true"]:not([customizing], [inDOMFullscreen="true"], [supress-primary-adjustment="true"])
+    #navigator-toolbox:not([animate="true"]):has(#tab-label-input) {
+    translate: none !important;
+
+    & #titlebar {
+      transition: none !important;
+      visibility: visible !important;
+    }
+  }
+}
+
+@media (-moz-platform: windows) {
+  /* no window-button box in compact's top row: the real ones stay top right
+     (zia.uc.js), and a box left in the row pushed the space's name out */
+  :root[zen-compact-mode="true"] #zen-sidebar-top-buttons .titlebar-buttonbox-container {
+    display: none !important;
+  }
+
+  /* minimise, maximise and close as Windows (and Dia) draw them: a block on
+     hover, red behind close, following the window's corner (thanks to Zylaah) */
+  .titlebar-button,
+  .titlebar-button:hover,
+  .titlebar-button:hover:active {
+    background-image: none !important;
+  }
+
+  .titlebar-button:last-child {
+    border-top-right-radius: 5px !important;
+  }
+}
+
+/* Optionally, no block behind them: hovered, a button just dims, and dims a
+   little more while pressed */
+@media (-moz-platform: windows) and -moz-pref("zia.window-buttons.dim") {
+  .titlebar-button,
+  .titlebar-button:hover,
+  .titlebar-button:hover:active {
+    background-color: transparent !important;
+  }
+
+  .titlebar-button {
+    opacity: 1;
+    transition: opacity 0.15s ease !important;
+  }
+
+  .titlebar-button:hover {
+    opacity: 0.55 !important;
+  }
+
+  .titlebar-button:hover:active {
+    opacity: 0.4 !important;
+  }
+}
+
+

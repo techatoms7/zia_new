@@ -1,0 +1,35 @@
+{
+    "id":  "zia-collapsible",
+    "name":  "Zia Collapsible",
+    "description":  "Zia with an optional collapsible, blurred sidebar (toggle in settings).",
+    "image":  "https://raw.githubusercontent.com/z1n-k/zia/readme-images/hero.webp",
+    "readme":  "https://raw.githubusercontent.com/z1n-k/zia/main/README.md",
+    "author":  "z1n-k",
+    "version":  "2.122.5",
+    "updatedAt":  "2026-11-11T22:18:00Z",
+    "style":  {
+                  "chrome":  "chrome.css"
+              },
+    "scripts":  {
+                    "zia.uc.js":  {
+                                      "include":  [
+                                                      "chrome://browser/content/browser.xhtml"
+                                                  ]
+                                  },
+                    "zia-collapsible.uc.js":  {
+                                                  "include":  [
+                                                                  "chrome://browser/content/browser.xhtml"
+                                                              ]
+                                              }
+                },
+    "tags":  [
+                 "chrome",
+                 "layout",
+                 "sleek"
+             ],
+    "fork":  [
+                 "zen"
+             ],
+    "preferences":  "preferences.json",
+    "homepage":  "https://github.com/z1n-k/zia"
+}

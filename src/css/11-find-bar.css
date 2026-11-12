@@ -1,0 +1,231 @@
+@media -moz-pref("zia.features.find-bar") {
+.browserContainer:has(> findbar) {
+  position: relative;
+}
+
+/* the page under it blurs too while it's open, drawn as a layer Firefox composites itself
+   (the trick from Floaty UI, as for the address pop-up): only then, as an HDR video drawn
+   that way loses its HDR (#561). Not while the page shows a video, as the compact
+   sidebar (16-compact-mode) */
+:root:not([zia-video]) #tabbrowser-tabpanels .browserSidebarContainer:has(findbar:not([hidden])) {
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+}
+
+findbar {
+  grid-area: auto !important;
+  position: absolute !important;
+  top: 10px;
+  right: 12px;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 3;
+  width: 380px;
+  max-width: calc(100% - 24px);
+  /* as tall as the address bar, and a touch see-through, the page
+     blurred behind it, as in Dia */
+  height: var(--zia-urlbar-height, 32px);
+  margin: 0 !important;
+  padding: 0 4px 0 10px !important;
+  display: flex;
+  align-items: center;
+  background: rgba(38, 38, 38, 0.78) !important;
+  backdrop-filter: blur(18px) saturate(1.4);
+  border: none !important;
+  border-radius: calc(12px * var(--zia-squircle-grow));
+  /* Zia's glass edge, its sides a faint light line rather than dark ones,
+     which went nowhere against a dark page, and a soft lift off it */
+  box-shadow: var(--zia-glass-edge-lit-dark), 0 10px 30px rgba(0, 0, 0, 0.35);
+  color: rgba(255, 255, 255, 0.92) !important;
+  color-scheme: dark;
+  transition: none !important;
+
+  &[hidden] {
+    display: none !important;
+  }
+
+  flex-direction: row !important;
+
+  & .findbar-container {
+    order: 1;
+    flex: 1;
+    flex-direction: row !important;
+    min-width: 0;
+    margin: 0 !important;
+    gap: 2px;
+    padding: 0 !important;
+    height: 100%;
+    align-items: center;
+
+    &::before {
+      order: -1;
+      content: "";
+      flex: none;
+      width: 16px;
+      height: 16px;
+      margin-inline-end: 8px;
+      background-color: currentColor;
+      opacity: 0.6;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='7' cy='7' r='4.6' fill='none' stroke='black' stroke-width='1.4'/%3E%3Cpath d='M10.4 10.4 13.6 13.6' stroke='black' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+  }
+
+  & :is(.findbar-textbox-wrapper, [anonid="findbar-textbox-wrapper"], .findbar-container > :has(> .findbar-textbox)) {
+    display: contents !important;
+  }
+
+  & .findbar-textbox {
+    order: 1;
+    flex: 1 1 auto !important;
+    min-width: 0;
+    width: auto !important;
+    max-width: none !important;
+    height: 28px;
+    margin: 0 !important;
+    padding: 0 !important;
+    appearance: none !important;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: inherit !important;
+    font-size: 14px !important;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    &[status="notfound"] {
+      color: rgb(255, 128, 128) !important;
+    }
+  }
+
+  & .found-matches {
+    order: 2;
+    margin: 0 6px !important;
+    font-size: 0 !important;
+    color: rgba(255, 255, 255, 0.75);
+
+    &::after {
+      content: attr(zia-count);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  & :is(.findbar-find-previous, .findbar-find-next) {
+    width: 28px;
+    height: 28px;
+    margin: 0 !important;
+    padding: 6px !important;
+    border: none !important;
+    border-radius: 7px !important;
+    background: transparent !important;
+  }
+
+  & :is(.findbar-find-previous, .findbar-find-next):hover:not([disabled]),
+  & .findbar-closebutton:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* (the close button the same grey as the arrows, which Firefox's icons
+     drew fainter than the text; brighter on hover) */
+  & :is(.findbar-find-previous, .findbar-find-next, .findbar-closebutton) {
+    color: rgba(255, 255, 255, 0.55) !important;
+    fill: currentColor !important;
+    fill-opacity: 1 !important;
+
+    &:hover:not([disabled]) {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+  }
+
+  & .findbar-find-previous {
+    order: 3;
+  }
+
+  & .findbar-find-next {
+    order: 4;
+  }
+
+  & :is(.findbar-highlight, .findbar-case-sensitive, .findbar-match-diacritics, .findbar-entire-word),
+  & .findbar-label:not(.found-matches) {
+    display: none !important;
+  }
+
+  & .findbar-closebutton {
+    order: 2;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    margin: 0 0 0 7px !important;
+    padding: 7px !important;
+    border-radius: 7px !important;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: -4px;
+      top: 6px;
+      bottom: 6px;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+/* (Zia's squircle, as on the rest of its glass: with an id, to beat the
+   rule that rounds every other corner, 00-variables) */
+:root:not(#zia-none) findbar {
+  corner-shape: var(--zia-squircle) !important;
+}
+
+/* solid while the page shows a video, as the compact sidebar (16-compact-mode) */
+:root[zia-video] findbar {
+  background: rgb(38, 38, 38) !important;
+  backdrop-filter: none;
+}
+
+:root[zia-video][zia-light] findbar {
+  background: rgb(248, 248, 250) !important;
+}
+
+/* Light mode (a light space, or no space colour in light mode): a pale
+   frosted bar with dark ink, as the sidebar and the page are */
+:root[zia-light] findbar {
+  background: rgba(248, 248, 250, 0.82) !important;
+  box-shadow: var(--zia-glass-edge-soft-light), 0 10px 30px rgba(0, 0, 0, 0.16);
+  color: rgba(28, 28, 32, 0.92) !important;
+  color-scheme: light;
+
+  & .findbar-textbox::placeholder {
+    color: rgba(28, 28, 32, 0.45);
+  }
+
+  & .findbar-textbox[status="notfound"] {
+    color: rgb(200, 40, 50) !important;
+  }
+
+  & .found-matches {
+    color: rgba(28, 28, 32, 0.65);
+  }
+
+  /* (the close button the same grey as the arrows: it was full black) */
+  & :is(.findbar-find-previous, .findbar-find-next, .findbar-closebutton) {
+    color: rgba(28, 28, 32, 0.55) !important;
+    fill: currentColor !important;
+    fill-opacity: 1 !important;
+  }
+
+  & :is(.findbar-find-previous, .findbar-find-next):hover:not([disabled]),
+  & .findbar-closebutton:hover {
+    background: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  & .findbar-closebutton::before {
+    background: rgba(0, 0, 0, 0.12);
+  }
+}
+}
+

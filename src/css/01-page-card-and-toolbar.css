@@ -1,0 +1,289 @@
+:root:not([zen-little-window="true"]):not([inDOMFullscreen="true"]):not([popup-window]) {
+  & #zen-appcontent-wrapper {
+    margin: var(--zia-card-top-gap) var(--zia-card-gap) var(--zia-card-gap) 0 !important;
+    border-radius: var(--zia-card-radius) !important;
+    background: transparent !important;
+    box-shadow: var(--zia-card-shadow) !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  &:is([zen-compact-mode="true"], [zen-right-side="true"]) #zen-appcontent-wrapper {
+    margin-left: var(--zia-card-gap) !important;
+  }
+
+  /* With the sidebar on the right, the page leaves no gap of its own beside
+     it, as it doesn't on the left: the sidebar's own padding is the gap, so
+     the tabs sit as far from the page as from the window's edge */
+  &[zen-right-side="true"]:not([zen-compact-mode="true"]) #zen-appcontent-wrapper {
+    margin-right: 0 !important;
+  }
+
+  & :is(#zen-appcontent-wrapper, #zen-appcontent-navbar-wrapper, #tabbrowser-tabpanels .browserSidebarContainer, #tabbrowser-tabpanels .browserStack, #tabbrowser-tabpanels browser) {
+    corner-shape: round !important;
+  }
+
+  & #zen-tabbox-wrapper {
+    margin: 0 !important;
+  }
+
+  & #tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
+    /* no white wash over a see-through page (an empty tab): Zen's glaze left it
+       a shade lighter than the toolbar and the sidebar, the same window colour */
+    --zen-transparent-browser-background: transparent !important;
+    border-radius: 0 0 var(--zia-card-radius) var(--zia-card-radius) !important;
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  & #tabbrowser-tabpanels :is(.browserSidebarContainer, .browserStack, browser) {
+    clip-path: inset(0 round 0 0 var(--zia-card-radius) var(--zia-card-radius));
+  }
+
+  & #tabbrowser-tabpanels browser[type="content"]:not([transparent="true"]) {
+    background: var(--zia-page-loading-bg) !important;
+  }
+
+  /* While a sidebar slides in or out, the page widens or narrows a few
+     frames before the site redraws at its new size, and the strip in
+     between showed this black: it takes the site's own colour then, so
+     the wait doesn't show (the tab sidebar's slide, and the Bookmarks or
+     History panel's) */
+  &:is([zen-compact-animating], [zia-panel-sliding]) #tabbrowser-tabpanels browser[type="content"]:not([transparent="true"]) {
+    background: var(--zia-site-bg, var(--zia-page-loading-bg)) !important;
+  }
+
+  & #zen-appcontent-navbar-wrapper {
+    background-color: var(--zia-site-bg, var(--zia-fallback-bg)) !important;
+    border-radius: var(--zia-card-radius) var(--zia-card-radius) 0 0 !important;
+    border-bottom: 1px solid var(--zia-separator) !important;
+    transition: background-color var(--zia-color-fade) ease, border-color var(--zia-color-fade) ease !important;
+  }
+
+  &[zia-color-snap="true"] #zen-appcontent-navbar-wrapper {
+    transition: none !important;
+  }
+
+  & #nav-bar {
+    --zen-toolbar-height: var(--zia-toolbar-height) !important;
+    --urlbar-height: var(--zia-urlbar-height) !important;
+  }
+
+  /* (the toolbar's own spacing, for the toolbar above the page: with Zen's
+     single toolbar the row sits in the sidebar, and it pushed the address
+     bar in from the sidebar's edges, past the essentials under it) */
+  &:not([zen-single-toolbar="true"]) #nav-bar {
+    padding-inline: var(--zia-toolbar-end-gap) !important;
+  }
+
+  &:not([zen-single-toolbar="true"]) #urlbar-container {
+    margin-inline-start: 8px !important;
+  }
+}
+
+/* Windows: no gap after the window buttons at the toolbar's end, so close
+   sits in the window's corner, as in Windows itself (the gap stays with the
+   buttons hidden, or dimming instead) */
+@media (-moz-platform: windows) {
+  :root:not(#zia-none):not([zen-little-window="true"]):not([inDOMFullscreen="true"]):not([popup-window]) #nav-bar:has(.titlebar-buttonbox-container) {
+    padding-inline-end: 0 !important;
+  }
+
+  /* The card sits a little below the window's top edge, so a flick of the
+     mouse to the top of the screen landed in that gap, which only drags
+     the window. Each button's click area reaches up to the edge, as in
+     Windows itself; the buttons look just the same. (On ::after, as
+     Firefox draws each button's glyph in its ::before.) */
+  :root:not([inDOMFullscreen="true"]):not([popup-window]) #nav-bar .titlebar-button {
+    position: relative;
+    -moz-window-dragging: no-drag;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      bottom: 100%;
+      height: 48px;
+      -moz-window-dragging: no-drag;
+    }
+
+    /* Close reaches the screen's right edge as well, and the corner above
+       it, so a flick into the top-right corner of a full-size window
+       closes it, as in Windows (and Dia) */
+    &.titlebar-close::after {
+      inset-inline: 0 -48px;
+      top: -48px;
+      bottom: 0;
+      height: auto;
+    }
+  }
+
+  @media -moz-pref("zia.window-buttons.hide"), -moz-pref("zia.window-buttons.dim") {
+    :root:not(#zia-none):not(#zia-none-2):not([zen-little-window="true"]):not([inDOMFullscreen="true"]):not([popup-window]) #nav-bar {
+      padding-inline-end: var(--zia-toolbar-end-gap) !important;
+    }
+  }
+}
+
+/* Zen's single toolbar (Look and Feel), with the address bar in the
+   sidebar: the bar above the page holds nothing but the window buttons, so
+   it isn't drawn as a toolbar (no site colour, no line under it, no top
+   corners), and the page itself is the rounded card, with all four corners
+   round. Drawn as the toolbar, it showed as a dark strip across the top.
+   The same with "Toolbar in the site's colour" off: the toolbar in Zen's
+   own colour, the window's (the sidebar's), rather than Zia's near-black
+   (zia-theme-toolbar, zia.uc.js); in compact mode too, where it had stayed
+   near-black (#337; floating over the page, it's on Zen's own toolbar colour:
+   16-compact-mode) */
+:root:is([zen-single-toolbar="true"], [zia-theme-toolbar]):not(#zia-none):not([inDOMFullscreen="true"]):not([popup-window]) {
+  & #zen-appcontent-wrapper {
+    box-shadow: none !important;
+  }
+
+  & #zen-appcontent-navbar-wrapper {
+    background: transparent !important;
+    border-bottom: none !important;
+    border-radius: 0 !important;
+  }
+
+  & #tabbrowser-tabbox {
+    border-radius: var(--zia-card-radius) !important;
+    box-shadow: var(--zia-card-shadow) !important;
+  }
+
+  & #tabbrowser-tabbox #tabbrowser-tabpanels .browserSidebarContainer {
+    border-radius: var(--zia-card-radius) !important;
+  }
+
+  & #tabbrowser-tabpanels :is(.browserSidebarContainer, .browserStack, browser) {
+    clip-path: inset(0 round var(--zia-card-radius));
+  }
+}
+
+/* An empty tab (a space with no tabs open): the page shows the window's colour
+   through it, and the toolbar is clear too, the same colour. Painted as a site's,
+   it took what the page's top was read as, which misses what macOS draws of the
+   window (its see-through material), so it came out a greyer shade over it. */
+:root[zen-has-empty-tab="true"]:not(#zia-none):not([inDOMFullscreen="true"]):not([popup-window]) #zen-appcontent-navbar-wrapper {
+  background-color: transparent !important;
+}
+
+/* Zen's own gap round the page (zen.theme.content-element-separation) once you've set
+   one; Zia's 6px otherwise (zia-zen-gap, 15-zen-defaults's followZenGap) */
+:root[zia-zen-gap]:not(#zia-none) {
+  --zia-card-gap: var(--zen-element-separation);
+  --zia-card-top-gap: var(--zen-element-separation);
+}
+
+/* Optional: the page edge to edge, with no gap, rounded corners or shadow
+   around it. Zen's own zen.theme.content-element-separation = 0 does the
+   same, so that's followed too. */
+:root[zen-no-padding="true"]:not(#zia-none):not(#zia-none-2) {
+  --zia-card-gap: 0px;
+  --zia-card-top-gap: 0px;
+  --zia-card-radius: 0px;
+  --zia-card-shadow: none;
+}
+
+@media -moz-pref("zia.page.edge-to-edge") {
+  :root:not(#zia-none):not(#zia-none-2) {
+    --zia-card-gap: 0px;
+    --zia-card-top-gap: 0px;
+    --zia-card-radius: 0px;
+    --zia-card-shadow: none;
+  }
+}
+
+/* A page gone full screen inside the window (zia.uc.js): square, black and
+   edge to edge, as it is when it takes over the screen */
+:root[zia-page-fullscreen]:not(#zia-none):not(#zia-none-2):not(#zia-none-3) {
+  --zia-card-gap: 0px;
+  --zia-card-top-gap: 0px;
+  --zia-card-radius: 0px;
+  --zia-card-shadow: none;
+
+  & #tabbrowser-tabpanels :is(.browserSidebarContainer, .browserStack, browser) {
+    border-radius: 0 !important;
+    clip-path: none !important;
+    box-shadow: none !important;
+  }
+
+  & #tabbrowser-tabpanels browser[type="content"] {
+    background: #000 !important;
+  }
+}
+
+/* A glance open: the toolbar steps back, clear on the window's own
+   background in the sidebar's ink rather than the glanced site's colour
+   (it spanned the window while the glance is narrower). The page behind
+   is a quieter card, 8px corners and no shadow, and the glance in front a
+   rounder one, 16px. (Thanks to meteulku for the design.) */
+:root:not(#zia-none):not([inDOMFullscreen="true"]):not([popup-window]) #zen-appcontent-wrapper:has(.browserSidebarContainer.zen-glance-background) {
+  --zia-glance-ink: light-dark(rgb(40, 40, 44), rgb(251, 251, 254));
+  background: transparent !important;
+  box-shadow: none !important;
+
+  & #zen-appcontent-navbar-wrapper {
+    background-color: transparent !important;
+    border-bottom-color: transparent !important;
+    color-scheme: inherit !important;
+    color: var(--zia-glance-ink) !important;
+    --toolbox-textcolor: var(--zia-glance-ink) !important;
+    --toolbar-color: var(--zia-glance-ink) !important;
+    --toolbar-field-color: var(--zia-glance-ink) !important;
+    --toolbarbutton-icon-fill: var(--zia-glance-ink) !important;
+    --zia-toolbar-ink: var(--zia-glance-ink);
+
+    & toolbarbutton:not(.webextension-browser-action, [id$="-browser-action"], [id$="-BAP"]) {
+      color: var(--zia-glance-ink) !important;
+      fill: var(--zia-glance-ink) !important;
+    }
+  }
+
+  & #tabbrowser-tabpanels .browserSidebarContainer.zen-glance-background {
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    clip-path: inset(0 round 8px) !important;
+
+    & :is(.browserStack, browser) {
+      clip-path: inset(0 round 8px) !important;
+    }
+  }
+
+  & #tabbrowser-tabpanels .browserSidebarContainer.zen-glance-overlay {
+    & .browserContainer:not([fade-out="true"]),
+    & .browserStack {
+      border-radius: 16px !important;
+    }
+
+    & :is(.browserStack, browser) {
+      clip-path: inset(0 round 16px) !important;
+    }
+  }
+}
+
+/* A pop-up window (a site's window.open): no sidebar or tabs, the address read-only.
+   Zen's sidebar button (it toggles a sidebar the pop-up hasn't got) and the
+   extensions menu (its buttons are hidden there) go; the address row takes the
+   window's colour, as the title row above it does, rather than a strip of its own;
+   and the address doesn't light up under the pointer as if it could be typed in
+   (#482) */
+:root[popup-window]:not(#zia-none) {
+  & :is(#zen-toggle-compact-mode, #unified-extensions-button) {
+    display: none !important;
+  }
+
+  & :is(#zen-appcontent-navbar-wrapper, #nav-bar) {
+    background: transparent !important;
+  }
+
+  & #urlbar > .urlbar-background {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  & #urlbar :is(.urlbar-input, #zia-url-title, #zia-url-plain) {
+    cursor: default !important;
+  }
+}

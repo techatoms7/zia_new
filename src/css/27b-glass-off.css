@@ -1,0 +1,147 @@
+/* Zia's glass is an option (zia.glass), off unless it's turned on. Off,
+   everything it touches looks as it did before it came in (2.93): no glass
+   edge anywhere (each one an empty shadow, so the lifts beside them stay),
+   no light where pressed (zia.uc.js), and back the fine shine round the
+   essentials and the Library's buttons, the hairline round the hover
+   cards, and the old edges on the selected essential's tile, the glance
+   card on an essential, the split cards and the find bar. The squircle
+   corners stay either way. */
+@media not -moz-pref("zia.glass") {
+  :root:not(#zia-none) {
+    --zia-glass-edge-dark: 0 0 transparent;
+    --zia-glass-edge-light: 0 0 transparent;
+    --zia-glass-edge-lit-dark: 0 0 transparent;
+    --zia-glass-edge-soft-light: 0 0 transparent;
+    --zia-glass-edge-thick-dark: 0 0 transparent;
+    --zia-glass-edge-thick-light: 0 0 transparent;
+    --zia-glass-edge: 0 0 transparent;
+    --zia-glass-edge-lit: 0 0 transparent;
+    --zia-glass-edge-thick: 0 0 transparent;
+  }
+
+  /* the fine shine round each essential (not the chosen one), the
+     Library's sliding tile and its Filter, Clear and Done, as it was: a hairline
+     ring, brightest along the middle of each side, fading into the
+     corners. Its outside is the squircle itself; its inside is cut by a
+     mask of the same squircle a hairline in (each corner exact, two bars
+     between, a pixel into the corners so no seam shows), as a plain
+     content-box cut left the inside square, thick at each corner. */
+  .tabbrowser-tab[zen-essential]:not([visuallyselected], [zia-split-tile]) > .tab-stack > .tab-background,
+  zen-library .zia-library-rail {
+    --zia-sq-r: calc(var(--zia-essential-radius) * var(--zia-squircle-grow));
+  }
+
+  zen-library :is(.zen-library-filter-button, .zen-library-filter-done) {
+    --zia-sq-r: calc(var(--zia-glass-button-radius) * var(--zia-squircle-grow));
+  }
+
+  :root:not(#zia-none) :is(
+    .tabbrowser-tab[zen-essential]:not([visuallyselected], [zia-split-tile]) > .tab-stack > .tab-background,
+    zen-library .zia-library-rail,
+    zen-library :is(.zen-library-filter-button, .zen-library-filter-done)
+  )::after {
+    --zia-sq-hole: calc(var(--zia-sq-r) - var(--zia-shine-width));
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: inherit !important;
+    corner-shape: var(--zia-squircle) !important;
+    pointer-events: none !important;
+    background: var(--zia-shine-layers) !important;
+    filter: none !important;
+    mask:
+      linear-gradient(#000 0 0),
+      var(--zia-sq-tl) var(--zia-shine-width) var(--zia-shine-width) / var(--zia-sq-hole) var(--zia-sq-hole) no-repeat,
+      var(--zia-sq-tr) calc(100% - var(--zia-shine-width)) var(--zia-shine-width) / var(--zia-sq-hole) var(--zia-sq-hole) no-repeat,
+      var(--zia-sq-bl) var(--zia-shine-width) calc(100% - var(--zia-shine-width)) / var(--zia-sq-hole) var(--zia-sq-hole) no-repeat,
+      var(--zia-sq-br) calc(100% - var(--zia-shine-width)) calc(100% - var(--zia-shine-width)) / var(--zia-sq-hole) var(--zia-sq-hole) no-repeat,
+      linear-gradient(#000 0 0) calc(var(--zia-shine-width) + var(--zia-sq-hole) - 1px) var(--zia-shine-width) / calc(100% - 2 * var(--zia-shine-width) - 2 * var(--zia-sq-hole) + 2px) calc(100% - 2 * var(--zia-shine-width)) no-repeat,
+      linear-gradient(#000 0 0) var(--zia-shine-width) calc(var(--zia-shine-width) + var(--zia-sq-hole) - 1px) / calc(100% - 2 * var(--zia-shine-width)) calc(100% - 2 * var(--zia-shine-width) - 2 * var(--zia-sq-hole) + 2px) no-repeat !important;
+    mask-composite: subtract, add, add, add, add, add, add !important;
+  }
+
+  .tabbrowser-tab[zen-essential]:not([visuallyselected]) > .tab-stack > .tab-background {
+    position: relative;
+  }
+
+  /* the chosen essential's tile, with its icon's colour round it */
+  @media -moz-pref("zen.theme.essentials-favicon-bg") {
+    .tabbrowser-tab[zen-essential][visuallyselected] > .tab-stack > .tab-background::before {
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.18) !important;
+    }
+  }
+
+  /* the hover cards: a hairline round them */
+  #zia-tab-card::after,
+  #zia-folder-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 0.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  :root:not(#zia-none) :is(#zia-tab-card, #zia-folder-card)::after {
+    corner-shape: var(--zia-squircle) !important;
+  }
+
+  /* a glance's card on its essential, and the ghost it flies from */
+  .tabbrowser-tab[zen-essential] > .tab-stack > .tab-content > .tabbrowser-tab[zen-glance-tab]:not(#zia-none) > .tab-stack > .tab-background,
+  .tabbrowser-tab[zen-essential] > .tab-stack > .tab-content > .tabbrowser-tab[zen-glance-tab]:not(#zia-none) > .tab-stack > .tab-background::before,
+  :root:not(#zia-none) .zia-glance-ghost {
+    background: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  /* the music player: a fine shine round it, following its squircle
+     (drawn on its inner box, against the card: Zen keeps the card's own
+     ::after as the bridge that holds a stack of cards hovered). The
+     essentials' shine at under half its strength: at theirs, on a card this
+     dark and this long, it read as an outline. */
+  :root:not(#zia-none) {
+    --zia-media-edge: 0 0 transparent;
+  }
+
+  @media -moz-pref("zia.features.media-player") {
+    :root:not(#zia-none) #zen-media-controls-toolbar .zen-media-card > .zen-media-main-vbox::after {
+      --zia-media-hole: calc(var(--zia-media-radius) * var(--zia-squircle-grow) - var(--zia-shine-width));
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: calc(var(--zia-media-radius) * var(--zia-squircle-grow));
+      corner-shape: var(--zia-squircle) !important;
+      pointer-events: none;
+      background:
+        linear-gradient(to right, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.06) 35%, rgba(255, 255, 255, 0.06) 65%, rgba(255, 255, 255, 0.01)),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.06) 35%, rgba(255, 255, 255, 0.06) 65%, rgba(255, 255, 255, 0.01));
+      mask:
+        linear-gradient(#000 0 0),
+        var(--zia-sq-tl) var(--zia-shine-width) var(--zia-shine-width) / var(--zia-media-hole) var(--zia-media-hole) no-repeat,
+        var(--zia-sq-tr) calc(100% - var(--zia-shine-width)) var(--zia-shine-width) / var(--zia-media-hole) var(--zia-media-hole) no-repeat,
+        var(--zia-sq-bl) var(--zia-shine-width) calc(100% - var(--zia-shine-width)) / var(--zia-media-hole) var(--zia-media-hole) no-repeat,
+        var(--zia-sq-br) calc(100% - var(--zia-shine-width)) calc(100% - var(--zia-shine-width)) / var(--zia-media-hole) var(--zia-media-hole) no-repeat,
+        linear-gradient(#000 0 0) calc(var(--zia-shine-width) + var(--zia-media-hole) - 1px) var(--zia-shine-width) / calc(100% - 2 * var(--zia-shine-width) - 2 * var(--zia-media-hole) + 2px) calc(100% - 2 * var(--zia-shine-width)) no-repeat,
+        linear-gradient(#000 0 0) var(--zia-shine-width) calc(var(--zia-shine-width) + var(--zia-media-hole) - 1px) / calc(100% - 2 * var(--zia-shine-width)) calc(100% - 2 * var(--zia-shine-width) - 2 * var(--zia-media-hole) + 2px) no-repeat;
+      mask-composite: subtract, add, add, add, add, add, add;
+    }
+  }
+
+  /* the split cards */
+  .zia-split-zone {
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  /* the find bar */
+  findbar {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 0 0 0.5px rgba(255, 255, 255, 0.1);
+  }
+
+  :root[zia-light] findbar {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16), inset 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+  }
+}

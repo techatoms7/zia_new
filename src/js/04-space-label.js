@@ -1,0 +1,260 @@
+  let workspaceSlot = null;
+  let movedIndicator = null;
+  let movedFromSpace = null;
+  let spaceAttrObserver = null;
+  const MIRRORED_SPACE_ATTRS = ["haspinnedtabs", "collapsedpinnedtabs"];
+  // Where the open space's name and icon show: "top" of the sidebar, beside the window
+  // buttons; the "icon" only there (with none, the slot has nothing to show); above the tabs,
+  // where Zen puts it ("list"); or "none", hidden
+  const SPACE_LABEL_PREF = "zia.sidebar.space-label";
+  const spaceLabelPlace = () => Services.prefs.getStringPref(SPACE_LABEL_PREF, "top");
+  // (in Zen's collapsed sidebar the icon column has no room beside the window buttons: the
+  // space's icon goes back above the tabs, where Zen puts it)
+  const spaceNameInList = () =>
+    spaceLabelPlace() === "list" || document.documentElement.getAttribute("zen-sidebar-expanded") !== "true";
+
+  // (until 2.116.0, two checkboxes: the name above the tabs, and the name hidden with the
+  // icon kept. Carried over once, unless a place has been chosen since)
+  // (only over the default, which Sine saves as soon as its settings are opened)
+  function carryOverSpaceLabelPrefs() {
+    const P = Services.prefs;
+    const IN_LIST = "zia.sidebar.space-name-in-list";
+    const HIDE_NAME = "zia.sidebar.hide-space-name";
+    try {
+      if (spaceLabelPlace() === "top") {
+        if (P.getBoolPref(IN_LIST, false)) {
+          P.setStringPref(SPACE_LABEL_PREF, "list");
+        } else if (P.getBoolPref(HIDE_NAME, false)) {
+          P.setStringPref(SPACE_LABEL_PREF, "icon");
+        }
+      }
+      P.clearUserPref(IN_LIST);
+      P.clearUserPref(HIDE_NAME);
+    } catch (err) {
+      noteError("space label: carry over", err);
+    }
+  }
+
+  function createWorkspaceSlot() {
+    const topButtons = document.getElementById("zen-sidebar-top-buttons");
+    if (!topButtons || !window.gZenWorkspaces) {
+      return;
+    }
+    carryOverSpaceLabelPrefs();
+    workspaceSlot = document.createElementNS(XHTML_NS, "div");
+    workspaceSlot.id = "zia-workspace-slot";
+    // (beside the window buttons only where they start the row: where they're elsewhere
+    // in it, the name went in after the ⋯ menu and reload rather than first, #489)
+    const buttonBox = topButtons.querySelector(":scope > .titlebar-buttonbox-container");
+    if (buttonBox && buttonBox === topButtons.firstElementChild) {
+      buttonBox.after(workspaceSlot);
+    } else {
+      topButtons.prepend(workspaceSlot);
+    }
+
+    for (const type of ["ZenWorkspacesUIUpdate", "ZenWorkspaceDataChanged", "AfterWorkspacesSessionRestore"]) {
+      window.addEventListener(type, () => setTimeout(placeWorkspaceIndicator, 0));
+    }
+
+    const onSpaceSwitch = () => setTimeout(placeWorkspaceIndicator, 0);
+    watchPrefs(SPACE_LABEL_PREF, onSpaceSwitch);
+    new MutationObserver(onSpaceSwitch).observe(document.documentElement, { attributes: true, attributeFilter: ["zen-sidebar-expanded"] });
+    watchPrefs("zen.workspaces.active", onSpaceSwitch);
+    gBrowser.tabContainer.addEventListener("TabSelect", onSpaceSwitch);
+    placeWorkspaceIndicator();
+    setTimeout(placeWorkspaceIndicator, 500);
+    setTimeout(placeWorkspaceIndicator, 2000);
+  }
+
+  function syncSpaceLabel(indicator) {
+    if (!indicator) {
+      return;
+    }
+    let workspace = null;
+    try {
+      workspace = gZenWorkspaces.getActiveWorkspace();
+    } catch (err) {
+      return;
+    }
+    if (!workspace) {
+      return;
+    }
+    let label = indicator.querySelector("#zia-space-label");
+    if (!label) {
+      label = document.createElementNS(XHTML_NS, "div");
+      label.id = "zia-space-label";
+      indicator.prepend(label);
+    }
+
+    const rawIcon = typeof workspace.icon === "string" ? workspace.icon : "";
+    const visibleIcon = rawIcon.replace(/[\s\u200b-\u200f\u2060\ufe00-\ufe0f\p{Cf}]/gu, "");
+    const hasIcon = visibleIcon !== "";
+    const icon = hasIcon ? rawIcon.trim() : "";
+
+    const blank = /^[\s\u200b-\u200f\u2060\ufe00-\ufe0f]+|[\s\u200b-\u200f\u2060\ufe00-\ufe0f]+$/gu;
+    let text = label.querySelector(".zia-space-name");
+    if (!text) {
+      label.textContent = "";
+      text = document.createElementNS(XHTML_NS, "span");
+      text.className = "zia-space-name";
+      label.appendChild(text);
+    }
+    text.textContent = (workspace.name || "").replace(blank, "");
+
+    const mark = label.querySelector(".zia-space-svg");
+    for (const name of ["zia-icon", "zia-has-icon", "zia-has-svg"]) {
+      label.removeAttribute(name);
+    }
+    if (!hasIcon) {
+      mark?.remove();
+      return;
+    }
+    if (!icon.endsWith(".svg")) {
+      mark?.remove();
+      label.setAttribute("zia-icon", icon);
+      label.setAttribute("zia-has-icon", "true");
+      return;
+    }
+    // Only the browser's and mods' own icon files: never a web address or a
+    // file elsewhere on the computer.
+    if (!isOwnIconUrl(icon)) {
+      mark?.remove();
+      return;
+    }
+    label.setAttribute("zia-has-svg", "true");
+    let svgSlot = mark;
+    if (!svgSlot) {
+      svgSlot = document.createElementNS(XHTML_NS, "span");
+      svgSlot.className = "zia-space-svg";
+      label.prepend(svgSlot);
+    }
+    if (svgSlot.dataset.src === icon && svgSlot.firstChild) {
+      return;
+    }
+    svgSlot.dataset.src = icon;
+    svgSlot.replaceChildren();
+    fetch(icon)
+      .then((response) => response.text())
+      .then((source) => {
+        if (svgSlot.dataset.src !== icon) {
+          return;
+        }
+        // (only a real SVG is parsed: anything else, or a file still
+        // carrying the build's # lines, logged an XML parsing error for
+        // every space)
+        const svgText = svgSourceOf(source);
+        if (!svgText) {
+          return;
+        }
+        const colored = svgText
+          .replace(/context-(?:fill|stroke)-opacity/g, "1")
+          .replace(/context-(?:fill|stroke)/g, "currentColor")
+          .replace(/\b(fill|stroke)="(?:#000(?:000)?|black)"/gi, '$1="currentColor"')
+          .replace(/(fill|stroke)\s*:\s*(?:#000(?:000)?|black)/gi, "$1:currentColor");
+        const parsed = new DOMParser().parseFromString(colored, "image/svg+xml");
+        const node = parsed.documentElement;
+        if (!node || node.localName !== "svg") {
+          return;
+        }
+        cleanSvg(node);
+        svgSlot.replaceChildren(document.importNode(node, true));
+      })
+      .catch(() => {});
+  }
+
+  const OWN_ICON_SCHEMES = ["chrome:", "resource:"];
+
+  function isOwnIconUrl(icon) {
+    try {
+      return OWN_ICON_SCHEMES.includes(new URL(icon, "chrome://browser/content/browser.xhtml").protocol);
+    } catch (err) {
+      return false;
+    }
+  }
+
+  // An icon is only shapes: drop anything that could run or load something
+  // before it goes into the browser's own window.
+  function cleanSvg(svg) {
+    for (const node of svg.querySelectorAll("script, foreignObject, iframe, embed, object, audio, video")) {
+      node.remove();
+    }
+    for (const node of [svg, ...svg.querySelectorAll("*")]) {
+      for (const attr of [...node.attributes]) {
+        const name = attr.name.toLowerCase();
+        const value = attr.value.trim().toLowerCase();
+        const isLink = name === "href" || name.endsWith(":href") || name === "src";
+        if (name.startsWith("on") || (isLink && !value.startsWith("#")) || value.startsWith("javascript:")) {
+          node.removeAttributeNode(attr);
+        }
+      }
+    }
+  }
+
+  function removeSpaceLabel(indicator) {
+    indicator?.querySelector("#zia-space-label")?.remove();
+  }
+
+  function mirrorSpaceAttributes(space) {
+    for (const name of MIRRORED_SPACE_ATTRS) {
+      setAttr(workspaceSlot, name, space?.hasAttribute(name) ? space.getAttribute(name) : null);
+    }
+  }
+
+  function placeWorkspaceIndicator() {
+    if (!workspaceSlot) {
+      return;
+    }
+    let space = null;
+    let indicator = null;
+    try {
+      space = gZenWorkspaces.activeWorkspaceElement;
+      indicator = space?.indicator;
+    } catch (err) {
+      return;
+    }
+
+    const inList = spaceNameInList();
+    setFlag("zia-space-name-in-list", inList);
+    if (inList) {
+      indicator = null;
+      spaceAttrObserver?.disconnect();
+      mirrorSpaceAttributes(null);
+    }
+
+    if (movedIndicator && movedIndicator !== indicator && movedFromSpace?.isConnected) {
+      removeSpaceLabel(movedIndicator);
+      movedFromSpace.prepend(movedIndicator);
+      movedIndicator = null;
+      movedFromSpace = null;
+    }
+
+    if (indicator && indicator.parentNode !== workspaceSlot) {
+      workspaceSlot.append(indicator);
+      movedIndicator = indicator;
+      movedFromSpace = space;
+    }
+
+    if (inList) {
+      setFlag("zia-workspace-slot", false);
+      return;
+    }
+
+    syncSpaceLabel(indicator);
+    // (hidden, or the icon only with no icon to show: the slot is blank, and where it starts the
+    // row it steps out, as with the name above the tabs. Empty, it still stretched across the
+    // row and kept the buttons pushed to its end; beside macOS's traffic lights it stays: the
+    // stylesheet)
+    const label = indicator?.querySelector("#zia-space-label");
+    const place = spaceLabelPlace();
+    const blank = !!label && (place === "none" || (place === "icon" && !label.matches("[zia-has-icon], [zia-has-svg]")));
+    setAttr(workspaceSlot, "zia-blank", blank ? "true" : null);
+
+    spaceAttrObserver?.disconnect();
+    mirrorSpaceAttributes(space);
+    if (space) {
+      spaceAttrObserver = new MutationObserver(() => mirrorSpaceAttributes(space));
+      spaceAttrObserver.observe(space, { attributes: true, attributeFilter: MIRRORED_SPACE_ATTRS });
+    }
+    setFlag("zia-workspace-slot", !!indicator);
+  }
+

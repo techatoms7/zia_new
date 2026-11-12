@@ -1,0 +1,53 @@
+#zen-loading-progress-bar {
+  display: none !important;
+}
+
+#urlbar[breakout-extend]:not([zia-classic]) .urlbar-input {
+  font-size: var(--zia-text-size) !important;
+  font-weight: var(--zia-tab-weight) !important;
+}
+
+:root[zia-split="true"] .zen-view-splitter-header-container {
+  z-index: 5 !important;
+  translate: 0 var(--zia-toolbar-height) !important;
+}
+
+/* Only the little move-and-expand pill itself takes the pointer: the
+   invisible box around it sat over the pane's toolbar buttons. */
+.zen-view-splitter-header-container {
+  pointer-events: none !important;
+}
+
+:root:not([inDOMFullscreen="true"]) .browserSidebarContainer:hover .zen-view-splitter-header,
+.zen-view-splitter-header:hover {
+  pointer-events: auto !important;
+}
+
+#urlbar[breakout-extend]:not([zia-classic]) {
+  & .urlbar-input-container {
+    padding-inline-start: var(--zia-pop-icon-start, 16px) !important;
+  }
+
+  & #identity-box {
+    margin-inline: 0 var(--zia-pop-text-gap, 10px) !important;
+    padding: 0 !important;
+  }
+
+  & #identity-icon-box {
+    margin-inline: 0 !important;
+    padding: 0 !important;
+  }
+
+  & #identity-icon {
+    width: 16px !important;
+    height: 16px !important;
+    opacity: 1 !important;
+    list-style-image: var(--zia-typed-icon, url("chrome://global/skin/icons/search-glass.svg")) !important;
+  }
+
+  &[usertyping] #identity-icon {
+    fill-opacity: 1 !important;
+    fill: rgb(255, 255, 255) !important;
+  }
+}
+

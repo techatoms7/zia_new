@@ -1,0 +1,261 @@
+/* Zia: built from src/css by scripts/build.sh. Edit the parts in src/css, not this file. */
+
+:root {
+  /* A spring with a slight overshoot, for things that open and close: about
+   * 3px past on the music player's 60px. Folders have their own, a little
+   * gentler (zia.uc.js). */
+  --zia-spring: cubic-bezier(0.3, 1.4, 0.5, 1);
+  --zia-spring-time: 0.42s;
+  --zia-fallback-bg: #121212;
+  --zia-page-loading-bg: #000;
+  --zia-separator: rgba(255, 255, 255, 0.1);
+  --zia-urlbar-hover-bg: rgba(0, 0, 0, 0.2);
+  --zia-urlbar-open-bg: #2c2c2c;
+  --zia-pop-row-height: 36px;
+  --zia-pop-row-gap: 4px;
+  --zia-pop-row-inset: 8px;
+  --zia-pop-row-radius: 8px;
+  --zia-pop-list-pad: 6px;
+  --zia-pop-bottom-trim: 10px;
+  --zia-loading-color: rgb(90, 185, 245);
+  --zia-urlbar-radius: 6px;
+  --zia-urlbar-open-offset: 0px;
+  --zia-urlbar-open-top: 0px;
+  /* Zen stores this already multiplied by --zen-squircle-value, because its
+     corners are a superellipse. Zia's corners are circular, so that stretch
+     is divided back out. With page rounding on, the card uses a fixed
+     length instead (04). */
+  /* (the page card's corner; edge to edge sets the card's to 0, while the
+     compact sidebar keeps this one, 16-compact-mode) */
+  --zia-card-radius-base: calc(var(--zen-native-inner-radius, 10.5px) / var(--zen-squircle-value, 1));
+  --zia-card-radius: var(--zia-card-radius-base);
+
+  /* the fine shine round essentials, folders and the Library's tiles, as
+     Dia's: as bright along the sides as the top and bottom, and fading
+     almost away into the corners (measured off Dia's: the corner about
+     half the sides') */
+  --zia-shine-layers:
+    linear-gradient(to right, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 0.15) 65%, rgba(255, 255, 255, 0.02)),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 0.15) 65%, rgba(255, 255, 255, 0.02));
+
+  /* a row's (a folder's box): as Dia's rows, lit along its length only,
+     fading out round each corner, its short ends dark (the colour here; the
+     shape where it's used, 06) */
+  --zia-shine-row-ink: rgba(255, 255, 255, 0.12);
+
+  --zia-tab-shine-layers:
+    linear-gradient(to bottom right, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.15) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.15) 75%, rgba(255, 255, 255, 0.26));
+  --zia-essential-min-width: 54px;
+  --zia-essential-height: 41px;
+  --zia-essential-inner-tighten: 1;
+  --zia-essential-radius: 12px;
+  --zia-essential-gap: 3px;
+  --zia-essential-bottom-space: 8px;
+  --zia-essential-bg: rgba(255, 255, 255, 0.13);
+  --zia-tab-height: 34px;
+  --zia-tab-gap: 2px;
+  --zia-tab-radius: 9.5px;
+  --zia-close-size: 22px;
+  --zia-close-radius: 6px;
+  --zia-close-hover-bg: rgba(255, 255, 255, 0.1);
+  --zia-folder-mark-opacity: 0.55;
+  --zia-folder-hover-bg: rgba(255, 255, 255, 0.1);
+
+  --zia-fc-white: #fbfbfb;
+  --zia-fc-green: #008b5d;
+  --zia-fc-blue: #007fbd;
+  --zia-fc-purple: #625da5;
+  --zia-fc-amber: #c98400;
+  --zia-fc-pink: #bd556b;
+  --zia-fc-red: #cc4a55;
+  --zia-fc-orange: #c95125;
+
+  --zia-folder-wash: 31%;
+  --zia-folder-tint: 53%;
+  --zia-folder-name-tint: 77%;
+  --zia-folder-name-tint-hover: 38%;
+  --zia-tab-hover-bg: rgba(255, 255, 255, 0.115);
+  --zia-active-glow-blur: 20px;
+  --zia-active-glow-spread: 4px;
+  --zia-active-glow-reach: 4px;
+  --zia-active-glow-color: rgba(255, 255, 255, 0.05);
+  --zia-top-row-space: 6.5px;
+  --zia-bottom-row-space: 6px;
+  --zia-tab-weight: 400;
+  --zia-folder-weight: 500;
+
+  --zia-tab-card-bg: rgb(38, 38, 38);
+  --zia-tab-card-sub: rgba(255, 255, 255, 0.55);
+  --zia-tab-card-radius: 13px;
+  --zia-tab-card-width: 230px;
+  --zia-media-card-base: light-dark(rgb(235, 235, 235), #1b1b1b);
+  --zia-split-gap: 5px;
+
+  /* Zia's squircle: on essentials, cards, pop-ups and small buttons, one
+     shape (wherever a part sets corner-shape: var(--zia-squircle)). Dia's,
+     fitted to the edge of its essentials pixel by pixel: a true squircle
+     (an exponent of about 3.8, superellipse(1.93)), its corner running
+     half as far again along each side as a round one of the same depth
+     (18px on a 40px tile, where Zia's round corners are 12px). So each
+     squircle's radius is its round radius grown by that much (x1.5)
+     (--zia-squircle-grow), cutting in as deep at the corner's middle but
+     easing in further. Icon buttons in the toolbars, whose radii are
+     Zen's, keep the softer one (--zia-squircle-soft). */
+  --zia-squircle: superellipse(1.93);
+  --zia-squircle-grow: 1.5;
+  --zia-squircle-soft: superellipse(1.35);
+  /* Dia's folder rows, fitted the same way: only a touch squarer than a
+     circle, superellipse(1.3), over a 13.8px corner on a 34px row (a
+     tab's 9.5px corner grown by 1.45) */
+  --zia-squircle-row: superellipse(1.3);
+  --zia-squircle-row-grow: 1.45;
+  /* the corners of the masks that cut shines and tiles to those squircles
+     (each a corner's quarter, stretched to its radius) */
+  --zia-row-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M100.00 0.00 L0.00 0.00 L0.06 7.21 L0.25 12.65 L0.56 17.57 L1.00 22.16 L1.56 26.52 L2.25 30.68 L3.06 34.67 L3.99 38.52 L5.05 42.24 L6.23 45.83 L7.53 49.30 L8.95 52.65 L10.49 55.89 L12.15 59.02 L13.92 62.04 L15.81 64.95 L17.82 67.74 L19.95 70.43 L22.18 73.00 L24.54 75.46 L27.00 77.82 L29.57 80.05 L32.26 82.18 L35.05 84.19 L37.96 86.08 L40.98 87.85 L44.11 89.51 L47.35 91.05 L50.70 92.47 L54.17 93.77 L57.76 94.95 L61.48 96.01 L65.33 96.94 L69.32 97.75 L73.48 98.44 L77.84 99.00 L82.43 99.44 L87.35 99.75 L92.79 99.94 L100.00 100.00 Z'/%3E%3C/svg%3E");
+  --zia-row-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0.00 0.00 L100.00 0.00 L99.94 7.21 L99.75 12.65 L99.44 17.57 L99.00 22.16 L98.44 26.52 L97.75 30.68 L96.94 34.67 L96.01 38.52 L94.95 42.24 L93.77 45.83 L92.47 49.30 L91.05 52.65 L89.51 55.89 L87.85 59.02 L86.08 62.04 L84.19 64.95 L82.18 67.74 L80.05 70.43 L77.82 73.00 L75.46 75.46 L73.00 77.82 L70.43 80.05 L67.74 82.18 L64.95 84.19 L62.04 86.08 L59.02 87.85 L55.89 89.51 L52.65 91.05 L49.30 92.47 L45.83 93.77 L42.24 94.95 L38.52 96.01 L34.67 96.94 L30.68 97.75 L26.52 98.44 L22.16 99.00 L17.57 99.44 L12.65 99.75 L7.21 99.94 L0.00 100.00 Z'/%3E%3C/svg%3E");
+  --zia-row-tl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M100.00 100.00 L0.00 100.00 L0.06 92.79 L0.25 87.35 L0.56 82.43 L1.00 77.84 L1.56 73.48 L2.25 69.32 L3.06 65.33 L3.99 61.48 L5.05 57.76 L6.23 54.17 L7.53 50.70 L8.95 47.35 L10.49 44.11 L12.15 40.98 L13.92 37.96 L15.81 35.05 L17.82 32.26 L19.95 29.57 L22.18 27.00 L24.54 24.54 L27.00 22.18 L29.57 19.95 L32.26 17.82 L35.05 15.81 L37.96 13.92 L40.98 12.15 L44.11 10.49 L47.35 8.95 L50.70 7.53 L54.17 6.23 L57.76 5.05 L61.48 3.99 L65.33 3.06 L69.32 2.25 L73.48 1.56 L77.84 1.00 L82.43 0.56 L87.35 0.25 L92.79 0.06 L100.00 0.00 Z'/%3E%3C/svg%3E");
+  --zia-row-tr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0.00 100.00 L100.00 100.00 L99.94 92.79 L99.75 87.35 L99.44 82.43 L99.00 77.84 L98.44 73.48 L97.75 69.32 L96.94 65.33 L96.01 61.48 L94.95 57.76 L93.77 54.17 L92.47 50.70 L91.05 47.35 L89.51 44.11 L87.85 40.98 L86.08 37.96 L84.19 35.05 L82.18 32.26 L80.05 29.57 L77.82 27.00 L75.46 24.54 L73.00 22.18 L70.43 19.95 L67.74 17.82 L64.95 15.81 L62.04 13.92 L59.02 12.15 L55.89 10.49 L52.65 8.95 L49.30 7.53 L45.83 6.23 L42.24 5.05 L38.52 3.99 L34.67 3.06 L30.68 2.25 L26.52 1.56 L22.16 1.00 L17.57 0.56 L12.65 0.25 L7.21 0.06 L0.00 0.00 Z'/%3E%3C/svg%3E");
+  --zia-sq-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M100.00 0.00 L0.00 0.00 L0.04 18.28 L0.16 26.29 L0.36 32.51 L0.65 37.77 L1.01 42.41 L1.46 46.60 L1.99 50.44 L2.60 53.99 L3.29 57.30 L4.07 60.40 L4.93 63.32 L5.88 66.07 L6.91 68.67 L8.03 71.13 L9.23 73.46 L10.53 75.66 L11.91 77.75 L13.39 79.73 L14.96 81.60 L16.63 83.37 L18.40 85.04 L20.27 86.61 L22.25 88.09 L24.34 89.47 L26.54 90.77 L28.87 91.97 L31.33 93.09 L33.93 94.12 L36.68 95.07 L39.60 95.93 L42.70 96.71 L46.01 97.40 L49.56 98.01 L53.40 98.54 L57.59 98.99 L62.23 99.35 L67.49 99.64 L73.71 99.84 L81.72 99.96 L100.00 100.00 Z'/%3E%3C/svg%3E");
+  --zia-sq-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0.00 0.00 L100.00 0.00 L99.96 18.28 L99.84 26.29 L99.64 32.51 L99.35 37.77 L98.99 42.41 L98.54 46.60 L98.01 50.44 L97.40 53.99 L96.71 57.30 L95.93 60.40 L95.07 63.32 L94.12 66.07 L93.09 68.67 L91.97 71.13 L90.77 73.46 L89.47 75.66 L88.09 77.75 L86.61 79.73 L85.04 81.60 L83.37 83.37 L81.60 85.04 L79.73 86.61 L77.75 88.09 L75.66 89.47 L73.46 90.77 L71.13 91.97 L68.67 93.09 L66.07 94.12 L63.32 95.07 L60.40 95.93 L57.30 96.71 L53.99 97.40 L50.44 98.01 L46.60 98.54 L42.41 98.99 L37.77 99.35 L32.51 99.64 L26.29 99.84 L18.28 99.96 L0.00 100.00 Z'/%3E%3C/svg%3E");
+  --zia-sq-tl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M100.00 100.00 L0.00 100.00 L0.04 81.72 L0.16 73.71 L0.36 67.49 L0.65 62.23 L1.01 57.59 L1.46 53.40 L1.99 49.56 L2.60 46.01 L3.29 42.70 L4.07 39.60 L4.93 36.68 L5.88 33.93 L6.91 31.33 L8.03 28.87 L9.23 26.54 L10.53 24.34 L11.91 22.25 L13.39 20.27 L14.96 18.40 L16.63 16.63 L18.40 14.96 L20.27 13.39 L22.25 11.91 L24.34 10.53 L26.54 9.23 L28.87 8.03 L31.33 6.91 L33.93 5.88 L36.68 4.93 L39.60 4.07 L42.70 3.29 L46.01 2.60 L49.56 1.99 L53.40 1.46 L57.59 1.01 L62.23 0.65 L67.49 0.36 L73.71 0.16 L81.72 0.04 L100.00 0.00 Z'/%3E%3C/svg%3E");
+  --zia-sq-tr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0.00 100.00 L100.00 100.00 L99.96 81.72 L99.84 73.71 L99.64 67.49 L99.35 62.23 L98.99 57.59 L98.54 53.40 L98.01 49.56 L97.40 46.01 L96.71 42.70 L95.93 39.60 L95.07 36.68 L94.12 33.93 L93.09 31.33 L91.97 28.87 L90.77 26.54 L89.47 24.34 L88.09 22.25 L86.61 20.27 L85.04 18.40 L83.37 16.63 L81.60 14.96 L79.73 13.39 L77.75 11.91 L75.66 10.53 L73.46 9.23 L71.13 8.03 L68.67 6.91 L66.07 5.88 L63.32 4.93 L60.40 4.07 L57.30 3.29 L53.99 2.60 L50.44 1.99 L46.60 1.46 L42.41 1.01 L37.77 0.65 L32.51 0.36 L26.29 0.16 L18.28 0.04 L0.00 0.00 Z'/%3E%3C/svg%3E");
+  --zia-folder-radius: var(--zia-tab-radius);
+  --zia-glass-button-radius: var(--zia-tab-radius);
+  --zia-pop-radius: 16.5px;
+  --zia-split-card-radius: 14px;
+
+  --zia-split-backdrop: rgb(23, 23, 23);
+  /* (the music player a deeper shade of the sidebar than the selected tab) */
+  --zia-media-bg: rgba(0, 0, 0, 0.25);
+  --zia-media-card-height: 64px;
+  --zia-media-card-height-open: 124px;
+  --zia-media-radius: 12.5px;
+  --zia-media-ring-size: 46px;
+  --zia-media-art-size: 38px;
+  --zia-toolbar-end-gap: 5px;
+  --zia-space-name-nudge: 4px;
+  --zia-space-name-offset: 1.5px;
+  --zia-space-pill-height: 34px;
+  --zia-space-pill-bg: rgba(255, 255, 255, 0.16);
+  --zia-space-icon-gap: 8px;
+  --zia-folder-icon-offset: 0px;
+  --zia-folder-mark-color: rgba(0, 0, 0, 0.75);
+  --zia-text-size: calc(1.22rem - 0.4px);
+  --zia-shine-width: 0.5px;
+  --zia-essential-max-width: 120px;
+  --zia-card-gap: 6px;
+  --zia-card-top-gap: 6px;
+  --zia-toolbar-height: 40px;
+  --zia-urlbar-height: 31px;
+  --zia-active-tab-bg: rgba(0, 0, 0, 0.1);
+  --zia-active-tab-bg-folder: rgba(0, 0, 0, 0.4);
+  --zia-space-name-tint: 25%;
+  --zia-card-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.16), 0 1px 4px rgba(0, 0, 0, 0.18);
+  --zia-hover-card-shadow: none;
+  --zia-color-fade: 0.15s;
+  /* the toolbar's ink, with a faint touch of the site's hue (zia.uc.js
+     sets the hue and strength, and darkens it on a bright colour it'd
+     vanish on; without them it's the plain grey) */
+  --zia-light-ink: hsl(var(--zia-ink-h, 240) var(--zia-ink-s, 3.5%) var(--zia-light-ink-l, 40%));
+}
+
+/* A Zen whose Firefox can't draw a squircle (corner-shape) draws every
+   corner round: there each corner keeps its round radius (no growing), and
+   the masks cut round corners to match, so the shines and tiles fit. */
+@supports not (corner-shape: round) {
+  :root:not(#zia-none) {
+    --zia-squircle-grow: 1;
+    --zia-squircle-row-grow: 1;
+    --zia-sq-tl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M100.00 100.00 L0.00 100.00 L0.08 96.07 L0.31 92.15 L0.69 88.25 L1.23 84.36 L1.92 80.49 L2.76 76.66 L3.75 72.86 L4.89 69.10 L6.18 65.39 L7.61 61.73 L9.19 58.13 L10.90 54.60 L12.75 51.14 L14.74 47.75 L16.85 44.44 L19.10 41.22 L21.47 38.09 L23.96 35.06 L26.57 32.12 L29.29 29.29 L32.12 26.57 L35.06 23.96 L38.09 21.47 L41.22 19.10 L44.44 16.85 L47.75 14.74 L51.14 12.75 L54.60 10.90 L58.13 9.19 L61.73 7.61 L65.39 6.18 L69.10 4.89 L72.86 3.75 L76.66 2.76 L80.49 1.92 L84.36 1.23 L88.25 0.69 L92.15 0.31 L96.07 0.08 L100.00 0.00 Z'/%3E%3C/svg%3E");
+    --zia-sq-tr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0.00 100.00 L100.00 100.00 L99.92 96.07 L99.69 92.15 L99.31 88.25 L98.77 84.36 L98.08 80.49 L97.24 76.66 L96.25 72.86 L95.11 69.10 L93.82 65.39 L92.39 61.73 L90.81 58.13 L89.10 54.60 L87.25 51.14 L85.26 47.75 L83.15 44.44 L80.90 41.22 L78.53 38.09 L76.04 35.06 L73.43 32.12 L70.71 29.29 L67.88 26.57 L64.94 23.96 L61.91 21.47 L58.78 19.10 L55.56 16.85 L52.25 14.74 L48.86 12.75 L45.40 10.90 L41.87 9.19 L38.27 7.61 L34.61 6.18 L30.90 4.89 L27.14 3.75 L23.34 2.76 L19.51 1.92 L15.64 1.23 L11.75 0.69 L7.85 0.31 L3.93 0.08 L0.00 0.00 Z'/%3E%3C/svg%3E");
+    --zia-sq-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M100.00 0.00 L0.00 0.00 L0.08 3.93 L0.31 7.85 L0.69 11.75 L1.23 15.64 L1.92 19.51 L2.76 23.34 L3.75 27.14 L4.89 30.90 L6.18 34.61 L7.61 38.27 L9.19 41.87 L10.90 45.40 L12.75 48.86 L14.74 52.25 L16.85 55.56 L19.10 58.78 L21.47 61.91 L23.96 64.94 L26.57 67.88 L29.29 70.71 L32.12 73.43 L35.06 76.04 L38.09 78.53 L41.22 80.90 L44.44 83.15 L47.75 85.26 L51.14 87.25 L54.60 89.10 L58.13 90.81 L61.73 92.39 L65.39 93.82 L69.10 95.11 L72.86 96.25 L76.66 97.24 L80.49 98.08 L84.36 98.77 L88.25 99.31 L92.15 99.69 L96.07 99.92 L100.00 100.00 Z'/%3E%3C/svg%3E");
+    --zia-sq-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0.00 0.00 L100.00 0.00 L99.92 3.93 L99.69 7.85 L99.31 11.75 L98.77 15.64 L98.08 19.51 L97.24 23.34 L96.25 27.14 L95.11 30.90 L93.82 34.61 L92.39 38.27 L90.81 41.87 L89.10 45.40 L87.25 48.86 L85.26 52.25 L83.15 55.56 L80.90 58.78 L78.53 61.91 L76.04 64.94 L73.43 67.88 L70.71 70.71 L67.88 73.43 L64.94 76.04 L61.91 78.53 L58.78 80.90 L55.56 83.15 L52.25 85.26 L48.86 87.25 L45.40 89.10 L41.87 90.81 L38.27 92.39 L34.61 93.82 L30.90 95.11 L27.14 96.25 L23.34 97.24 L19.51 98.08 L15.64 98.77 L11.75 99.31 L7.85 99.69 L3.93 99.92 L0.00 100.00 Z'/%3E%3C/svg%3E");
+    --zia-row-tl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M100.00 100.00 L0.00 100.00 L0.08 96.07 L0.31 92.15 L0.69 88.25 L1.23 84.36 L1.92 80.49 L2.76 76.66 L3.75 72.86 L4.89 69.10 L6.18 65.39 L7.61 61.73 L9.19 58.13 L10.90 54.60 L12.75 51.14 L14.74 47.75 L16.85 44.44 L19.10 41.22 L21.47 38.09 L23.96 35.06 L26.57 32.12 L29.29 29.29 L32.12 26.57 L35.06 23.96 L38.09 21.47 L41.22 19.10 L44.44 16.85 L47.75 14.74 L51.14 12.75 L54.60 10.90 L58.13 9.19 L61.73 7.61 L65.39 6.18 L69.10 4.89 L72.86 3.75 L76.66 2.76 L80.49 1.92 L84.36 1.23 L88.25 0.69 L92.15 0.31 L96.07 0.08 L100.00 0.00 Z'/%3E%3C/svg%3E");
+    --zia-row-tr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0.00 100.00 L100.00 100.00 L99.92 96.07 L99.69 92.15 L99.31 88.25 L98.77 84.36 L98.08 80.49 L97.24 76.66 L96.25 72.86 L95.11 69.10 L93.82 65.39 L92.39 61.73 L90.81 58.13 L89.10 54.60 L87.25 51.14 L85.26 47.75 L83.15 44.44 L80.90 41.22 L78.53 38.09 L76.04 35.06 L73.43 32.12 L70.71 29.29 L67.88 26.57 L64.94 23.96 L61.91 21.47 L58.78 19.10 L55.56 16.85 L52.25 14.74 L48.86 12.75 L45.40 10.90 L41.87 9.19 L38.27 7.61 L34.61 6.18 L30.90 4.89 L27.14 3.75 L23.34 2.76 L19.51 1.92 L15.64 1.23 L11.75 0.69 L7.85 0.31 L3.93 0.08 L0.00 0.00 Z'/%3E%3C/svg%3E");
+    --zia-row-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M100.00 0.00 L0.00 0.00 L0.08 3.93 L0.31 7.85 L0.69 11.75 L1.23 15.64 L1.92 19.51 L2.76 23.34 L3.75 27.14 L4.89 30.90 L6.18 34.61 L7.61 38.27 L9.19 41.87 L10.90 45.40 L12.75 48.86 L14.74 52.25 L16.85 55.56 L19.10 58.78 L21.47 61.91 L23.96 64.94 L26.57 67.88 L29.29 70.71 L32.12 73.43 L35.06 76.04 L38.09 78.53 L41.22 80.90 L44.44 83.15 L47.75 85.26 L51.14 87.25 L54.60 89.10 L58.13 90.81 L61.73 92.39 L65.39 93.82 L69.10 95.11 L72.86 96.25 L76.66 97.24 L80.49 98.08 L84.36 98.77 L88.25 99.31 L92.15 99.69 L96.07 99.92 L100.00 100.00 Z'/%3E%3C/svg%3E");
+    --zia-row-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0.00 0.00 L100.00 0.00 L99.92 3.93 L99.69 7.85 L99.31 11.75 L98.77 15.64 L98.08 19.51 L97.24 23.34 L96.25 27.14 L95.11 30.90 L93.82 34.61 L92.39 38.27 L90.81 41.87 L89.10 45.40 L87.25 48.86 L85.26 52.25 L83.15 55.56 L80.90 58.78 L78.53 61.91 L76.04 64.94 L73.43 67.88 L70.71 70.71 L67.88 73.43 L64.94 76.04 L61.91 78.53 L58.78 80.90 L55.56 83.15 L52.25 85.26 L48.86 87.25 L45.40 89.10 L41.87 90.81 L38.27 92.39 L34.61 93.82 L30.90 95.11 L27.14 96.25 L23.34 97.24 L19.51 98.08 L15.64 98.77 L11.75 99.31 L7.85 99.69 L3.93 99.92 L0.00 100.00 Z'/%3E%3C/svg%3E");
+  }
+}
+
+/* Zen paints superellipse(var(--zen-squircle-value)) onto every element
+   (1.3 on macOS, 2.3 on Windows). A Zia length drawn with that curve looks
+   squarer on Windows than the same length on macOS. Zia's corners are
+   circular, but for its squircles (--zia-squircle): those have to beat
+   this rule, so they're !important, with a selector at least as specific
+   (an id, two classes, or :root and a class). Menus, panels and dialogs
+   keep Zen's curve, because their radii are stretched for it. */
+:root,
+:root *:not(menupopup, menupopup *, panel, panel *, dialog, dialog *),
+:root *:not(menupopup, menupopup *, panel, panel *, dialog, dialog *)::before,
+:root *:not(menupopup, menupopup *, panel, panel *, dialog, dialog *)::after {
+  corner-shape: round !important;
+}
+
+/* Every small icon button's background, in toolbars and the sidebar (the
+   workspaces' icons among them), is Zia's squircle */
+:root :is(toolbarbutton, toolbarbutton > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack, .toolbarbutton-text)):not(menupopup *, panel *, dialog *) {
+  corner-shape: var(--zia-squircle-soft) !important;
+}
+
+/* The fine edge round essentials, folders and cards is half a pixel: one
+   screen pixel on a 2x display. On a 1x one (most Windows screens) half a
+   pixel rounded to nothing and the edge was gone, so there it's a whole one,
+   the same one screen pixel. */
+@media (max-resolution: 1.5dppx) {
+  :root {
+    --zia-shine-width: 1px;
+  }
+}
+
+/* Windows draws the sidebar over a flatter, darker backdrop than macOS's
+   translucent one, so the same folder colours read far more vivid there;
+   they get a lighter wash and hover tint. */
+@media (-moz-platform: windows) {
+  :root {
+    --zia-folder-wash: 20%;
+    --zia-folder-tint: 34%;
+  }
+}
+
+/* Transparent pages show the window through, so split view mustn't lay an opaque tray under them */
+@media -moz-pref("browser.tabs.allow_transparent_browser") {
+  :root {
+    --zia-split-backdrop: transparent;
+  }
+}
+
+@media -moz-pref("zia.loading-bar.accent-color") {
+  :root {
+    --zia-loading-color: var(--zen-primary-color);
+  }
+}
+
+:root[zia-site-dark="true"] {
+  --zia-urlbar-hover-bg: rgba(255, 255, 255, 0.09);
+}
+
+:root[zia-site-light="true"] {
+  --zia-separator: rgba(0, 0, 0, 0.12);
+  --zia-urlbar-hover-bg: rgba(0, 0, 0, 0.06);
+}
+
+/* The sidebar's text size, an option: a touch or two smaller, for a
+   narrow sidebar, or a touch larger (read straight off the option, so it
+   takes as soon as it's changed, with or without zia.uc.js) */
+@media -moz-pref("zia.sidebar.text-size", "small") {
+  :root {
+    --zia-text-size: calc(1.22rem - 1.4px);
+  }
+}
+
+@media -moz-pref("zia.sidebar.text-size", "smaller") {
+  :root {
+    --zia-text-size: calc(1.22rem - 2.4px);
+  }
+}
+
+@media -moz-pref("zia.sidebar.text-size", "large") {
+  :root {
+    --zia-text-size: calc(1.22rem + 0.6px);
+  }
+}

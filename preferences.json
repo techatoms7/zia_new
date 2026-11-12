@@ -1,0 +1,1354 @@
+[
+    {
+        "type":  "separator",
+        "label":  "Look",
+        "id":  "zia-section-look"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Toolbar in the site\u0027s colour (off: the theme\u0027s)",
+        "property":  "zia.toolbar.site-color",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Loading bar in Zen\u0027s accent colour (off: Zia blue)",
+        "property":  "zia.loading-bar.accent-color",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Hide the glow around the selected tab",
+        "property":  "zia.tabs.no-glow",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Tint the selected tab\u0027s glow and sound bars with the site\u0027s colours",
+        "property":  "zia.tabs.favicon-glow",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Dim asleep tabs, essentials and folders",
+        "property":  "zia.tabs.dim-asleep",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Hide the slash in a pinned tab that\u0027s moved off its page (its icon still takes it back)",
+        "property":  "zia.tabs.no-pin-slash",
+        "since":  "2.112.4",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Glass: essentials, cards and the Library\u0027s buttons edged as macOS Tahoe\u0027s glass, lighting up where pressed (off: Zia\u0027s fine shine)",
+        "property":  "zia.glass",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "See-through surfaces keep blurring a video behind them (it comes out duller, and HDR video loses its HDR; off: see-through without the blur over a video)",
+        "property":  "zia.glass.blur-over-video",
+        "since":  "2.118.0",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Zia\u0027s rounded page corners (off: Zen\u0027s)",
+        "property":  "zia.page.rounding",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Page fills its space edge to edge, with no gap or shadow",
+        "property":  "zia.page.edge-to-edge",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Ultra: extra effects (a thinking orb while a tab loads, the colour round the open essential slowly moving, the music player glowing in its artwork\u0027s colours, the Library\u0027s chosen section springing to the next, the welcome tour\u0027s Zia in liquid metal)",
+        "property":  "zia.ultra",
+        "defaultValue":  true
+    },
+    {
+        "type":  "separator",
+        "label":  "Tabs and essentials",
+        "id":  "zia-section-tabs"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Hover cards for tabs and folders",
+        "property":  "zia.features.tab-hover-cards",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Hover cards are see-through, with what\u0027s behind blurred",
+        "property":  "zia.cards.blur",
+        "defaultValue":  true,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tab-hover-cards",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Hover cards show a picture of the tab\u0027s page at the top",
+        "property":  "zia.cards.page-picture",
+        "since":  "2.120.0",
+        "defaultValue":  true,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tab-hover-cards",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "A coloured folder\u0027s hover card takes its colour",
+        "property":  "zia.folders.tint-card",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tab-hover-cards",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Sound bars on playing tabs (off: Zen\u0027s speaker)",
+        "property":  "zia.tabs.sound-bars",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Sound bars move even when your system asks for less motion",
+        "property":  "zia.sound-bars.always-move",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.tabs.sound-bars",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Hold Cmd/Ctrl to number your tabs, and go to one by its number",
+        "property":  "zia.features.tab-numbers",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Tab numbers always showing",
+        "property":  "zia.tab-numbers.always",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tab-numbers",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Colour of the number you type",
+        "property":  "zia.tab-numbers.color",
+        "defaultValue":  "zia",
+        "options":  [
+                        {
+                            "label":  "Zia blue",
+                            "value":  "zia"
+                        },
+                        {
+                            "label":  "The space\u0027s colour",
+                            "value":  "space"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tab-numbers",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Cmd/Ctrl+Z reopens a closed tab",
+        "property":  "zia.features.undo-close",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "A glance shows on its tab as a small picture of the page",
+        "property":  "zia.glance.thumbnail",
+        "defaultValue":  true
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Open links in Glance (Shift+click opens a tab)",
+        "property":  "zia.glance.links",
+        "since":  "2.122.0",
+        "defaultValue":  "off",
+        "options":  [
+                        {
+                            "label":  "Off",
+                            "value":  "off"
+                        },
+                        {
+                            "label":  "Links to other sites",
+                            "value":  "other"
+                        },
+                        {
+                            "label":  "Every link",
+                            "value":  "all"
+                        }
+                    ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Zia\u0027s narrower essentials (off: Zen\u0027s widths)",
+        "property":  "zia.essentials.zia-width",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Two essentials to a row, for a narrower sidebar",
+        "property":  "zia.essentials.two-per-row",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "The last essential stretches across its row",
+        "property":  "zia.essentials.fill-row",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Split essentials: drag a two-site split onto the essentials (experimental)",
+        "property":  "zia.essentials.split",
+        "defaultValue":  true
+    },
+    {
+        "type":  "separator",
+        "label":  "Sidebar and folders",
+        "id":  "zia-section-sidebar"
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Text size in the sidebar",
+        "property":  "zia.sidebar.text-size",
+        "defaultValue":  "default",
+        "options":  [
+                        {
+                            "label":  "Default",
+                            "value":  "default"
+                        },
+                        {
+                            "label":  "Small",
+                            "value":  "small"
+                        },
+                        {
+                            "label":  "Smaller",
+                            "value":  "smaller"
+                        },
+                        {
+                            "label":  "Large",
+                            "value":  "large"
+                        }
+                    ]
+    },
+    {
+        "type":  "dropdown",
+        "label":  "The open space\u0027s name and icon",
+        "property":  "zia.sidebar.space-label",
+        "since":  "2.116.0",
+        "defaultValue":  "top",
+        "options":  [
+                        {
+                            "label":  "At the top of the sidebar",
+                            "value":  "top"
+                        },
+                        {
+                            "label":  "At the top, icon only",
+                            "value":  "icon"
+                        },
+                        {
+                            "label":  "Above the tabs, as Zen does",
+                            "value":  "list"
+                        },
+                        {
+                            "label":  "Hidden",
+                            "value":  "none"
+                        }
+                    ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Space switcher at the foot of the sidebar shows dots, the open space\u0027s icon among them (Zen\u0027s look when they don\u0027t fit)",
+        "property":  "zia.spaces.collapse-icons",
+        "since":  "2.112.0",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Folders open and close with a spring",
+        "property":  "zia.folders.bounce",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Coloured folders show their colour only when hovered or open",
+        "property":  "zia.folders.tint-when-open",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Icon picker for folders and spaces (5,166 icons)",
+        "property":  "zia.features.icon-picker",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Name new folders and pick their icons with a local model (a ~25MB download, once)",
+        "property":  "zia.features.folder-icon-suggest",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Bookmarks, History and Synced Tabs panels in Zia\u0027s look",
+        "property":  "zia.sidebar-panels.style",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Those panels beside the page, full height, as a second sidebar",
+        "property":  "zia.sidebar-panels.beside",
+        "defaultValue":  true,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.sidebar-panels.style",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Zen\u0027s own Library look (off: Zia\u0027s)",
+        "property":  "zia.library.zen-look",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Compact mode: the sidebar is see-through, the page blurred behind",
+        "property":  "zia.compact.sidebar-blur",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Compact mode: the top toolbar hides while the sidebar is out",
+        "property":  "zia.compact.hide-toolbar",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Compact mode: the hidden top toolbar fades in over the page (off: it opens in the gap above the page, as Zen\u0027s does)",
+        "property":  "zia.compact.toolbar-over-page",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zen.view.compact.hide-toolbar",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "separator",
+        "label":  "Address bar and new tabs",
+        "id":  "zia-section-address"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Zia\u0027s address bar (off: Zen\u0027s own, as it looks without Zia)",
+        "property":  "zia.urlbar.zia-look",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Zia\u0027s address bar pop-up (off: Zen\u0027s)",
+        "property":  "zia.urlbar.dia-style",
+        "defaultValue":  true,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.urlbar.zia-look",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "The pop-up is see-through, the page blurred behind",
+        "property":  "zia.urlbar.pop-up-blur",
+        "defaultValue":  true,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.urlbar.dia-style",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "The pop-up takes the toolbar\u0027s colour as it opens",
+        "property":  "zia.urlbar.site-color",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.urlbar.dia-style",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "zia.toolbar.site-color",
+                                          "value":  true
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Show only the page\u0027s title, in the domain\u0027s colour, until clicked",
+        "property":  "zia.urlbar.title-only",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.urlbar.zia-look",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "zia.urlbar.full-url",
+                                          "value":  false
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Show the page\u0027s full address rather than its domain and title",
+        "property":  "zia.urlbar.full-url",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.urlbar.zia-look",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Centre the address bar\u0027s text",
+        "property":  "zia.urlbar.center-text",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.urlbar.zia-look",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Keep the opened pop-up\u0027s text from the left",
+        "property":  "zia.urlbar.center-text.pop-up-left",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.urlbar.zia-look",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "zia.urlbar.center-text",
+                                          "value":  true
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Centre the address bar itself, with as much room before it as after (the buttons either side balanced)",
+        "property":  "zia.urlbar.center-bar",
+        "since":  "2.112.0",
+        "defaultValue":  false
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Address bar position",
+        "property":  "zia.urlbar.position",
+        "defaultValue":  "top",
+        "options":  [
+                        {
+                            "label":  "Top",
+                            "value":  "top"
+                        },
+                        {
+                            "label":  "Bottom",
+                            "value":  "bottom"
+                        }
+                    ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Zia\u0027s find in page bar",
+        "property":  "zia.features.find-bar",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Cmd/Ctrl+T and + New Tab open a real tab (off: Zen\u0027s floating address bar)",
+        "property":  "zia.newtab.real-tab",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "New tabs open your search engine\u0027s page, unless an extension has its own new tab page (off: Zen\u0027s new tab page)",
+        "property":  "zia.newtab.search-engine",
+        "defaultValue":  true,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.newtab.real-tab",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "New tabs start in the address bar, ready to type",
+        "property":  "zia.newtab.focus-address-bar",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.newtab.real-tab",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "separator",
+        "label":  "Page",
+        "id":  "zia-section-page"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Dia\u0027s round arrow when swiping back or forward, holding it lists the pages",
+        "property":  "zia.swipe.dia-arrow",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Pull to refresh: keep scrolling up at the top of a page and let go to reload it",
+        "property":  "zia.pull-refresh",
+        "since":  "2.121.0",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Drop cards when dragging a tab onto the page to split it (off: Zen\u0027s)",
+        "property":  "zia.split.drop-cards",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "PDFs in Zia\u0027s viewer look (reopen a PDF to see it)",
+        "property":  "zia.pdf.dia-style",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Show where links go, at the foot of the page, as you hover them",
+        "property":  "zia.status-bar",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Hide the window buttons, for keyboard users",
+        "property":  "zia.window-buttons.hide",
+        "defaultValue":  false,
+        "disabledOn":  [
+                           "macos"
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Window buttons just dim on hover (off: Windows\u0027 own)",
+        "property":  "zia.window-buttons.dim",
+        "defaultValue":  false,
+        "disabledOn":  [
+                           "macos",
+                           "linux"
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Show the â‹¯ menu at the end of the toolbar",
+        "property":  "zia.toolbar.menu-button",
+        "defaultValue":  true
+    },
+    {
+        "type":  "separator",
+        "label":  "Media",
+        "id":  "zia-section-media"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Music player card",
+        "property":  "zia.features.media-player",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "The music player stays when its video goes picture-in-picture",
+        "property":  "zia.media.keep-with-pip",
+        "defaultValue":  true,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.media-player",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "The music player shows a YouTube channel\u0027s picture, not the video\u0027s",
+        "property":  "zia.media.youtube-channel-art",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.media-player",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "The music player leaves emoji out of titles and artist names",
+        "property":  "zia.media.hide-emoji",
+        "since":  "2.117.0",
+        "defaultValue":  true,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.media-player",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Zia\u0027s picture-in-picture controls (off: Firefox\u0027s)",
+        "property":  "zia.pip.dia-style",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Push picture-in-picture against a screen edge, or right-click it, to tuck it away",
+        "property":  "zia.pip.tuck",
+        "defaultValue":  true
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Picture-in-picture tucks into",
+        "property":  "zia.pip.tuck-spot",
+        "defaultValue":  "nearest",
+        "options":  [
+                        {
+                            "label":  "The nearest side",
+                            "value":  "nearest"
+                        },
+                        {
+                            "label":  "Left side",
+                            "value":  "left"
+                        },
+                        {
+                            "label":  "Right side",
+                            "value":  "right"
+                        },
+                        {
+                            "label":  "Bottom",
+                            "value":  "bottom"
+                        },
+                        {
+                            "label":  "Bottom-left corner",
+                            "value":  "bottom-left"
+                        },
+                        {
+                            "label":  "Bottom-right corner",
+                            "value":  "bottom-right"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.pip.tuck",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Pointing at tucked picture-in-picture shows all of it until the pointer leaves (off: it nudges out a little)",
+        "property":  "zia.pip.tuck-peek",
+        "defaultValue":  false,
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.pip.tuck",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "checkbox",
+        "label":  "A playing video goes picture-in-picture as you leave its tab (Firefox\u0027s own)",
+        "property":  "zia.pip.auto-on-tab-switch",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "\"Add to Multiview\" on videos and tabs: a tab that grids up videos and streams",
+        "property":  "zia.multiview",
+        "defaultValue":  true
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Multiview tab icon colour",
+        "property":  "zia.multiview.icon-color",
+        "defaultValue":  "zia",
+        "options":  [
+                        {
+                            "label":  "Zia blue",
+                            "value":  "zia"
+                        },
+                        {
+                            "label":  "The space\u0027s colour",
+                            "value":  "space"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.multiview",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "separator",
+        "label":  "Rename downloads with AI",
+        "id":  "zia-section-rename"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Rename finished downloads with AI, with an undo (restart after turning on)",
+        "property":  "zia.features.tidy-downloads",
+        "defaultValue":  false
+    },
+    {
+        "type":  "dropdown",
+        "label":  "AI service",
+        "property":  "extensions.downloads.ai_provider",
+        "defaultValue":  "mistral",
+        "description":  "Cloud providers first, then Ollama, OpenRouter, or any OpenAI-compatible endpoint.",
+        "options":  [
+                        {
+                            "label":  "Mistral AI",
+                            "value":  "mistral"
+                        },
+                        {
+                            "label":  "OpenAI",
+                            "value":  "openai"
+                        },
+                        {
+                            "label":  "Anthropic",
+                            "value":  "anthropic"
+                        },
+                        {
+                            "label":  "Google Gemini",
+                            "value":  "google"
+                        },
+                        {
+                            "label":  "Ollama (local)",
+                            "value":  "ollama"
+                        },
+                        {
+                            "label":  "OpenRouter",
+                            "value":  "openrouter"
+                        },
+                        {
+                            "label":  "OpenAI-compatible endpoint",
+                            "value":  "openai_compat"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "string",
+        "label":  "Mistral API key",
+        "property":  "extensions.downloads.mistral_api_key",
+        "placeholder":  "Enter your Mistral API key",
+        "defaultValue":  "",
+        "description":  "Your API key from console.mistral.ai. The model list loads once this is set.",
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "mistral"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Mistral model",
+        "property":  "extensions.downloads.mistral_model",
+        "defaultValue":  "mistral-small-latest",
+        "description":  "Models available for your Mistral key. The list is fetched from Mistral when a key is set.",
+        "options":  [
+                        {
+                            "value":  "mistral-small-latest",
+                            "label":  "Mistral Small Latest"
+                        },
+                        {
+                            "value":  "mistral-medium-latest",
+                            "label":  "Mistral Medium Latest"
+                        },
+                        {
+                            "value":  "mistral-large-latest",
+                            "label":  "Mistral Large Latest"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "mistral"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "string",
+        "label":  "OpenAI API key",
+        "property":  "extensions.downloads.openai_api_key",
+        "placeholder":  "Enter your OpenAI API key",
+        "defaultValue":  "",
+        "description":  "Your API key from platform.openai.com. The model list loads once this is set.",
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "openai"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "dropdown",
+        "label":  "OpenAI model",
+        "property":  "extensions.downloads.openai_model",
+        "defaultValue":  "gpt-4.1-mini",
+        "description":  "Models available for your OpenAI key. The list is fetched from OpenAI when a key is set.",
+        "options":  [
+                        {
+                            "value":  "gpt-4.1-mini",
+                            "label":  "GPT-4.1 Mini"
+                        },
+                        {
+                            "value":  "gpt-4.1",
+                            "label":  "GPT-4.1"
+                        },
+                        {
+                            "value":  "gpt-4o",
+                            "label":  "GPT-4o"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "openai"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "string",
+        "label":  "Anthropic API key",
+        "property":  "extensions.downloads.anthropic_api_key",
+        "placeholder":  "Enter your Anthropic API key",
+        "defaultValue":  "",
+        "description":  "Your API key from console.anthropic.com. The model list loads once this is set.",
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "anthropic"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Anthropic model",
+        "property":  "extensions.downloads.anthropic_model",
+        "defaultValue":  "claude-sonnet-4-0",
+        "description":  "Models available for your Anthropic key. The list is fetched from Anthropic when a key is set.",
+        "options":  [
+                        {
+                            "value":  "claude-sonnet-4-0",
+                            "label":  "Claude Sonnet 4"
+                        },
+                        {
+                            "value":  "claude-opus-4-0",
+                            "label":  "Claude Opus 4"
+                        },
+                        {
+                            "value":  "claude-3-5-haiku-latest",
+                            "label":  "Claude 3.5 Haiku Latest"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "anthropic"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "string",
+        "label":  "Google AI API key",
+        "property":  "extensions.downloads.google_api_key",
+        "placeholder":  "Enter your Google AI Studio API key",
+        "defaultValue":  "",
+        "description":  "Your API key from aistudio.google.com. The model list loads once this is set.",
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "google"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Gemini model",
+        "property":  "extensions.downloads.google_model",
+        "defaultValue":  "gemini-2.5-flash",
+        "description":  "Models available for your Google key. The list is fetched from Google when a key is set.",
+        "options":  [
+                        {
+                            "value":  "gemini-2.5-flash",
+                            "label":  "Gemini 2.5 Flash"
+                        },
+                        {
+                            "value":  "gemini-2.5-pro",
+                            "label":  "Gemini 2.5 Pro"
+                        },
+                        {
+                            "value":  "gemini-2.0-flash",
+                            "label":  "Gemini 2.0 Flash"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "google"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "string",
+        "label":  "Ollama base URL",
+        "property":  "extensions.downloads.ollama_base_url",
+        "placeholder":  "http://localhost:11434",
+        "defaultValue":  "http://localhost:11434",
+        "description":  "Your local Ollama server. No API key required. Installed models are listed from this host.",
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "ollama"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Ollama model",
+        "property":  "extensions.downloads.ollama_model",
+        "defaultValue":  "llama3.2",
+        "description":  "Models installed in your local Ollama instance. The list loads when Ollama is running.",
+        "options":  [
+                        {
+                            "value":  "llama3.2",
+                            "label":  "llama3.2"
+                        },
+                        {
+                            "value":  "mistral",
+                            "label":  "mistral"
+                        },
+                        {
+                            "value":  "qwen2.5",
+                            "label":  "qwen2.5"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "ollama"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "string",
+        "label":  "OpenRouter API key",
+        "property":  "extensions.downloads.openrouter_api_key",
+        "placeholder":  "Enter your OpenRouter API key",
+        "defaultValue":  "",
+        "description":  "Your API key from openrouter.ai. The model list loads once this is set.",
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "openrouter"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "dropdown",
+        "label":  "OpenRouter model",
+        "property":  "extensions.downloads.openrouter_model",
+        "defaultValue":  "openai/gpt-4.1-mini",
+        "description":  "Models available for your OpenRouter key. The list is fetched from OpenRouter when a key is set.",
+        "options":  [
+                        {
+                            "value":  "openai/gpt-4.1-mini",
+                            "label":  "OpenAI GPT-4.1 Mini"
+                        },
+                        {
+                            "value":  "anthropic/claude-sonnet-4",
+                            "label":  "Anthropic Claude Sonnet 4"
+                        },
+                        {
+                            "value":  "google/gemini-2.5-flash",
+                            "label":  "Google Gemini 2.5 Flash"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "openrouter"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "string",
+        "label":  "Endpoint API key",
+        "property":  "extensions.downloads.openai_compat_api_key",
+        "placeholder":  "Paste your compatible API key",
+        "defaultValue":  "",
+        "description":  "API key for a custom OpenAI-compatible server. The model list loads once this is set.",
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "openai_compat"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "string",
+        "label":  "Endpoint base URL",
+        "property":  "extensions.downloads.openai_compat_base_url",
+        "placeholder":  "https://api.example.com/v1",
+        "defaultValue":  "https://openrouter.ai/api/v1",
+        "description":  "Base URL ending in /v1. Chat and model list use this host.",
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "openai_compat"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "dropdown",
+        "label":  "Endpoint model",
+        "property":  "extensions.downloads.openai_compat_model",
+        "defaultValue":  "openai/gpt-4.1-mini",
+        "description":  "Models advertised by your endpoint. The list is fetched when an API key is set.",
+        "options":  [
+                        {
+                            "value":  "openai/gpt-4.1-mini",
+                            "label":  "openai/gpt-4.1-mini"
+                        }
+                    ],
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           },
+                           {
+                               "if":  {
+                                          "property":  "extensions.downloads.ai_provider",
+                                          "value":  "openai_compat"
+                                      }
+                           }
+                       ],
+        "operator":  "AND"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Log what renaming does in the Browser Console",
+        "property":  "extensions.downloads.enable_debug",
+        "defaultValue":  false,
+        "description":  "Writes Tidy Downloads diagnostic messages to the browser toolbox console.",
+        "conditions":  [
+                           {
+                               "if":  {
+                                          "property":  "zia.features.tidy-downloads",
+                                          "value":  true
+                                      }
+                           }
+                       ]
+    },
+    {
+        "type":  "separator",
+        "label":  "Install count",
+        "id":  "zia-section-install-count"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Count this install (once a day, with nothing about you or your browsing)",
+        "property":  "zia.install-count",
+        "since":  "2.113.0",
+        "defaultValue":  true
+    },
+    {
+        "type":  "separator",
+        "label":  "Welcome tour",
+        "id":  "zia-section-welcome"
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Show the welcome tour after updates that bring something new",
+        "property":  "zia.welcome.show",
+        "defaultValue":  true
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Show the welcome tour again (turns itself back off)",
+        "property":  "zia.welcome.again",
+        "defaultValue":  false
+    },
+    {
+        "type":  "checkbox",
+        "label":  "Show what\u0027s new in this version again (turns itself back off)",
+        "property":  "zia.welcome.whats-new-again",
+        "defaultValue":  false
+    },
+    {
+        "property":  "zia.sidebar.collapsible",
+        "label":  "Collapsible sidebar: use it instead of Zia\u0027s normal sidebar (Ctrl+Shift+\\ or the sidebar button collapses it)",
+        "type":  "checkbox",
+        "defaultValue":  false
+    },
+    {
+        "property":  "zia.sidebar.collapsible.peek",
+        "label":  "Collapsible sidebar: slide out over the page when hovered while collapsed",
+        "type":  "checkbox",
+        "defaultValue":  true
+    },
+    {
+        "property":  "zia.sidebar.collapsible.blur",
+        "label":  "Collapsible sidebar: background blur in px (0 to 60)",
+        "type":  "string",
+        "defaultValue":  "18"
+    },
+    {
+        "property":  "zia.sidebar.collapsible.rail",
+        "label":  "Collapsible sidebar: collapsed width in px (36 to 120)",
+        "type":  "string",
+        "defaultValue":  "52"
+    }
+]

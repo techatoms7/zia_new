@@ -1,0 +1,574 @@
+@media -moz-pref("zen.theme.essentials-favicon-bg") {
+  .tabbrowser-tab[zen-essential][visuallyselected] > .tab-stack > .tab-background {
+    --zen-essential-bg-margin: 3px !important;
+    --zen-essential-tab-selected-bg: rgba(92, 92, 94, 0.72) !important;
+    --zen-essential-tab-selected-bg-hover: rgba(102, 102, 104, 0.66) !important;
+    outline: none !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16) !important;
+
+    /* cut to Zia's squircle with a mask: Zen cuts the icon's blurred
+       colour round it to the essential's edge with overflow, and Firefox
+       cuts that to a round corner whatever its corner-shape, so the chosen
+       essential came out rounder than the rest. Each corner is the exact
+       squircle (superellipse(1.93)) at the essential's radius, and two bars
+       fill between them, so it fits any width, a pixel into the corners:
+       meeting them edge to edge, the seams showed as dark lines across
+       the tile while it was held down, shrunk to a part of a pixel off. */
+    --zia-sq-r: calc(var(--zia-essential-radius) * var(--zia-squircle-grow));
+    mask:
+      var(--zia-sq-tl) 0 0 / var(--zia-sq-r) var(--zia-sq-r) no-repeat,
+      var(--zia-sq-tr) 100% 0 / var(--zia-sq-r) var(--zia-sq-r) no-repeat,
+      var(--zia-sq-bl) 0 100% / var(--zia-sq-r) var(--zia-sq-r) no-repeat,
+      var(--zia-sq-br) 100% 100% / var(--zia-sq-r) var(--zia-sq-r) no-repeat,
+      linear-gradient(#000 0 0) calc(var(--zia-sq-r) - 1px) 0 / calc(100% - 2 * var(--zia-sq-r) + 2px) 100% no-repeat,
+      linear-gradient(#000 0 0) 0 calc(var(--zia-sq-r) - 1px) / 100% calc(100% - 2 * var(--zia-sq-r) + 2px) no-repeat !important;
+
+    &::after {
+      inset: -30% !important;
+      border-radius: inherit !important;
+      filter: blur(9px) saturate(2.4) brightness(1.15) !important;
+      corner-shape: var(--zia-squircle) !important;
+    }
+
+    &::before {
+      corner-shape: var(--zia-squircle) !important;
+      border-radius: calc(max(0px, calc(var(--zia-essential-radius) - var(--zen-essential-bg-margin) * var(--zia-essential-inner-tighten))) * var(--zia-squircle-grow)) !important;
+      /* (the glass edge, as on the other essentials, a touch thicker so it
+         holds its own against the colour round it) */
+      box-shadow: var(--zia-glass-edge-thick) !important;
+    }
+  }
+}
+
+/* Zen 1.23's floating music notes, over playing tabs and the media card:
+   gone, as Zia's sound bars already show what's playing */
+.zen-media-notes {
+  display: none !important;
+}
+
+.tab-icon-overlay:not([crashed]):is([soundplaying], [muted], [activemedia-blocked]) {
+  list-style-image: var(--zia-sound-wave, url("chrome://sine/content/zia/icons/sound-wave.svg")) !important;
+  -moz-context-properties: fill !important;
+  fill: rgb(255, 255, 255) !important;
+  background-color: rgba(22, 22, 22, 0.86) !important;
+  background-image: none !important;
+  border-radius: 999px !important;
+  corner-shape: round !important;
+  outline: 0.5px solid rgba(255, 255, 255, 0.18) !important;
+  outline-offset: -0.5px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  transition: background-color 0.15s ease !important;
+
+  &[muted] {
+    list-style-image: var(--zia-sound-muted, url("chrome://sine/content/zia/icons/sound-muted.svg")) !important;
+    fill: rgba(255, 255, 255, 0.8) !important;
+  }
+
+  /* a site waiting to play (autoplay blocked): Zen's music note becomes
+     a small play button in the same badge, and a click plays it */
+  &[activemedia-blocked]:not([soundplaying], [muted]) {
+    list-style-image: url("chrome://sine/content/zia/icons/media-blocked.svg") !important;
+
+    &::before,
+    &::after {
+      content: none !important;
+      background: none !important;
+      mask: none !important;
+    }
+  }
+
+  &:hover {
+    background-color: rgba(48, 48, 48, 0.92) !important;
+  }
+}
+
+/* Selected tab: the white glow around it picks up a hint of the favicon's
+   colours. Mostly white, barely stronger than the plain glow. */
+@media -moz-pref("zia.tabs.favicon-glow") {
+  .tabbrowser-tab:not([zen-essential])[visuallyselected][zia-glow] > .tab-stack > .tab-background,
+  :root[zen-sidebar-expanded="true"] tab-group[split-view-group][zia-glow]:is([hasactivetab], :has(.tabbrowser-tab[visuallyselected])) .tab-group-container {
+    --zia-glow-hint: 35%;
+    --zia-glow-strength: 6%;
+    --zia-glow-mix-1: color-mix(in srgb, color-mix(in srgb, var(--zia-glow-1) var(--zia-glow-hint), white) var(--zia-glow-strength), transparent);
+    --zia-glow-mix-2: color-mix(in srgb, color-mix(in srgb, var(--zia-glow-2, var(--zia-glow-1)) var(--zia-glow-hint), white) var(--zia-glow-strength), transparent);
+    --zia-glow-mix-3: color-mix(in srgb, color-mix(in srgb, var(--zia-glow-3, var(--zia-glow-1)) var(--zia-glow-hint), white) var(--zia-glow-strength), transparent);
+    box-shadow:
+      -6px 0 var(--zia-active-glow-blur) var(--zia-active-glow-spread) var(--zia-glow-mix-1),
+      6px 0 var(--zia-active-glow-blur) var(--zia-active-glow-spread) var(--zia-glow-mix-2),
+      0 calc(-1 * var(--zia-active-glow-reach)) var(--zia-active-glow-blur) var(--zia-active-glow-spread) var(--zia-glow-mix-3),
+      0 var(--zia-active-glow-reach) var(--zia-active-glow-blur) var(--zia-active-glow-spread) var(--zia-glow-mix-1) !important;
+  }
+}
+
+@media -moz-pref("zia.tabs.sound-bars") {
+/* Sound bars in place of Zen's speaker, next to the favicon */
+.zia-tab-sound {
+  display: none;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-inline: -3px 5px;
+  border-radius: 5px;
+  background: var(--zia-sound-wave, url("chrome://sine/content/zia/icons/sound-wave.svg")) center / 16px no-repeat;
+  cursor: pointer;
+  transition: background-color 0.15s ease, scale 0.15s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+
+  &:active {
+    scale: 0.9;
+  }
+}
+
+.tabbrowser-tab[muted] > .tab-stack > .tab-content > .zia-tab-sound {
+  background-image: var(--zia-sound-muted, url("chrome://sine/content/zia/icons/sound-muted.svg"));
+}
+
+:root[zen-sidebar-expanded="true"] .tabbrowser-tab:not([zen-essential]):is([soundplaying], [muted]) {
+  & > .tab-stack > .tab-content > .zia-tab-sound {
+    display: block;
+  }
+
+  & .tab-content .tab-audio-button {
+    display: none !important;
+  }
+}
+}
+
+@media -moz-pref("zia.page.rounding") {
+  :root {
+    --zia-card-radius: 10.5px;
+  }
+}
+
+/* Windows: the page's corners are Zen's own there, worked out from the
+   window's corner (zen.theme.border-radius) so the two sit evenly one
+   inside the other. Zia's 10.5px looked rounder than the window round it,
+   and the window's corner less the whole gap too sharp. */
+@media (-moz-platform: windows) and -moz-pref("zia.page.rounding") {
+  :root:not(#zia-none) {
+    --zia-card-radius: calc(var(--zen-native-inner-radius, 8px) / var(--zen-squircle-value, 1));
+  }
+}
+
+/* The last essential stretches across whatever's left of its row */
+@media -moz-pref("zia.essentials.fill-row") {
+  :root[zen-sidebar-expanded="true"] .zen-essentials-container > .tabbrowser-tab[zen-essential][zia-fill-row] {
+    max-width: none !important;
+  }
+}
+
+/* Zia's narrower essentials (off: Zen's own widths) */
+@media -moz-pref("zia.essentials.zia-width") {
+  :root[zen-sidebar-expanded="true"] .zen-essentials-container {
+    &,
+    &[data-hack-type] {
+      /* (auto-fit: a row of fewer essentials than would fit still spans the
+         sidebar, the columns left over folded away, and no column comes and
+         goes under them as the sidebar widens) */
+      grid-template-columns: repeat(auto-fit, minmax(var(--zia-essential-min-width), 1fr)) !important;
+    }
+
+    /* (no widest: a full row's columns are never wider than two of the
+       narrowest anyway, and a short row's essentials fill it) */
+    & > .tabbrowser-tab[zen-essential] {
+      min-width: 0 !important;
+      max-width: none !important;
+      width: 100% !important;
+    }
+  }
+}
+
+/* Optional: two essentials to a row, however wide the sidebar, so it can
+   be made as narrow as Zen's own allows with the tiles still a good size */
+@media -moz-pref("zia.essentials.two-per-row") {
+  :root[zen-sidebar-expanded="true"]:not(#zia-none) .zen-essentials-container {
+    &,
+    &[data-hack-type] {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    & > .tabbrowser-tab[zen-essential] {
+      min-width: 0 !important;
+      max-width: none !important;
+      width: 100% !important;
+    }
+  }
+}
+
+:is(
+  .tabbrowser-tab[zen-essential]:not([visuallyselected]),
+  .tabbrowser-tab:not([zen-essential])[visuallyselected]
+) > .tab-stack > .tab-background {
+  position: relative;
+}
+
+/* The selected tab: its highlight and glow, and its fine shine round its
+   edge (essentials have the glass edge instead, 06) */
+.tabbrowser-tab:not([zen-essential])[visuallyselected] > .tab-stack > .tab-background {
+  background: var(--zia-active-tab-bg) !important;
+  box-shadow:
+    0 0 var(--zia-active-glow-blur) var(--zia-active-glow-spread) var(--zia-active-glow-color),
+    0 calc(-1 * var(--zia-active-glow-reach)) var(--zia-active-glow-blur) var(--zia-active-glow-spread) var(--zia-active-glow-color),
+    0 var(--zia-active-glow-reach) var(--zia-active-glow-blur) var(--zia-active-glow-spread) var(--zia-active-glow-color) !important;
+
+  &::after {
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    padding: var(--zia-shine-width) !important;
+    border-radius: inherit !important;
+    corner-shape: round !important;
+    pointer-events: none !important;
+    background: var(--zia-tab-shine-layers) !important;
+    filter: none !important;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0) !important;
+  }
+}
+
+.tabbrowser-tab:not([zen-essential]) {
+  --zen-active-tab-scale: 1 !important;
+}
+
+/* An essential keeps Zen's press, without its 0.01deg turn that puts it on the
+   GPU: the first press after a start, the squircle tile with the glass edge
+   showed a black cross as it was drawn there in pieces */
+.tabbrowser-tab[zen-essential]:active {
+  rotate: none !important;
+}
+
+/* Optional: no glow around the selected tab (or a split's group), just
+   its highlight and fine edge; the favicon-tinted glow goes with it */
+@media -moz-pref("zia.tabs.no-glow") {
+  :root:not(#zia-none) {
+    --zia-active-glow-color: transparent;
+    /* (and a light space's soft shadow in its place, 23-light-spaces.css) */
+    --zia-light-tab-lift: transparent;
+    & .tabbrowser-tab:not([zen-essential])[visuallyselected] > .tab-stack > .tab-background,
+    & tab-group[split-view-group] > .tab-group-container {
+      box-shadow: none !important;
+    }
+  }
+}
+
+#zia-workspace-slot .zen-current-workspace-indicator-name,
+#zia-space-label {
+  color: rgb(255, 255, 255) !important;
+}
+
+:root[zia-space-colored="true"] #zia-workspace-slot .zen-current-workspace-indicator-name,
+:root[zia-space-colored="true"] #zia-space-label {
+  color: color-mix(in srgb, var(--zen-primary-color, white) var(--zia-space-name-tint), white) !important;
+}
+
+/* A tab with no icon of its own shows a plain translucent square (no logo) */
+.tabbrowser-tab:not([busy], [crashed]) .tab-icon-image:is(:not([src]), [src=""], :-moz-broken, [src="chrome://branding/content/icon32.png"], [src="chrome://global/skin/icons/defaultFavicon.svg"]) {
+  content: url("chrome://sine/content/zia/icons/tab-blank.svg") !important;
+}
+
+/* Asleep (unloaded) tabs and essentials fade their icon and title to about
+   half; a folder does too once every tab in it is asleep. The selected tab
+   is always awake. Off by default, on in Zia's settings.
+   The fade is a filter, not opacity: Zen hides a collapsed folder's rows
+   (a folder inside it included) by setting their opacity to 0, and an
+   opacity here overrode that, leaving a nested folder showing in a
+   collapsed one. A filter fades on top of whatever Zen sets. */
+@media -moz-pref("zia.tabs.dim-asleep") {
+  :root:not(#zia-none) .tabbrowser-tab[pending]:not([selected], [visuallyselected]) {
+    & :is(.tab-icon-stack, .tab-icon-image) {
+      filter: opacity(0.55);
+      transition: filter 0.15s ease;
+    }
+
+    & .tab-label-container {
+      filter: opacity(0.6);
+      transition: filter 0.15s ease;
+    }
+  }
+
+  /* In a light space (or light mode) less: the names there are dark ink a little
+     softened already, and faded to half on the pale sidebar they all but vanished */
+  :root[zia-light]:not(#zia-none):not(#zia-none-2) {
+    & .tabbrowser-tab[pending]:not([selected], [visuallyselected]) {
+      & :is(.tab-icon-stack, .tab-icon-image) {
+        filter: opacity(0.75);
+      }
+
+      & .tab-label-container {
+        filter: opacity(0.8);
+      }
+    }
+
+    & :is(zen-folder, tab-group:not([split-view-group])):has(.tabbrowser-tab[pending]):not(:has(.tabbrowser-tab:not([pending]))) > .tab-group-label-container {
+      filter: opacity(0.8);
+    }
+  }
+
+  /* an asleep essential's tile fades with it */
+  :root:not(#zia-none) .tabbrowser-tab[zen-essential][pending]:not([selected], [visuallyselected]) > .tab-stack > .tab-background {
+    filter: opacity(0.6);
+    transition: filter 0.15s ease;
+  }
+
+  :root:not(#zia-none) :is(zen-folder, tab-group:not([split-view-group])):has(.tabbrowser-tab[pending]):not(:has(.tabbrowser-tab:not([pending]))) > .tab-group-label-container {
+    filter: opacity(0.6);
+    transition: filter 0.15s ease;
+  }
+}
+
+/* Split essentials (zia.uc.js): the tile holds both sites, each in a small
+   half of its own, the half you're in lit; the split it opens is hidden
+   from the tab list. */
+.tabbrowser-tab[zia-split-of],
+tab-group[split-view-group]:has(.tabbrowser-tab[zia-split-of]) {
+  display: none !important;
+}
+
+/* no wider than the other essentials, whatever its halves want */
+.tabbrowser-tab[zen-essential][zia-split-tile] {
+  min-width: 0 !important;
+}
+
+.tabbrowser-tab[zen-essential][zia-split-tile] > .tab-stack {
+  min-width: 0 !important;
+  overflow: hidden;
+}
+
+.tabbrowser-tab[zen-essential][zia-split-tile] > .tab-stack > .tab-content {
+  position: relative;
+  z-index: 1;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden;
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 8px !important;
+  margin: 0 !important;
+
+  & > .tab-icon-stack {
+    display: none !important;
+  }
+
+  & > .zia-split-half {
+    flex: 0 1 auto !important;
+    min-width: 0 !important;
+    max-width: calc(50% - 3px) !important;
+    height: 100% !important;
+    aspect-ratio: 4 / 5;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: calc(var(--zia-essential-radius) * var(--zia-squircle-grow));
+    corner-shape: var(--zia-squircle) !important;
+    background-color: rgba(0, 0, 0, 0.18);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  & > .zia-split-half > image {
+    width: 16px;
+    height: 16px;
+  }
+
+  & > .zia-split-half > .zia-split-title {
+    display: none;
+  }
+}
+
+/* a stand-in, not an essential's size: halves as tall as the real ones
+   (zia.uc.js), centred */
+.tabbrowser-tab[zen-essential][zia-split-tile][zia-essential-proxy] > .tab-stack > .tab-content {
+  padding-block: 0 !important;
+  align-items: center !important;
+
+  & > .zia-split-half {
+    height: var(--zia-split-half-height, calc(100% - 16px)) !important;
+  }
+}
+
+.tabbrowser-tab[zen-essential][zia-split-tile][zia-essential-proxy][style*="--zia-split-half-width"] > .tab-stack > .tab-content > .zia-split-half {
+  flex: none !important;
+  width: var(--zia-split-half-width) !important;
+  max-width: none !important;
+  aspect-ratio: auto !important;
+}
+
+.tabbrowser-tab[zen-essential][zia-split-tile][zia-split-focus="a"] > .tab-stack > .tab-content > .zia-split-half[side="a"],
+.tabbrowser-tab[zen-essential][zia-split-tile][zia-split-focus="b"] > .tab-stack > .tab-content > .zia-split-half[side="b"] {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+/* Dragged off the essentials, the tile turns into the split's row: both
+   sites, icon and title, side by side */
+.tabbrowser-tab[zia-split-tile]:not([zen-essential]) > .tab-stack > .tab-content {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+
+  & > :not(.zia-split-half) {
+    display: none !important;
+  }
+
+  & > .zia-split-half {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  & > .zia-split-half > image {
+    width: 16px;
+    height: 16px;
+    flex: none;
+  }
+
+  & > .zia-split-half > .zia-split-title {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: var(--zia-text-size, 13px);
+  }
+}
+
+/* The glow and tint: the half you're in, over the whole tile */
+@media -moz-pref("zen.theme.essentials-favicon-bg") {
+  .tabbrowser-tab[zen-essential][zia-split-tile][visuallyselected] > .tab-stack > .tab-background::after {
+    background-image: var(--zia-split-glow, var(--zen-essential-tab-icon)) !important;
+  }
+}
+
+/* Tab numbers (zia.uc.js): hold Cmd/Ctrl and a small key at the end of each
+   tab, and in the corner of each essential, shows the number Cmd/Ctrl+1–9
+   takes you to, drawn as an outlined key like the shortcuts in Zen's own
+   menus and pop-ups. Optionally always shown. */
+.tabbrowser-tab > .tab-stack > .tab-content > .zia-tab-number {
+  display: none;
+  flex: none;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  margin: 0 0 0 6px;
+  padding: 0;
+  border-radius: calc(5.5px * var(--zia-squircle-grow));
+  corner-shape: var(--zia-squircle) !important;
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  font: 500 10px/1 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  place-items: center;
+  pointer-events: none;
+
+  & > span {
+    display: block;
+    text-box: trim-both cap alphabetic;
+  }
+}
+
+.tabbrowser-tab > .tab-stack > .tab-content > .zia-tab-number[zia-wide] {
+  width: auto;
+  min-width: 18px;
+  padding: 0 4px;
+
+  /* the two digits a little closer; the space the last one gives back is
+     made up after it, so the pair stays centred */
+  & > span {
+    letter-spacing: -0.05em;
+    margin-inline-end: 0.05em;
+  }
+}
+
+.tabbrowser-tab[visuallyselected] > .tab-stack > .tab-content > .zia-tab-number {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.68);
+}
+
+/* Essentials, and every tab when the sidebar is collapsed to icons: a
+   smaller key in the corner */
+.tabbrowser-tab[zen-essential] > .tab-stack,
+:root:not([zen-sidebar-expanded="true"]) .tabbrowser-tab > .tab-stack {
+  position: relative;
+}
+
+:is(.tabbrowser-tab[zen-essential], :root:not([zen-sidebar-expanded="true"]) .tabbrowser-tab) > .tab-stack > .tab-content > .zia-tab-number {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border-radius: calc(4.25px * var(--zia-squircle-grow));
+  background-color: rgba(28, 28, 30, 0.45);
+  font-size: 8.75px;
+}
+
+:is(.tabbrowser-tab[zen-essential], :root:not([zen-sidebar-expanded="true"]) .tabbrowser-tab) > .tab-stack > .tab-content > .zia-tab-number[zia-wide] {
+  width: auto;
+  min-width: 15px;
+  padding: 0 2.5px;
+}
+
+:root[zia-tab-numbers] .tabbrowser-tab > .tab-stack > .tab-content > .zia-tab-number {
+  display: grid;
+  animation: zia-tab-number-in 0.16s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+@media -moz-pref("zia.tab-numbers.always") {
+  .tabbrowser-tab > .tab-stack > .tab-content > .zia-tab-number {
+    display: grid;
+  }
+}
+
+/* The number being typed: its key lights up, in Zia blue or the space's
+   colour, until the key is let go and the tab chosen */
+.tabbrowser-tab > .tab-stack > .tab-content > .zia-tab-number[zia-target] {
+  background-color: #5ab9f5 !important;
+  box-shadow: none;
+  color: rgb(8, 24, 38);
+}
+
+:root[zia-tab-number-color="space"][zia-space-colored="true"] .tabbrowser-tab > .tab-stack > .tab-content > .zia-tab-number[zia-target] {
+  background-color: color-mix(in srgb, var(--zen-primary-color) 80%, black) !important;
+  color: rgb(255, 255, 255);
+}
+
+@keyframes zia-tab-number-in {
+  from {
+    opacity: 0;
+    translate: 4px 0;
+  }
+}
+
+/* let go: they slide back off to the right, as they came in */
+:root[zia-tab-numbers-leaving]:not([zia-tab-numbers]) .tabbrowser-tab > .tab-stack > .tab-content > .zia-tab-number {
+  display: grid;
+  animation: zia-tab-number-out 0.1s cubic-bezier(0.4, 0, 0.8, 0.4) forwards;
+}
+
+@keyframes zia-tab-number-out {
+  to {
+    opacity: 0;
+    translate: 4px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[zia-tab-numbers] .tabbrowser-tab > .tab-stack > .tab-content > .zia-tab-number {
+    animation: none;
+  }
+
+  :root[zia-tab-numbers-leaving]:not([zia-tab-numbers]) .tabbrowser-tab > .tab-stack > .tab-content > .zia-tab-number {
+    display: none;
+  }
+}

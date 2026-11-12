@@ -1,0 +1,545 @@
+/* the tab, folder and tip cards (tip: 28o-tooltips.js) */
+:is(#zia-tab-card, #zia-folder-card, #zia-tip-card) {
+  position: fixed;
+  z-index: 2147483647;
+  box-sizing: border-box;
+  background-color: var(--zia-tab-card-bg);
+  border-radius: calc(var(--zia-tab-card-radius) * var(--zia-squircle-grow));
+  corner-shape: var(--zia-squircle) !important;
+  /* a faint light edge: a dark one went nowhere against a dark sidebar or page */
+  box-shadow: var(--zia-glass-edge-lit);
+  color: rgb(255, 255, 255);
+  -moz-window-dragging: no-drag;
+
+  &[zia-open] {
+    animation: zia-tab-card-in 0.26s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+  }
+
+  &[zia-snap] {
+    animation: none;
+  }
+
+  &[zia-closing] {
+    animation: zia-tab-card-out 0.12s ease-in forwards;
+    pointer-events: none;
+  }
+}
+
+:is(#zia-tab-card, #zia-folder-card, #zia-tip-card, .zia-tab-card-shot, .zia-tab-card-sub, #zia-tab-card-actions, .zia-tab-card-action)[hidden] {
+  display: none !important;
+}
+
+#zia-tab-card,
+#zia-folder-card {
+  /* clip, so the shadows (the glass edge's sides) fall outside it */
+  overflow: clip;
+  width: var(--zia-tab-card-width);
+  padding: 12px 14px 10px;
+  pointer-events: auto;
+}
+
+@keyframes zia-tab-card-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+#zia-folder-card {
+  width: 222px;
+  padding: 0;
+  overflow: hidden;
+}
+
+#zia-tip-card {
+  width: max-content;
+  max-width: var(--zia-tab-card-width);
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+.zia-folder-card-list {
+  /* a tab's icon inset (measured: 27-hover-cards.js), less each row's own margin */
+  --zia-folder-card-inset: 9.5px;
+  padding: calc(var(--zia-folder-card-inset) - var(--zia-folder-card-gap)) var(--zia-folder-card-inset);
+  /* ten rows exactly: ten tab heights and eleven margins */
+  --zia-folder-card-gap: calc(2 * var(--zia-tab-gap));
+  max-height: calc(10 * var(--zia-tab-height) + 11 * var(--zia-folder-card-gap) + 2 * (var(--zia-folder-card-inset) - var(--zia-folder-card-gap)));
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.zia-folder-card-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  height: var(--zia-tab-height);
+  margin-block: var(--zia-folder-card-gap);
+
+  padding-inline: 9px 6px;
+  border-radius: var(--zia-tab-radius);
+  corner-shape: round !important;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: var(--zia-text-size);
+  font-weight: var(--zia-tab-weight);
+  cursor: default;
+}
+
+.zia-folder-card-row:hover {
+  background-color: rgba(255, 255, 255, 0.13);
+}
+
+.zia-folder-card-row[zia-selected] {
+  background-color: var(--zia-active-tab-bg-folder);
+  color: rgb(255, 255, 255);
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: var(--zia-shine-width);
+    border-radius: inherit;
+    corner-shape: round;
+    pointer-events: none;
+    background: var(--zia-tab-shine-layers);
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+  }
+}
+
+.zia-folder-card-act:is([zia-act="close"], [zia-act="unload"]) {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-inline-start: auto;
+  padding: 4px;
+  border-radius: calc(var(--zia-close-radius) * var(--zia-squircle-grow));
+  corner-shape: var(--zia-squircle) !important;
+  opacity: 0;
+  -moz-context-properties: fill, fill-opacity;
+  fill: currentColor;
+
+  .zia-folder-card-row:hover > & {
+    opacity: 0.8;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    opacity: 1 !important;
+  }
+}
+
+.zia-folder-card-act[zia-act="mute"] {
+  border-radius: calc(4px * var(--zia-squircle-grow));
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.zia-folder-card-row[zia-new-tab] {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.zia-folder-card-icon,
+.zia-folder-card-sound {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  -moz-context-properties: fill, fill-opacity;
+  fill: currentColor;
+}
+
+.zia-folder-card-icon {
+  object-fit: contain;
+}
+
+.zia-folder-card-sound {
+  margin-inline: 2px 6px;
+}
+
+.zia-folder-card-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes zia-tab-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* the page's picture, set in from the card's edge by a hair (TAB_THUMB_INSET, 27-hover-cards)
+   with its top corners curving with the card's and a fine dark edge, as in Dia. Its box clips
+   it to the card's squircle (!important, with the id, to beat the rule that rounds every other
+   corner, 00-variables: without it, the picture was round inside the card's squircle) */
+#zia-tab-card .zia-tab-card-shot {
+  --zia-thumb-inset: 2px;
+  display: block;
+  overflow: clip;
+  margin: calc(var(--zia-thumb-inset) - 12px) calc(var(--zia-thumb-inset) - 14px) 10px;
+  border-radius: calc(var(--zia-tab-card-radius) * var(--zia-squircle-grow) - var(--zia-thumb-inset)) calc(var(--zia-tab-card-radius) * var(--zia-squircle-grow) - var(--zia-thumb-inset)) 0 0;
+  corner-shape: var(--zia-squircle) !important;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.55);
+}
+
+#zia-tab-card .zia-tab-card-thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 0.55;
+}
+
+:root[zia-light] #zia-tab-card .zia-tab-card-shot {
+  background: rgba(0, 0, 0, 0.04);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.14);
+}
+
+.zia-tab-card-title {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.35;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.zia-tab-card-sub {
+  color: var(--zia-tab-card-sub);
+  font-size: 13px;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#zia-tab-card-actions {
+  display: flex;
+  gap: 2px;
+  margin: 8px -6px -4px;
+}
+
+.zia-tab-card-action {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: calc(8px * var(--zia-squircle-grow));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* (with :root, to beat the rule that rounds every corner, 00-variables) */
+:root .zia-tab-card-action {
+  corner-shape: var(--zia-squircle) !important;
+}
+
+/* faded as a whole: faded per shape, overlapping strokes showed brighter */
+.zia-tab-card-action img {
+  width: 17px;
+  height: 17px;
+  -moz-context-properties: fill, fill-opacity;
+  fill: rgb(255, 255, 255);
+  fill-opacity: 1;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.zia-tab-card-action:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.zia-tab-card-action:hover img {
+  opacity: 1;
+}
+
+.tabbrowser-tab .tab-content > :is(.tab-close-button, .tab-reset-button):active {
+  scale: 1 !important;
+}
+
+.tabbrowser-tab[zia-no-unload]:not([zen-essential]) .tab-reset-button {
+  display: none !important;
+}
+
+.tabbrowser-tab[zia-no-unload]:not([zen-essential]):is(:hover, [visuallyselected]) .tab-close-button {
+  display: flex !important;
+}
+
+.tabbrowser-tab .tab-close-button {
+  -moz-context-properties: fill, fill-opacity !important;
+  fill: rgb(255, 255, 255) !important;
+  fill-opacity: 1 !important;
+  color: rgb(255, 255, 255) !important;
+  width: var(--zia-close-size) !important;
+  height: var(--zia-close-size) !important;
+  min-width: var(--zia-close-size) !important;
+  border-radius: calc(var(--zia-close-radius) * var(--zia-squircle-grow)) !important;
+  /* (the same squircle as the unload button beside it, 17-tab-buttons) */
+  corner-shape: var(--zia-squircle) !important;
+  margin-inline-end: 0 !important;
+  padding: 4px !important;
+}
+
+.tabbrowser-tab:not([zen-essential]) .tab-content {
+  padding-inline-end: calc((var(--zia-tab-height) - var(--zia-close-size)) / 2) !important;
+}
+
+/* a glance (Option-click peek) tab: a soft light tile, no glow or edge */
+.tabbrowser-tab[zen-glance-tab]:not(#zia-none) > .tab-stack > .tab-background {
+  background: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.tabbrowser-tab[zen-glance-tab]:not(#zia-none) > .tab-stack > .tab-background::after {
+  display: none !important;
+}
+
+/* a true square: Zia's tab height and padding would stretch it */
+.tabbrowser-tab[zen-glance-tab]:not(#zia-none) {
+  --zia-glance-size: var(--size-item-medium, 26px);
+  width: var(--zia-glance-size) !important;
+  min-width: var(--zia-glance-size) !important;
+  max-width: var(--zia-glance-size) !important;
+  height: var(--zia-glance-size) !important;
+  min-height: var(--zia-glance-size) !important;
+  padding: 0 !important;
+  margin-block: 0 !important;
+
+  & > .tab-stack {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  & > .tab-stack > .tab-background {
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  & .tab-content {
+    position: absolute !important;
+    inset: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  & .tab-content > :not(.tab-icon-stack) {
+    display: none !important;
+  }
+
+  & .tab-icon-stack {
+    margin: 0 !important;
+  }
+}
+
+/* on an essential: a small tilted card behind its icon (.zia-glance-ghost: the closing stand-in) */
+.tabbrowser-tab[zen-essential] > .tab-stack > .tab-content > :is(.tabbrowser-tab[zen-glance-tab], .zia-glance-ghost):not(#zia-none) {
+  position: absolute !important;
+  top: 6px !important;
+  bottom: 6px !important;
+  right: 5px !important;
+  left: auto !important;
+  width: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 1;
+  pointer-events: none;
+  rotate: 6deg;
+  transform-origin: 50% 50%;
+}
+
+.tabbrowser-tab[zen-essential] > .tab-stack > .tab-content > .tabbrowser-tab[zen-glance-tab]:not(#zia-none) {
+  /* hidden until zia.uc.js springs it out */
+  &:not([zia-glance-shown]) {
+    opacity: 0 !important;
+  }
+
+  & > .tab-stack > .tab-background,
+  & > .tab-stack > .tab-background::before {
+    border: none !important;
+    border-radius: calc(9px * var(--zia-squircle-grow)) !important;
+    /* no backdrop blur: tilted, it drew a line of the colour behind down its side */
+    corner-shape: var(--zia-squircle) !important;
+    background: rgba(255, 255, 255, 0.16) !important;
+    backdrop-filter: none !important;
+    box-shadow: var(--zia-glass-edge-thick), 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  & .tab-icon-image {
+    width: 13px !important;
+    height: 13px !important;
+    animation: zia-glance-icon-in 0.34s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  }
+
+  /* empty until the site's own icon arrives, which then grows in */
+  & :is(.tab-throbber, .tab-icon-pending),
+  &[busy] .tab-icon-image,
+  & .tab-icon-image:is(:not([src]), [src=""], [src="chrome://branding/content/icon32.png"], :-moz-broken) {
+    display: none !important;
+  }
+}
+
+/* (with an id, to beat the rule that rounds every other corner) */
+:root:not(#zia-none) .zia-glance-ghost {
+  corner-shape: var(--zia-squircle) !important;
+}
+
+@keyframes zia-glance-icon-in {
+  from { opacity: 0; scale: 0.4; }
+  to { opacity: 1; scale: 1; }
+}
+
+.zia-glance-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(9px * var(--zia-squircle-grow));
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: var(--zia-glass-edge-thick), 0 1px 4px rgba(0, 0, 0, 0.2);
+
+  & > .zia-glance-ghost-icon {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.tabbrowser-tab[zen-essential] > .tab-stack > .tab-content > .tab-icon-stack {
+  transition: translate 0.3s cubic-bezier(0.3, 1.4, 0.5, 1) 0.1s;
+}
+
+.tabbrowser-tab[zen-essential]:has(> .tab-stack > .tab-content > .tabbrowser-tab[zen-glance-tab]) > .tab-stack > .tab-content > .tab-icon-stack {
+  translate: -8px 0;
+  transition: translate 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+:root[zen-sidebar-expanded="true"] :is(zen-folder, tab-group:not([split-view-group])) > .tab-group-container > .tabbrowser-tab {
+  margin-inline-end: 0 !important;
+}
+
+
+/* see-through cards (zia.cards.blur); solid while the page shows a video, as the compact
+   sidebar (16-compact-mode) */
+@media -moz-pref("zia.cards.blur") {
+  :root:not([zia-video]) :is(#zia-tab-card, #zia-folder-card, #zia-tip-card) {
+    background-color: color-mix(in srgb, var(--zia-tab-card-bg) 76%, transparent) !important;
+    backdrop-filter: blur(24px) saturate(1.6) !important;
+  }
+
+  /* the page behind a card blurs too (the compositing trick from Floaty UI), only while
+     one is up: drawn that way, an HDR video loses its HDR, washed out (#561) */
+  :root:not([zia-video]):has(> :is(#zia-tab-card, #zia-folder-card, #zia-tip-card):not([hidden])) #tabbrowser-tabpanels .browserSidebarContainer {
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+  }
+}
+
+/* a coloured folder's card takes its colour (zia.folders.tint-card) */
+@media -moz-pref("zia.folders.tint-card") {
+  #zia-folder-card {
+    &[zia-folder-color="green"] { --zia-folder-swatch: var(--zia-fc-green); }
+    &[zia-folder-color="blue"] { --zia-folder-swatch: var(--zia-fc-blue); }
+    &[zia-folder-color="purple"] { --zia-folder-swatch: var(--zia-fc-purple); }
+    &[zia-folder-color="amber"] { --zia-folder-swatch: var(--zia-fc-amber); }
+    &[zia-folder-color="pink"] { --zia-folder-swatch: var(--zia-fc-pink); }
+    &[zia-folder-color="red"] { --zia-folder-swatch: var(--zia-fc-red); }
+    &[zia-folder-color="orange"] { --zia-folder-swatch: var(--zia-fc-orange); }
+
+    &[zia-folder-color]:not([zia-folder-color="white"]) {
+      --zia-folder-card-bg: color-mix(in srgb, var(--zia-folder-swatch) var(--zia-folder-wash), var(--zia-tab-card-bg));
+      background-color: var(--zia-folder-card-bg) !important;
+    }
+  }
+
+  /* see-through too: the blur setting's background overrode the tint, leaving it grey */
+  @media -moz-pref("zia.cards.blur") {
+    :root:not([zia-video]) #zia-folder-card[zia-folder-color]:not([zia-folder-color="white"]) {
+      background-color: color-mix(in srgb, var(--zia-folder-card-bg) 76%, transparent) !important;
+    }
+  }
+}
+
+/* light mode: light cards with dark ink */
+:root[zia-light]:not(#zia-none) {
+  --zia-tab-card-bg: rgb(250, 250, 251);
+  --zia-tab-card-sub: rgba(28, 28, 32, 0.55);
+
+  & :is(#zia-tab-card, #zia-folder-card, #zia-tip-card) {
+    color: rgb(28, 28, 32);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+
+    &::after {
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  & .zia-tab-card-action img {
+    fill: rgb(28, 28, 32);
+  }
+
+  & .zia-tab-card-action:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  & .zia-folder-card-row {
+    color: rgba(28, 28, 32, 0.78);
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.055);
+    }
+
+    /* (the sidebar's white for the open tab went nowhere on a white card) */
+    &[zia-selected] {
+      background-color: rgba(0, 0, 0, 0.07);
+      color: rgb(28, 28, 32);
+    }
+
+    &[zia-new-tab] {
+      color: rgba(28, 28, 32, 0.55);
+    }
+  }
+
+  & .zia-folder-card-act {
+    color: rgb(28, 28, 32) !important;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+}

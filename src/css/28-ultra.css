@@ -1,0 +1,42 @@
+/* Ultra (zia.ultra, on by default): effects ported from Libraries.dev
+   (https://libraries.dev, MIT, by Jakub Antalik). zia.uc.js puts each in. */
+
+/* A loading tab's thinking orb, in its icon's place: the spinner goes while
+   it shows (28s-ultra.js, which centres it on the icon) */
+.tab-icon-stack > canvas.zia-orb {
+  grid-area: 1 / 1;
+  place-self: center start;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.tabbrowser-tab[zia-orb] :is(.tab-throbber, .tab-icon-pending, .tab-icon-image) {
+  visibility: hidden !important;
+}
+
+/* The music player card's glow (28b-ultra-glow.css) under its text and buttons:
+   the card is its own stack (isolation), so the glow sits over its background
+   and under the rest */
+#zen-media-controls-toolbar .zen-media-card:has(> .zia-glow) {
+  position: relative;
+  --zia-glow-z: -1;
+}
+
+/* The glow takes the artwork's colours (28s-ultra.js), so the soft wash of them
+   behind the artwork on hover goes */
+#zen-media-controls-toolbar .zen-media-card::before {
+  @media -moz-pref("zia.ultra") {
+    display: none !important;
+  }
+}
+
+/* The Library's chosen-section tile on a gentler spring than Zia's own, as
+   it stretches and squashes on the way too (28s-ultra.js) */
+@media -moz-pref("zia.ultra") {
+  zen-library .zia-library-rail:not([instant]) {
+    transition:
+      transform var(--zia-spring-time) cubic-bezier(0.3, 1.12, 0.5, 1),
+      height var(--zia-spring-time) cubic-bezier(0.3, 1.12, 0.5, 1) !important;
+  }
+}

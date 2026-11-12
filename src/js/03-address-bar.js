@@ -1,0 +1,731 @@
+  let titleEl = null;
+  let plainEl = null;
+
+  function createTitleElement() {
+    const inputBox = gURLBar.inputField?.parentNode;
+    if (!inputBox) {
+      return;
+    }
+    // each a host part and the rest
+    const titleBox = (id) => {
+      const box = document.createElementNS(XHTML_NS, "div");
+      box.id = id;
+      for (const part of ["host", "rest"]) {
+        const span = document.createElementNS(XHTML_NS, "span");
+        span.className = `zia-url-title-${part}`;
+        box.append(span);
+      }
+      inputBox.append(box);
+      return box;
+    };
+    titleEl = titleBox("zia-url-title");
+    plainEl = titleBox("zia-url-plain");
+  }
+
+  function showTitle(el, host, rest) {
+    el.firstChild.textContent = host;
+    el.lastChild.textContent = rest;
+  }
+
+  const TITLE_ONLY_PREF = "zia.urlbar.title-only";
+
+  function titleOnly() {
+    try {
+      return Services.prefs.getBoolPref(TITLE_ONLY_PREF, false);
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function watchTitleOnly() {
+    watchPrefs([TITLE_ONLY_PREF, FULL_URL_PREF], () => {
+      updateTitle();
+      // (the address written out again, with or without its scheme, rather than at the next page)
+      try {
+        if (!gURLBar.focused) {
+          gURLBar.setURI();
+        }
+      } catch (err) {
+        noteError("address bar: full address", err);
+      }
+    });
+  }
+
+  // (an option: the page's whole address, as Firefox shows it, rather than the domain and title)
+  const FULL_URL_PREF = "zia.urlbar.full-url";
+
+  function updateTitle() {
+    if (!titleEl) {
+      return;
+    }
+    const urlbar = gURLBar.textbox || document.getElementById("urlbar");
+    const browser = gBrowser.selectedBrowser;
+    const uri = browser?.currentURI;
+    let host = "";
+    try {
+      if (uri && /^https?$/.test(uri.scheme)) {
+        host = uri.displayHost.replace(/^www\./, "");
+      }
+    } catch (err) {
+      // (an address with no host)
+    }
+    const title = (browser?.contentTitle || "").trim();
+    const valid = urlbar.getAttribute("pageproxystate") === "valid";
+
+    // Multiview reads as a browser feature ("Multiview · 3"), not a website.
+    if (valid && isMultiviewURI(uri)) {
+      showTitle(titleEl, title || "Multiview", "");
+      showTitle(plainEl, title || "Multiview", "");
+      urlbar.setAttribute("zia-has-title", "true");
+      return;
+    }
+    if (!host || !valid || isErrorPage(browser) || Services.prefs.getBoolPref(FULL_URL_PREF, false)) {
+      urlbar.removeAttribute("zia-has-title");
+      return;
+    }
+    let isHomePage = false;
+    let path = "";
+    try {
+      isHomePage = (uri.filePath || "/") === "/" && !uri.query && !uri.ref;
+      path = uri.pathQueryRef || "";
+    } catch (err) {
+      // (an address without a path)
+    }
+    const hasTitle = /[\p{L}\p{N}]/u.test(title);
+    // Title only (an option): the title alone, in the domain's place and
+    // colour, even on a site's home page; a page with none shows its domain
+    if (titleOnly() && hasTitle) {
+      showTitle(titleEl, title, "");
+    } else {
+      showTitle(titleEl, host, !isHomePage && hasTitle && title !== host ? ` / ${title}` : "");
+    }
+    showTitle(plainEl, host, path === "/" ? "" : path);
+    urlbar.setAttribute("zia-has-title", "true");
+  }
+
+  let urlbarTyping = false;
+  // What was last typed
+  let typedValue = "";
+
+  // A site's address with nothing after it ends in a bare "/", which Zia
+  // leaves off: youtube.com, not youtube.com/.
+  const BARE_SLASH = /^([^/?#\s]+)\/$/;
+
+  function plainAddress(value) {
+    // (with "Full address" on, the address as it is: Firefox's own trimming, browser.urlbar.
+    // trimHttps, decides on its scheme, #519)
+    if (typeof value !== "string" || Services.prefs.getBoolPref(FULL_URL_PREF, false)) {
+      return value;
+    }
+    return value.replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(BARE_SLASH, "$1");
+  }
+
+  function neverShowScheme() {
+    const ui = window.gZenUIManager;
+    if (ui && typeof ui.urlbarTrim === "function" && !ui.urlbarTrim.ziaWrapped) {
+      const original = ui.urlbarTrim.bind(ui);
+      const trimmed = (url) => (urlbarTyping && gURLBar.focused ? original(url) : plainAddress(original(url)));
+      trimmed.ziaWrapped = true;
+      ui.urlbarTrim = trimmed;
+    }
+
+    const input = gURLBar?.inputField || document.querySelector("#urlbar .urlbar-input");
+    if (!input || input.ziaSchemeStripped) {
+      return;
+    }
+    const desc = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), "value");
+    if (!desc?.get || !desc?.set) {
+      return;
+    }
+    input.ziaSchemeStripped = true;
+    Object.defineProperty(input, "value", {
+      configurable: true,
+      enumerable: desc.enumerable,
+      get() {
+        return desc.get.call(this);
+      },
+      set(next) {
+        const typing = urlbarTyping && gURLBar.focused;
+        // While typing, the only writes are Firefox's own, like autofill
+        // completing "yo" to "youtube.com/": that loses its bare "/" too.
+        // Typed characters don't come through here. A "/" typed on the end
+        // stays, though: autofill writes "twitch.tv/" back for it, and
+        // taking that off undid the key press.
+        const keepSlash = typing && typedValue.endsWith("/");
+        desc.set.call(
+          this,
+          typing ? (typeof next === "string" && !keepSlash ? next.replace(BARE_SLASH, "$1") : next) : plainAddress(next)
+        );
+        if (holdWholeSelection && gURLBar.focused) {
+          this.select();
+        }
+      },
+    });
+    input.addEventListener("input", (event) => {
+      if (event.isTrusted) {
+        urlbarTyping = true;
+        // (up to the caret: an autofilled ending after it may already be in)
+        typedValue = desc.get.call(input).slice(0, input.selectionStart ?? undefined);
+      }
+    });
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        urlbarTyping = false;
+      }
+    });
+    input.addEventListener("blur", () => {
+      urlbarTyping = false;
+      typedValue = "";
+    });
+  }
+
+  let holdWholeSelection = false;
+
+  function holdSelectionOnRewrite(input) {
+    if (input.ziaSelectionHeld) {
+      return;
+    }
+    input.ziaSelectionHeld = true;
+    const setRange = input.setSelectionRange;
+    input.setSelectionRange = function (start, end, direction) {
+      if (holdWholeSelection && gURLBar.focused) {
+        return setRange.call(this, 0, this.value.length, direction);
+      }
+      return setRange.call(this, start, end, direction);
+    };
+  }
+
+  function keepWholeUrlSelected(urlbar) {
+    const input = urlbar.querySelector(".urlbar-input") || gURLBar.inputField;
+    if (!input) {
+      return;
+    }
+    holdSelectionOnRewrite(input);
+    let closedLength = -1;
+    urlbar.addEventListener(
+      "mousedown",
+      (event) => {
+        const opening = !urlbar.hasAttribute("breakout-extend") && !gURLBar.focused;
+        closedLength = opening ? input.value.length : -1;
+        holdWholeSelection = opening && event.button === 0;
+      },
+      true
+    );
+    // The click that opens the bar selects the whole address. The bar moves
+    // and grows as it opens, though, so with the button still down the text
+    // slid under a pointer that hadn't moved and Firefox took it for a drag,
+    // selecting only part of it ("youtub"). Unless the pointer itself moved,
+    // that click selects the whole address however the text moved under it.
+    let pressedAt = null;
+    urlbar.addEventListener(
+      "mousedown",
+      (event) => {
+        pressedAt = holdWholeSelection ? { x: event.screenX, y: event.screenY } : null;
+        lastPointer = null;
+      },
+      true
+    );
+    // While that click is held, a drag Firefox reads into the moving text is
+    // undone as it happens, before it's drawn (only fixed on release, the
+    // part-selection showed for a moment first). A real drag moves the
+    // pointer, and is left alone.
+    let lastPointer = null;
+    window.addEventListener(
+      "mousemove",
+      (event) => {
+        lastPointer = pressedAt ? { x: event.screenX, y: event.screenY } : null;
+      },
+      true
+    );
+    const holdWhole = () => {
+      const press = pressedAt;
+      if (!press || !gURLBar.focused || urlbarTyping) {
+        return;
+      }
+      if (lastPointer && Math.hypot(lastPointer.x - press.x, lastPointer.y - press.y) > 4) {
+        return;
+      }
+      if (input.selectionStart !== 0 || input.selectionEnd !== input.value.length) {
+        input.select();
+      }
+    };
+    input.addEventListener("selectionchange", holdWhole);
+    input.addEventListener("select", holdWhole);
+    window.addEventListener(
+      "mouseup",
+      (event) => {
+        const press = pressedAt;
+        pressedAt = null;
+        if (!press || event.button !== 0 || Math.hypot(event.screenX - press.x, event.screenY - press.y) > 4) {
+          return;
+        }
+        const wholeLater = () => {
+          if (gURLBar.focused && !urlbarTyping && (input.selectionStart !== 0 || input.selectionEnd !== input.value.length)) {
+            input.select();
+          }
+        };
+        wholeLater();
+        requestAnimationFrame(wholeLater);
+      },
+      true
+    );
+    const release = () => {
+      holdWholeSelection = false;
+      pressedAt = null;
+    };
+    urlbar.addEventListener("keydown", release, true);
+    input.addEventListener("input", release);
+    input.addEventListener("blur", release);
+    const fix = () => {
+      if (closedLength < 0) {
+        return;
+      }
+      const { selectionStart, selectionEnd, value } = input;
+      if (selectionStart === 0 && selectionEnd === closedLength && closedLength < value.length) {
+        input.select();
+        closedLength = -1;
+      }
+    };
+    new MutationObserver(() => {
+      if (!urlbar.hasAttribute("breakout-extend")) {
+        closedLength = -1;
+        return;
+      }
+      requestAnimationFrame(fix);
+      for (const ms of [30, 100, 200]) {
+        setTimeout(fix, ms);
+      }
+      setTimeout(() => {
+        closedLength = -1;
+      }, 400);
+    }).observe(urlbar, { attributes: true, attributeFilter: ["breakout-extend"] });
+  }
+
+  function revertTypedTextOnLeave(urlbar) {
+    const input = urlbar.querySelector(".urlbar-input") || gURLBar.inputField;
+    if (!input || typeof gURLBar.handleRevert !== "function") {
+      return;
+    }
+    let navigatingAt = 0;
+    urlbar.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Enter") {
+          navigatingAt = Date.now();
+        }
+      },
+      true
+    );
+    urlbar.addEventListener(
+      "mousedown",
+      (event) => {
+        if (event.target.closest?.(".urlbarView, #urlbar-go-button")) {
+          navigatingAt = Date.now();
+        }
+      },
+      true
+    );
+    input.addEventListener("blur", () => {
+      const browser = gBrowser.selectedBrowser;
+      setTimeout(() => {
+        if (gURLBar.focused || !document.hasFocus() || Date.now() - navigatingAt < 1500) {
+          return;
+        }
+        if (urlbar.hasAttribute("zen-newtab")) {
+          return;
+        }
+        try {
+          if (browser && browser !== gBrowser.selectedBrowser) {
+            if (browser.userTypedValue) {
+              browser.userTypedValue = null;
+            }
+            return;
+          }
+          if (gBrowser.userTypedValue == null && !gURLBar.valueIsTyped) {
+            return;
+          }
+          gURLBar.handleRevert();
+          updateTitle();
+        } catch (err) {
+          console.error("[Zia] Could not restore the address:", err);
+        }
+      }, 0);
+    });
+  }
+
+  let openOffset = 0;
+
+  // Optional (zia.urlbar.center-text): the address centred on the toolbar, not in the bar,
+  // which the buttons either side push off the toolbar's middle; and held there as the
+  // bar's own buttons show and hide on hover (re-centred in what was left, it slid aside
+  // each time). Measured as either changes size, before it's drawn. Only the toolbar's
+  // bar, closed: in the sidebar (Zen's single toolbar) or open, it's as it was.
+  // Optional (zia.urlbar.center-bar): the address bar itself in the middle of the toolbar, as
+  // much room before it as after, made up on the side with fewer buttons, rather than with
+  // flexible spaces added by hand (#515). Measured again as the toolbar changes.
+  const CENTER_BAR_PREF = "zia.urlbar.center-bar";
+  function watchCenteredBar() {
+    const container = document.getElementById("urlbar-container");
+    const navBar = document.getElementById("nav-bar");
+    if (!container || !navBar) {
+      return;
+    }
+    const update = () => {
+      let before = 0;
+      let after = 0;
+      if (Services.prefs.getBoolPref(CENTER_BAR_PREF, false) && root.getAttribute("zen-single-toolbar") !== "true") {
+        const style = getComputedStyle(container);
+        const own = [parseFloat(container.style.marginInlineStart) || 0, parseFloat(container.style.marginInlineEnd) || 0];
+        const bar = container.getBoundingClientRect();
+        const row = navBar.getBoundingClientRect();
+        // (the room each side takes now, less what was added for it)
+        const left = bar.left - row.left - (style.direction === "rtl" ? own[1] : own[0]);
+        const right = row.right - bar.right - (style.direction === "rtl" ? own[0] : own[1]);
+        const gap = Math.round(left - right);
+        if (bar.width && Math.abs(gap) >= 1 && Math.abs(gap) < bar.width / 2) {
+          [before, after] = gap > 0 ? [0, gap] : [-gap, 0];
+          if (style.direction === "rtl") {
+            [before, after] = [after, before];
+          }
+        }
+      }
+      const set = (name, px) =>
+        px ? container.style.setProperty(name, `${px}px`, "important") : container.style.removeProperty(name);
+      if ((parseFloat(container.style.marginInlineStart) || 0) !== before) {
+        set("margin-inline-start", before);
+      }
+      if ((parseFloat(container.style.marginInlineEnd) || 0) !== after) {
+        set("margin-inline-end", after);
+      }
+    };
+    let pending = 0;
+    const soon = () => {
+      pending ||= requestAnimationFrame(() => {
+        pending = 0;
+        update();
+      });
+    };
+    const observer = new ResizeObserver(soon);
+    observer.observe(navBar);
+    for (const item of navBar.querySelectorAll(":scope > *, #nav-bar-customization-target > *")) {
+      observer.observe(item);
+    }
+    new MutationObserver(soon).observe(navBar, { childList: true, subtree: true });
+    watchPrefs(CENTER_BAR_PREF, soon);
+    window.addEventListener("unload", () => observer.disconnect());
+    soon();
+  }
+
+  function watchCenteredAddress() {
+    const urlbar = gURLBar.textbox || document.getElementById("urlbar");
+    const box = gURLBar.inputField?.parentNode;
+    const toolbar = document.getElementById("zen-appcontent-navbar-wrapper");
+    if (!urlbar || !box || !toolbar) {
+      return;
+    }
+    // (where the closed bar's text was centred, in the window)
+    let closedCentre = null;
+    const update = () => {
+      let shift = 0;
+      // Opened, the text stays where it was as the bar was clicked (centred in the opened
+      // bar instead, it jumped aside, #443): the opened bar is wider and elsewhere, so the
+      // shift is measured again from it, to the closed text's centre (kept, it moved the
+      // closed bar's shift into the opened bar, still a jump, #475). Not with the opened
+      // pop-up's text from the left (an option).
+      if (
+        urlbar.hasAttribute("breakout-extend") &&
+        urlbar.getAttribute("zen-floating-urlbar") !== "true" &&
+        !Services.prefs.getBoolPref("zia.urlbar.center-text.pop-up-left", false)
+      ) {
+        const bar = box.getBoundingClientRect();
+        if (closedCentre !== null && bar.width) {
+          const most = bar.width / 5;
+          shift = Math.max(-most, Math.min(most, closedCentre - (bar.left + bar.width / 2)));
+          setStyle(urlbar, "--zia-center-shift", Math.abs(shift) >= 1 ? `${Math.round(shift)}px` : null);
+        }
+        return;
+      }
+      closedCentre = null;
+      if (
+        Services.prefs.getBoolPref("zia.urlbar.center-text", false) &&
+        root.getAttribute("zen-single-toolbar") !== "true" &&
+        !urlbar.hasAttribute("breakout-extend") &&
+        urlbar.getAttribute("zen-floating-urlbar") !== "true"
+      ) {
+        const bar = box.getBoundingClientRect();
+        const card = toolbar.getBoundingClientRect();
+        if (bar.width && card.width) {
+          // (a fifth of the bar at most either way: a long address keeps most of its room)
+          const most = bar.width / 5;
+          shift = Math.max(-most, Math.min(most, card.left + card.width / 2 - (bar.left + bar.width / 2)));
+          closedCentre = bar.left + bar.width / 2 + shift;
+        }
+      }
+      setStyle(urlbar, "--zia-center-shift", Math.abs(shift) >= 1 ? `${Math.round(shift)}px` : null);
+    };
+    const observer = new ResizeObserver(update);
+    observer.observe(box, { box: "border-box" });
+    observer.observe(toolbar, { box: "border-box" });
+    // (and a frame on, once the opened bar's in place: moved without a change of size,
+    // nothing else measures it)
+    new MutationObserver(() => {
+      update();
+      requestAnimationFrame(update);
+    }).observe(urlbar, { attributes: true, attributeFilter: ["breakout-extend", "zen-floating-urlbar"] });
+    watchPrefs(["zia.urlbar.center-text", "zia.urlbar.center-text.pop-up-left"], update);
+    window.addEventListener("unload", () => observer.disconnect());
+    update();
+  }
+
+  function desiredOpenTop() {
+    return parseFloat(getComputedStyle(root).getPropertyValue("--zia-urlbar-open-top")) || 0;
+  }
+
+  let closedTextRect = null;
+  let openOffsetX = 0;
+
+  let clickedUrlbarAt = 0;
+
+  function rememberClosedText() {
+    const urlbar = gURLBar.textbox || document.getElementById("urlbar");
+    if (!urlbar || urlbar.hasAttribute("breakout-extend") || root.getAttribute("zia-split") === "true") {
+      return;
+    }
+    // At the bottom, the opened pop-up is pinned by its bottom edge to where
+    // the closed bar sits, so it grows upwards instead of off the screen.
+    const bar = urlbar.getBoundingClientRect();
+    if (bar.width) {
+      root.style.setProperty("--zia-url-left", `${Math.round(bar.left)}px`);
+      root.style.setProperty("--zia-url-width", `${Math.round(bar.width)}px`);
+      root.style.setProperty("--zia-url-bottom", `${Math.round(window.innerHeight - bar.bottom)}px`);
+    }
+    const title = document.getElementById("zia-url-title");
+    const input = urlbar.querySelector(".urlbar-input");
+    // (only while it shows: hidden, it's still laid out, at the bar's width)
+    const titleRect = title?.checkVisibility({ visibilityProperty: true }) ? title.getBoundingClientRect() : null;
+    const rect = titleRect?.width ? titleRect : input?.getBoundingClientRect();
+    if (rect?.width) {
+      closedTextRect = { left: rect.left, centerY: rect.top + rect.height / 2, at: Date.now() };
+    }
+  }
+
+  function alignOpenedUrlbar() {
+    const urlbar = gURLBar.textbox || document.getElementById("urlbar");
+    // Opened as wide as the closed bar: Zen measures that as the layout changes, but not
+    // as compact mode takes the sidebar away, so it opened at its width beside the sidebar
+    const container = document.getElementById("urlbar-container");
+    const single = root.getAttribute("zen-single-toolbar") === "true";
+    if (urlbar?.hasAttribute("breakout-extend") && urlbar.getAttribute("zen-floating-urlbar") !== "true" && !single && container) {
+      const width = `${container.getBoundingClientRect().width}px`;
+      if (width !== "0px" && urlbar.style.getPropertyValue("--urlbar-width") !== width) {
+        urlbar.style.setProperty("--urlbar-width", width);
+      }
+    }
+    // (and in the sidebar, with Zen's single toolbar, it opens where Zen puts it: moved to
+    // keep the text where it was, it went past the window's left edge)
+    if (urlbar) {
+      setStyle(urlbar, "--zia-pop-reach-top", null);
+      setStyle(urlbar, "--zia-pop-trim-top", null);
+    }
+    if ((urlbar?.getAttribute("zen-floating-urlbar") === "true" && !urlbarAtBottom()) || single) {
+      openOffset = 0;
+      openOffsetX = 0;
+      root.style.setProperty("--zia-urlbar-open-offset", "0px");
+      root.style.setProperty("--zia-urlbar-open-offset-x", "0px");
+      return;
+    }
+    if (!urlbar?.hasAttribute("breakout-extend")) {
+      return;
+    }
+    // Only while it's shown over the window: a modal dialog (Cmd+Q's quit or close, say)
+    // takes every pop-up down, the opened bar too, while it stays marked opened, and measured
+    // there, back in the toolbar, it was moved further out of place each time
+    if (urlbar.matches?.("[popover]") && !urlbar.matches(":popover-open")) {
+      return;
+    }
+    if (root.getAttribute("zia-split") === "true") {
+      return;
+    }
+    const input = urlbar.querySelector(".urlbar-input");
+    const inputRect = input?.getBoundingClientRect();
+
+    // At the bottom the pop-up grows upwards from the bar, so the text always
+    // stays where it was, however the bar was opened.
+    // (lined up only with where the text was at that click: taken earlier, say before compact
+    // mode moved the bar, or with Zen's new tab bar still open as it was clicked, the old
+    // spot sent the pop-up up and to the left)
+    const fresh = !!closedTextRect && (urlbarAtBottom() || clickedUrlbarAt - closedTextRect.at < 100);
+    const openedByClick = (urlbarAtBottom() || Date.now() - clickedUrlbarAt < 1500) && fresh;
+    // (with the text centred, it's kept where it was by its centring, watchCenteredAddress:
+    // lined up by the left of its box as well, the opened pop-up went off to the left, #515)
+    const centred =
+      Services.prefs.getBoolPref("zia.urlbar.center-text", false) &&
+      !Services.prefs.getBoolPref("zia.urlbar.center-text.pop-up-left", false);
+    if (!openedByClick && openOffsetX) {
+      openOffsetX = 0;
+      root.style.setProperty("--zia-urlbar-open-offset-x", "0px");
+    }
+    if (openedByClick && inputRect?.width) {
+      const dx = centred ? -openOffsetX : closedTextRect.left - inputRect.left;
+      const dy = closedTextRect.centerY - (inputRect.top + inputRect.height / 2);
+      if (Math.abs(dx) > 0.5) {
+        openOffsetX += dx;
+        root.style.setProperty("--zia-urlbar-open-offset-x", `${openOffsetX}px`);
+      }
+      if (Math.abs(dy) > 0.5) {
+        openOffset += dy;
+        root.style.setProperty("--zia-urlbar-open-offset", `${openOffset}px`);
+      }
+      if (!urlbarAtBottom()) {
+        keepOpenedUrlbarInWindow(urlbar);
+      }
+      reachWindowTop(urlbar);
+      return;
+    }
+
+    const top = urlbar.getBoundingClientRect().top;
+    const diff = desiredOpenTop() - top;
+    if (Math.abs(diff) > 0.5) {
+      openOffset += diff;
+      root.style.setProperty("--zia-urlbar-open-offset", `${openOffset}px`);
+    }
+    reachWindowTop(urlbar);
+  }
+
+  // Moved to keep the text where it was, the pop-up stays inside the window: with the page
+  // edge to edge the bar sits against the window's edge, and the bigger pop-up round the
+  // same text went past it and was cut off. Past the top, only its background is cut back to
+  // the window's edge (--zia-pop-trim-top): moved down, the text came out a few pixels
+  // lower than in the closed bar
+  function keepOpenedUrlbarInWindow(urlbar) {
+    const box = urlbar.getBoundingClientRect();
+    if (!box.width) {
+      return;
+    }
+    const dy = box.top < 0 ? -box.top : 0;
+    const dx = box.left < 0 ? -box.left : box.right > window.innerWidth ? window.innerWidth - box.right : 0;
+    setStyle(urlbar, "--zia-pop-trim-top", dy > 0.5 ? `${dy}px` : null);
+    if (Math.abs(dx) > 0.5) {
+      openOffsetX += dx;
+      root.style.setProperty("--zia-urlbar-open-offset-x", `${openOffsetX}px`);
+    }
+  }
+
+  // The pop-up at the top of the window reaches up to its top edge, as Dia's does: it stopped
+  // the card's gap short of it. Its background grows up into that gap, so the address and
+  // the results stay where they are. Not at the bottom, in the sidebar or floating.
+  function reachWindowTop(urlbar) {
+    const top = urlbar.getBoundingClientRect().top;
+    const reach = !urlbarAtBottom() && top > 0 && top < 24 ? top : 0;
+    setStyle(urlbar, "--zia-pop-reach-top", reach ? `${reach}px` : null);
+  }
+
+  function alignOpenedUrlbarSoon() {
+    // Straight away, before the opened bar is first drawn, so the text doesn't
+    // visibly jump; the later passes only catch late layout changes.
+    alignOpenedUrlbar();
+    requestAnimationFrame(alignOpenedUrlbar);
+    setTimeout(alignOpenedUrlbar, 60);
+    setTimeout(alignOpenedUrlbar, 200);
+  }
+
+  // Restarts a CSS animation keyed on an attribute, then clears it.
+  function replayAttribute(el, name, ms, value = "true") {
+    el.removeAttribute(name);
+    el.getBoundingClientRect();
+    el.setAttribute(name, value);
+    clearTimeout(el.ziaReplayTimers?.[name]);
+    el.ziaReplayTimers = { ...el.ziaReplayTimers, [name]: setTimeout(() => el.removeAttribute(name), ms) };
+  }
+
+  // Back and forward slide through when clicked; reload and stop turn into
+  // each other as a page starts and finishes loading (the motion itself is
+  // in the CSS, keyed on these attributes).
+  function animateNavButtons() {
+    for (const id of ["back-button", "forward-button"]) {
+      const button = document.getElementById(id);
+      button?.addEventListener(
+        "click",
+        (event) => {
+          if (event.button === 0 && !button.hasAttribute("disabled")) {
+            replayAttribute(button, "zia-slide", 420);
+          }
+        },
+        true
+      );
+    }
+    const reload = document.getElementById("reload-button");
+    const container = document.getElementById("stop-reload-button");
+    if (!reload || !container) {
+      return;
+    }
+    let showingStop = reload.hasAttribute("displaystop");
+    new MutationObserver(() => {
+      const now = reload.hasAttribute("displaystop");
+      if (now === showingStop) {
+        return;
+      }
+      showingStop = now;
+      replayAttribute(container, "zia-morph", 450, now ? "to-stop" : "to-reload");
+      // Reload's hover look (its arrowhead drawn back) isn't kept while
+      // stop's showing: coming back, reload grew in whole and then snapped
+      // to that look. It springs into it once it's in, if still hovered.
+      if (now) {
+        reload.ziaReloadCut?.(0, true);
+      } else {
+        // (once the grow-in has let go of it: its animation holds the
+        // arrowhead's turn until then, and eased in under it, it jumped
+        // to wherever the ease had got to as the animation ended)
+        setTimeout(() => {
+          if (!reload.hasAttribute("displaystop") && !container.hasAttribute("zia-morph") && container.matches(":hover")) {
+            reload.ziaReloadCut?.(RELOAD_HOVER_CUT);
+          }
+        }, 470);
+      }
+    }).observe(reload, { attributes: true, attributeFilter: ["displaystop"] });
+  }
+
+  // Reload on hover: the arrowhead draws back 20 degrees round the circle
+  // and the arc shortens with it, on Zia's spring. The CSS reads the angle
+  // from --zia-reload-cut, eased here frame by frame.
+  const RELOAD_HOVER_CUT = 20;
+  const RELOAD_HOVER_MS = 380;
+
+  function springReloadHover() {
+    const button = document.getElementById("reload-button");
+    if (!button) {
+      return;
+    }
+    const ease = cubicBezier(0.3, 1.35, 0.5, 1);
+    let cut = 0;
+    let frame = 0;
+    const setCut = (value) => {
+      cut = value;
+      button.style.setProperty("--zia-reload-cut", `${cut}deg`);
+    };
+    const go = (target, instant = false) => {
+      cancelAnimationFrame(frame);
+      if (instant || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        setCut(target);
+        return;
+      }
+      const from = cut;
+      const start = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - start) / RELOAD_HOVER_MS);
+        setCut(from + (target - from) * ease(t));
+        if (t < 1) {
+          frame = requestAnimationFrame(step);
+        }
+      };
+      frame = requestAnimationFrame(step);
+    };
+    button.addEventListener("mouseenter", () => {
+      // (not while it's coming back in from stop: that springs it after)
+      if (!button.parentElement?.hasAttribute("zia-morph")) {
+        go(RELOAD_HOVER_CUT);
+      }
+    });
+    button.addEventListener("mouseleave", () => go(0));
+    button.ziaReloadCut = go;
+  }
