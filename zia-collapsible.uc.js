@@ -51,6 +51,9 @@
       --zia-cs-full: 260px;
       --zia-cs-blur: 18px;
       --zia-cs-ease: cubic-bezier(.2, .8, .2, 1);
+      /* plain colours on purpose: Zen's theme variables can be gradients, which made the old tint vanish */
+      --zia-cs-bg: light-dark(rgb(238 238 241 / .72), rgb(30 30 34 / .72));
+      --zia-cs-bg-peek: light-dark(rgb(240 240 243 / .80), rgb(32 32 36 / .80));
     }
 
     /* animate width changes whichever way we are going */
@@ -68,8 +71,18 @@
       position: relative;
       z-index: 6;
       overflow: clip;
-      background: color-mix(in srgb, var(--zen-main-browser-background, var(--toolbar-bgcolor, Canvas)) 62%, transparent) !important;
-      backdrop-filter: blur(var(--zia-cs-blur)) saturate(1.5) !important;
+      isolation: isolate;
+      background: var(--zia-cs-bg) !important;
+    }
+    /* the blur lives on a pseudo-element behind the content: it survives Zen/Zia styles that
+       override backdrop-filter on the toolbox itself */
+    ${COLLAPSED} #navigator-toolbox::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      backdrop-filter: blur(var(--zia-cs-blur)) saturate(1.5);
     }
     ${COLLAPSED} #zen-sidebar-splitter { display: none !important; }
 
@@ -86,6 +99,23 @@
     ${RAIL} .tabbrowser-tab { padding-inline: 0 !important; }
     ${RAIL} :is(#zen-essentials, .zen-essentials-container) {
       grid-template-columns: 1fr !important;
+      justify-items: center !important;
+      gap: 6px !important;
+    }
+    /* Zia keeps its essentials tall; make them even squares so they read as icons */
+    ${RAIL} .tabbrowser-tab[zen-essential] {
+      width: 36px !important;
+      min-width: 36px !important;
+      max-width: 36px !important;
+      height: 36px !important;
+      min-height: 36px !important;
+      max-height: 36px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    /* catch-all for leftover text ("N" of New Tab, workspace names): icons stay, words go */
+    ${RAIL} #navigator-toolbox :is(label, description, .toolbarbutton-text) {
+      font-size: 0 !important;
     }
     /* "Only Sidebar": the nav bar lives in the sidebar, so tuck it away in the rail */
     ${RAIL}[zen-single-toolbar] :is(#nav-bar, #urlbar-container) { display: none !important; }
@@ -97,8 +127,7 @@
       max-width: var(--zia-cs-full) !important;
       margin-inline-end: calc(var(--zia-cs-rail) - var(--zia-cs-full)) !important;
       z-index: 20;
-      background: color-mix(in srgb, var(--zen-main-browser-background, var(--toolbar-bgcolor, Canvas)) 70%, transparent) !important;
-      backdrop-filter: blur(var(--zia-cs-blur)) saturate(1.6) !important;
+      background: var(--zia-cs-bg-peek) !important;
       box-shadow: 0 10px 40px rgba(0, 0, 0, .32);
     }
     /* sidebar on the right: it grows leftwards, so the negative margin flips sides */
